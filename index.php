@@ -1,5 +1,7 @@
 <?php
 
+exit();
+
 $dbHost = "localhost";
 $dbUser = "itnew";
 $dbPass = "mypasS77";
