@@ -37,16 +37,6 @@ if (
 			"protected";
 
 		/**
-		 * Errors
-		 */
-		$settings =
-			$protectedDir .
-			DIRECTORY_SEPARATOR .
-			"config" .
-			DIRECTORY_SEPARATOR .
-			"settings.php";
-
-		/**
 		 * Yii application
 		 */
 		$yii = 
