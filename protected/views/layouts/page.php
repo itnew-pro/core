@@ -4,17 +4,19 @@
 	<meta charset="utf-8">
 	<title><?php echo $this->pageTitle; ?></title>
 
-	<link rel="stylesheet" href="/css/css.css"/>
-	<?php if (!Yii::app()->user->isGuest) { ?>
-		<link rel="stylesheet" href="/css/admin.css"/>
-	<?php } ?>
-	<link rel="stylesheet" href="/style.css"/>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
 	<?php if (!Yii::app()->user->isGuest) { ?>
+		<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/css/admin.css"/>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 		<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/tinymce/tinymce.min.js"></script>
 	<?php } ?>
+
+	<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/css/css.css"/>
 	<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/js.js"></script>
+
+	<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/static/<?php
+		echo Yii::app()->params["siteId"]; ?>/css.css"/>
 </head>
 <body>
 <?php

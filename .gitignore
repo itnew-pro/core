@@ -1,4 +1,7 @@
 assets
+static
 
 protected/runtime
 protected/vendors
+
+protected/config/settings.php

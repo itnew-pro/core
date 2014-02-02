@@ -29,7 +29,7 @@ return array(
 
 	"components" => array(
 		"db" => array(
-			"connectionString" => "mysql:host=" . DB_HOST . "; dbname=" . DB_NAME,
+			"connectionString" => "mysql:host=localhost; dbname=" . DB_NAME,
 			"emulatePrepare"   => true,
 			"username"         => DB_USERNAME,
 			"password"         => DB_PASSWORD,
@@ -92,14 +92,14 @@ return array(
 	),
 
 	"params" => array(
-		"www" => "/var/www/itnew/data/www",
-		"baseUrl" => BASE_URL,
-		"domain" => DOMAIN,
+		"baseUrl"     => "",
+		"siteId"      => SITE_ID,
+		"domain"      => DOMAIN,
 		"migrateTime" => "2014-01-25 00:00:00",
 
 		"admin" => array(
-			"login" => "1",
-			"password" => "1",
+			"login"    => ADMIN_LOGIN,
+			"password" => ADMIN_PASSWORD,
 		),
 	),
 );
