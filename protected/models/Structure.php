@@ -148,4 +148,42 @@ class Structure extends CActiveRecord
 		}
 		return parent::beforeDelete();
 	}
+
+	public static function isCss()
+	{
+		$file = 
+			__DIR__ .
+			DIRECTORY_SEPARATOR .
+			".." .
+			DIRECTORY_SEPARATOR .
+			".." .
+			DIRECTORY_SEPARATOR .
+			"static/" .
+			Yii::app()->params["siteId"] .
+			"/css.css";
+		if (file_exists($file)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public static function isJs()
+	{
+		$file = 
+			__DIR__ .
+			DIRECTORY_SEPARATOR .
+			".." .
+			DIRECTORY_SEPARATOR .
+			".." .
+			DIRECTORY_SEPARATOR .
+			"static/" .
+			Yii::app()->params["siteId"] .
+			"/js.js";
+		if (file_exists($file)) {
+			return true;
+		}
+
+		return false;
+	}
 }

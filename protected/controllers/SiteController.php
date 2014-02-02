@@ -23,7 +23,7 @@ class SiteController extends CController
 		if (Yii::app()->db->schema->getTable("site")) {
 			$model = Structure::getModel();
 
-			if (!Yii::app()->user->isGuest) {
+			if (!Yii::app()->user->isGuest && $model) {
 				Yii::app()->session["structureId"] = $model->id;
 			}
 

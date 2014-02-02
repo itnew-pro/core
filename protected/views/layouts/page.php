@@ -15,8 +15,15 @@
 	<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/css/css.css"/>
 	<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/js.js"></script>
 
-	<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/static/<?php
-		echo Yii::app()->params["siteId"]; ?>/css.css"/>
+	<?php if (Structure::isCss()) { ?>
+		<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/static/<?php
+			echo Yii::app()->params["siteId"]; ?>/css.css"/>
+	<?php } ?>
+
+	<?php if (Structure::isJs()) { ?>
+		<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/static/<?php
+			echo Yii::app()->params["siteId"]; ?>/js.js"></script>
+	<?php } ?>
 </head>
 <body>
 <?php
