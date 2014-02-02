@@ -1,0 +1,13 @@
+AddDefaultCharset utf8
+php_flag register_globals 0
+
+RewriteEngine on
+
+RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php [L]
+
+
+RewriteRule ^images/(.*)$ /index.php?a=$1 [L]
