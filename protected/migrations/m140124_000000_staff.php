@@ -24,7 +24,7 @@ class m140124_000000_staff extends CDbMigration
 				array(
 					"id" => "pk",
 					"staff_id" => "INT NOT NULL",
-					"seo_id" => "INT NOT NULL",
+					"name" => "VARCHAR(255)",
 					"sort" => "INT NOT NULL",
 				),
 				"ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci"
@@ -32,9 +32,6 @@ class m140124_000000_staff extends CDbMigration
 
 			$this->addForeignKey(
 				"staff_group_staff_id", "staff_group", "staff_id", "staff", "id"
-			);
-			$this->addForeignKey(
-				"staff_group_seo_id", "staff_group", "seo_id", "seo", "id"
 			);
 		}
 
@@ -44,9 +41,9 @@ class m140124_000000_staff extends CDbMigration
 				array(
 					"id" => "pk",
 					"seo_id" => "INT NOT NULL",
-					"photo" => "INT NOT NULL",
-					"description" => "INT NOT NULL",
-					"text" => "INT NOT NULL",
+					"photo" => "INT",
+					"description" => "INT",
+					"text" => "INT",
 					"group_id" => "INT NOT NULL",
 					"sort" => "INT NOT NULL",
 				),
@@ -84,7 +81,6 @@ class m140124_000000_staff extends CDbMigration
 
 		if (Yii::app()->db->schema->getTable("staff_group")) {
 			$this->dropForeignKey("staff_group_staff_id", "staff_group");
-			$this->dropForeignKey("staff_group_seo_id", "staff_group");
 			$this->dropTable("staff_group");
 		}
 

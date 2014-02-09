@@ -10,8 +10,6 @@ Yii::setPathOfAlias(
 	DIRECTORY_SEPARATOR
 );
 
-require_once(__DIR__ . DIRECTORY_SEPARATOR . "settings.php");
-
 return array(
 	"sourceLanguage" => "en_us",
     "language" => LANG,
@@ -94,6 +92,7 @@ return array(
 	),
 
 	"params" => array(
+		"staticDir"   => "/var/www/itnew/data/_SITES_",
 		"baseUrl"     => "",
 		"siteId"      => SITE_ID,
 		"domain"      => DOMAIN,

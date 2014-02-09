@@ -6,6 +6,19 @@
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
+	<!-- убрать -->
+		<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/jquery.mousewheel-3.0.6.pack.js"></script>
+
+		<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/css/fancybox/jquery.fancybox.css"/>
+		<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/fancybox/jquery.fancybox.pack.js"></script>
+
+		<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/css/fancybox/jquery.fancybox-thumbs.css"/>
+		<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/fancybox/jquery.fancybox-thumbs.js"></script>
+
+		<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/css/fancybox/jquery.fancybox-buttons.css"/>
+		<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/fancybox/jquery.fancybox-buttons.js"></script>
+	<!-- убрать -->
+
 	<?php if (!Yii::app()->user->isGuest) { ?>
 		<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/css/admin.css"/>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
@@ -18,9 +31,7 @@
 	<?php if (Structure::isCss()) { ?>
 		<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/static/<?php
 			echo Yii::app()->params["siteId"]; ?>/css.css"/>
-	<?php } ?>
-
-	<?php if (Structure::isJs()) { ?>
+	<?php } if (Structure::isJs()) { ?>
 		<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/static/<?php
 			echo Yii::app()->params["siteId"]; ?>/js.js"></script>
 	<?php } ?>

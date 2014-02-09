@@ -55,7 +55,7 @@ class StaffContent extends CActiveRecord
 		return array(
 			'group' => array(self::BELONGS_TO, 'StaffGroup', 'group_id'),
 			'description' => array(self::BELONGS_TO, 'Text', 'description'),
-			'photo' => array(self::BELONGS_TO, 'Images', 'photo'),
+			'images' => array(self::BELONGS_TO, 'Images', 'photo'),
 			'seo' => array(self::BELONGS_TO, 'Seo', 'seo_id'),
 			'text' => array(self::BELONGS_TO, 'Text', 'text'),
 		);

@@ -1,3 +1,24 @@
+/* Default font */
+	@font-face {
+		font-family: "HelveticaRegular";
+		src: url(fonts/helvetica_webfont_cerilic.eot);
+		src: url(fonts/helvetica_webfont_cerilic.eot?#iefix) format("embedded-opentype"),
+			url(fonts/helvetica_webfont_cerilic.ttf) format("truetype"),
+			url(fonts/helvetica_webfont_cerilic.svg#HelveticaRegular) format("svg");
+		font-weight: normal;
+		font-style: normal;
+	}
+	@font-face {
+		font-family: "HelveticaRegular";
+		src: url(fonts/helvetica_bold_webfont_cerilic.eot);
+		src: url(fonts/helvetica_bold_webfont_cerilic.eot?#iefix) format("embedded-opentype"),
+			url(fonts/helvetica_bold_webfont_cerilic.ttf) format("truetype"),
+			url(fonts/helvetica_bold_webfont_cerilic.svg#HelveticaRegular) format("svg");
+		font-weight: bold;
+		font-style: normal;
+	}
+/* Default font */
+
 /* common */
 	* {
 		margin: 0;
@@ -7,7 +28,8 @@
 		outline: 0;
 	}
 	body {
-		font-family: Arial, Helvetica, sans-serif;
+		font-family: HelveticaRegular, Arial, Helvetica, sans-serif;
+		font-size: 18px;
 	}
 	.grid-container {
 		box-sizing: border-box;
@@ -53,6 +75,11 @@
 		color: #f00;
 		font-size: 12px;
 		display: none;
+	}
+	.wrapper * {
+		-webkit-transition: background 0.3s ease;
+		-moz-transition: background 0.3s ease;
+		transition: background 0.3s ease;
 	}
 /* common */
 
@@ -410,3 +437,40 @@
 		list-style: none;
 	}
 /* menu */
+
+/* staff */
+	.content-staff .group-title {
+		font-size: 22px;
+	}
+	.content-staff .card {
+		margin: 2px 3px;
+		padding: 15px;
+		border-radius: 10px;
+	}
+	.content-staff .card:hover {
+		background: #fcfcfc;
+		box-shadow: 1px 1px 2px 1px rgba(177, 177, 177, 0.5);
+		background: #f3f3f3;
+	}
+	.content-staff .card .photo {
+		float: left;
+		width: 100px;
+	}
+	.content-staff .content-with-photo {
+		margin-left: 110px;
+	}
+	.content-staff .content .title {
+		font-size: 18px;
+		font-weight: bold;
+	}
+/* staff */
+
+/* images */
+	.fancybox {
+		cursor: url(magnify.cur), -moz-zoom-in !important;
+	}
+	.fancybox-wrap a,
+	#fancybox-buttons a {
+		border-bottom: 0;
+	}
+/* images */

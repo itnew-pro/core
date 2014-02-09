@@ -154,12 +154,9 @@ class ImagesContent extends CActiveRecord
 
 	private function _getUploadDir()
 	{
-		return Yii::app()->params["www"] .
+		return Yii::app()->params["staticDir"] .
 			DIRECTORY_SEPARATOR .
-			Yii::app()->params["domain"] .
-			Yii::app()->params["baseUrl"] .
-			DIRECTORY_SEPARATOR .
-			"upload" .
+			Yii::app()->params["siteId"] .
 			DIRECTORY_SEPARATOR .
 			"images" .
 			DIRECTORY_SEPARATOR;
@@ -182,13 +179,7 @@ class ImagesContent extends CActiveRecord
 				break;
 		}
 
-		return Yii::app()->params["baseUrl"] .
-			DIRECTORY_SEPARATOR .
-			"upload" .
-			DIRECTORY_SEPARATOR .
-			"images" .
-			DIRECTORY_SEPARATOR .
-			$name;
+		return $this->_getDir() . $name;
 	}
 
 	private function _getSizes($images)
@@ -243,24 +234,23 @@ class ImagesContent extends CActiveRecord
 
 	public function getThumbUrl()
 	{
-		return Yii::app()->params["baseUrl"] .
-			DIRECTORY_SEPARATOR .
-			"upload" .
-			DIRECTORY_SEPARATOR .
-			"images" .
-			DIRECTORY_SEPARATOR .
-			"thumb_" .
-			$this->file;
+		return $this->_getDir() . "thumb_" . $this->file;
 	}
 
 	public function getFullUrl()
 	{
+		return $this->_getDir() . $this->file;
+	}
+
+	private function _getDir()
+	{
 		return Yii::app()->params["baseUrl"] .
 			DIRECTORY_SEPARATOR .
-			"upload" .
+			"static" .
+			DIRECTORY_SEPARATOR .
+			Yii::app()->params["siteId"] .
 			DIRECTORY_SEPARATOR .
 			"images" .
-			DIRECTORY_SEPARATOR .
-			$this->file;
+			DIRECTORY_SEPARATOR;
 	}
 }

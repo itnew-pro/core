@@ -58,6 +58,14 @@ if (
 			"config" .
 			DIRECTORY_SEPARATOR .
 			"main.php";
+
+		$settings =
+			$protectedDir .
+			DIRECTORY_SEPARATOR .
+			"config" .
+			DIRECTORY_SEPARATOR .
+			"settings.php";
+		require_once($settings);
 			
 		require_once($yii);
 		Yii::createWebApplication($config)->run();
