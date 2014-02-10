@@ -54,10 +54,10 @@ class StaffContent extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'group' => array(self::BELONGS_TO, 'StaffGroup', 'group_id'),
-			'description' => array(self::BELONGS_TO, 'Text', 'description'),
+			'descriptionT' => array(self::BELONGS_TO, 'Text', 'description'),
 			'images' => array(self::BELONGS_TO, 'Images', 'photo'),
 			'seo' => array(self::BELONGS_TO, 'Seo', 'seo_id'),
-			'text' => array(self::BELONGS_TO, 'Text', 'text'),
+			'textT' => array(self::BELONGS_TO, 'Text', 'text'),
 		);
 	}
 
