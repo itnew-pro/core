@@ -1,3 +1,7 @@
+post_max_size=512M
+upload_max_filesize=512M
+memory_limit=512M
+
 AddDefaultCharset utf8
 php_flag register_globals 0
 
