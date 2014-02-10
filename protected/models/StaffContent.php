@@ -118,4 +118,13 @@ class StaffContent extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	public function getDescription()
+	{
+		if ($this->descriptionT) {
+			return $this->descriptionT->text;
+		}
+
+		return null;
+	}
 }

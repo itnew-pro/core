@@ -24,7 +24,7 @@
 								</div>
 
 								<div class="description">
-									<?php //echo $staff->descriptionT->text; ?>
+									<?php echo $staff->getDescription(); ?>
 								</div>
 							</div>
 						<?php } ?>
