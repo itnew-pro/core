@@ -24,7 +24,7 @@
 								</div>
 
 								<div class="description">
-									12 <strong>Текст</strong> на русском <strong>Text</strong> english <em>italic</em>
+									<?php echo $staff->description->text; ?>
 								</div>
 							</div>
 						<?php } ?>
