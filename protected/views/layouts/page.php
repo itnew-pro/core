@@ -19,13 +19,14 @@
 		<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/fancybox/jquery.fancybox-buttons.js"></script>
 	<!-- убрать -->
 
+	<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/css/css.css"/>
+
 	<?php if (!Yii::app()->user->isGuest) { ?>
 		<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/css/admin.css"/>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 		<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/tinymce/tinymce.min.js"></script>
 	<?php } ?>
 
-	<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/css/css.css"/>
 	<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/js.js"></script>
 
 	<?php if (Structure::isCss()) { ?>

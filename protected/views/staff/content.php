@@ -9,7 +9,6 @@
 
 				<?php foreach ($group->staffContent as $staff) { ?>
 					<div class="card">
-						<?php if ($model->photo) { ?>
 							<div class="photo">
 								<?php if ($staff->images) { ?>
 									<?php $this->renderPartial("../images/content", array("model" => $staff->images)); ?>
@@ -27,8 +26,6 @@
 									<?php echo $staff->getDescription(); ?>
 								</div>
 							</div>
-						<?php } ?>
-
 						<div class="clear"></div>
 					</div>
 				<?php } ?>

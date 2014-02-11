@@ -492,3 +492,17 @@
 		width: 25%;
 	}
 /* menu */
+
+/* move-item */
+	.move-item {
+		background: #fff;
+		padding: 10px;
+		border-radius: 5px;
+		box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
+		margin: 10px 0;
+		cursor: move;
+	}
+	.move-item:hover {
+		background: #fdfdfd;
+	}
+/* move-item */

@@ -194,6 +194,11 @@
 		width: 100%;
 		z-index: 99;
 	}
+	.window-bottom {
+		position: absolute;
+		left: 20px;
+		bottom: 30px;
+	}
 /* window */
 
 /* login */

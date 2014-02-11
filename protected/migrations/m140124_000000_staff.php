@@ -10,9 +10,7 @@ class m140124_000000_staff extends CDbMigration
 				"staff",
 				array(
 					"id" => "pk",
-					"photo" => "INT NOT NULL",
-					"description" => "INT NOT NULL",
-					"text" => "INT NOT NULL",
+					"is_group" => "INT NOT NULL",
 				),
 				"ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci"
 			);
