@@ -501,8 +501,24 @@
 		box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
 		margin: 10px 0;
 		cursor: move;
+		position: relative;
 	}
 	.move-item:hover {
 		background: #fdfdfd;
+	}
+	.move-item .delete,
+	.move-item .edit {
+		position: absolute;
+		right: 15px;
+		top: 50%;
+		margin-top: -10px;
+		display: none;
+	}
+	.move-item:hover .delete,
+	.move-item:hover .edit {
+		display: block;
+	}
+	.move-item .edit {
+		right: 45px;
 	}
 /* move-item */

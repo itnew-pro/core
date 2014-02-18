@@ -186,7 +186,7 @@ class ContentController extends CController
 	 *
 	 * @return void
 	 */
-	public function actionUpdate()
+	public function actionSaveWindow()
 	{
 		if (Yii::app()->request->getQuery("id")) {
 			if ($model = $this->loadModel(Yii::app()->request->getQuery("id"))) {

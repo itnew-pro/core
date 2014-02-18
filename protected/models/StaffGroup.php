@@ -62,7 +62,7 @@ class StaffGroup extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'staff_id' => 'Staff',
-			'seo_id' => 'Seo',
+			'name' => Yii::t("staff", "Name"),
 			'sort' => 'Sort',
 		);
 	}

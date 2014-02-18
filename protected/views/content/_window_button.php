@@ -1,4 +1,13 @@
 <?php
+
+	if (empty($action)) {
+		$action = "saveWindow";
+	}
+
+	if (empty($button)) {
+		$button = "Update";
+	}
+
 	if (empty($success)) {
 		$success = '
 			hideWindow("' . Yii::app()->controller->id . '");
@@ -8,12 +17,12 @@
 	}
 
 	echo CHtml::ajaxSubmitButton(
-		Yii::t("common", "Update"), 
+		Yii::t("common", $button), 
 		$this->createUrl(
 			"ajax/index",
 			array(
 				"controller" => Yii::app()->controller->id,
-				"action" => "update",
+				"action" => $action,
 				"language" => Yii::app()->language,
 				"id" => $model->id,
 			)

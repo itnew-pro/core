@@ -71,6 +71,9 @@
 	a.none-decoration {
 		border-bottom: 0;
 	}
+	a img {
+		border: 0;
+	}
 	.error {
 		color: #f00;
 		font-size: 12px;
@@ -100,6 +103,13 @@
 	}
 	i.close:hover {
 		background-position: 0px -80px;
+	}
+	i.settings {
+		background-position: 0px -140px;
+		cursor: pointer;
+	}
+	i.settings:hover {
+		background-position: 0px -120px;
 	}
 	i.arrow-blue {
 		background-position: -20px 0px;
@@ -198,6 +208,12 @@
 		position: absolute;
 		left: 20px;
 		bottom: 30px;
+	}
+	.window-level-2 {
+		z-index: 110;
+	}
+	.overlay-level-2 {
+		z-index: 109;
 	}
 /* window */
 

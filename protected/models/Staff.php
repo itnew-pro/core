@@ -5,6 +5,8 @@
  *
  * The followings are the available columns in table 'staff':
  * @property integer $id
+ * @property integer $is_group
+ * @property integer $is_detail
  *
  * The followings are the available model relations:
  * @property StaffGroup[] $staffGroup
@@ -29,7 +31,8 @@ class Staff extends CActiveRecord
 		return array(
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, is_group', 'safe', 'on'=>'search'),
+			array('is_group, is_detail', 'numerical', 'integerOnly' => true),
+			array('id, is_group, is_detail', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -62,6 +65,7 @@ class Staff extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'is_group' => 'Is Group',
+			'is_detail' => 'Is Detail',
 		);
 	}
 
@@ -83,8 +87,9 @@ class Staff extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('is_group',$this->is_group);
 		$criteria->compare('id',$this->id);
+		$criteria->compare('is_group',$this->is_group);
+		$criteria->compare('is_detail',$this->is_group);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

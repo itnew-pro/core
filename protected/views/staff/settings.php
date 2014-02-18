@@ -8,6 +8,11 @@
 		<?php echo CHtml::activeLabel($model, "is_group", array("class" => "checkbox-label")); ?>
 	</div>
 
+	<div class="form-block">
+		<?php echo CHtml::activeCheckbox($model, "is_detail", array("class" => "checkbox")); ?>
+		<?php echo CHtml::activeLabel($model, "is_detail", array("class" => "checkbox-label")); ?>
+	</div>
+
 	<?php $this->renderPartial("../content/_save_settings", compact("model")); ?>
 
 <?php echo CHtml::endForm(); ?>
