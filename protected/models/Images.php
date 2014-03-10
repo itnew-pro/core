@@ -19,10 +19,14 @@ class Images extends CActiveRecord
 {
 	public $imageContentIds = "";
 
+	const TYPE_SIMPLE = 0;
+	const TYPE_LITEBOX = 1;
+	const TYPE_SLIDER = 2;
+
 	private $_views = array(
-		0 => "simple",
-		1 => "litebox",
-		2 => "slider",
+		self::TYPE_SIMPLE => "simple",
+		self::TYPE_LITEBOX => "litebox",
+		self::TYPE_SLIDER => "slider",
 	);
 
 	/**
@@ -153,7 +157,7 @@ class Images extends CActiveRecord
 	public function getViewList()
 	{
 		$list = array();
-		$list[0] = Yii::t("images", "Simple images");
+		$list[0] = Yii::t("images", "Simple image");
 		$list[1] = Yii::t("images", "Increasing thumbnail");
 		$list[2] = Yii::t("images", "Slider");
 		return $list;

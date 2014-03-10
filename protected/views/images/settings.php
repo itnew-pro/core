@@ -47,10 +47,10 @@
 		
 		function showImageStyleParams()
 		{
-			var style = $("#'. $imageUniqId .'").val();
-			$(".form-style-'. $imageUniqId .'").addClass("hide");
+			var style = $("#' . $imageUniqId . '").val();
+			$(".form-style-' . $imageUniqId . '").addClass("hide");
 			if (style == 1) {
-				$(".form-thumb-'. $imageUniqId .'").removeClass("hide");
+				$(".form-thumb-' . $imageUniqId . '").removeClass("hide");
 			}
 		}
 	');

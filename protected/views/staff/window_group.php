@@ -5,10 +5,19 @@
 		<?php echo CHtml::activeTextField($model, "name", array("class" => "blue-form")); ?>
 	</div>
 
+	<?php echo CHtml::activeHiddenField($model, "staff_id"); ?>
+	<?php echo CHtml::activeHiddenField($model, "id"); ?>
+
 	<?php $this->renderPartial("../content/_window_button", array(
 		"model" => $model,
-		"button" => "Add",
+		"button" => $model->id ? "Update" : "Add",
 		"action" => "saveGroup",
+		"success" => '
+			hideWindow("staff-group");
+			hideWindow("staff");
+			$("body").append(data);
+			showWindow("staff");
+		',
 	)); ?>
 
 <?php echo CHtml::endForm(); ?>

@@ -13,6 +13,9 @@
 class Text extends CActiveRecord
 {
 
+	const DEFAULT_TEXT_SIZE = 15;
+	const DEFAULT_DESCRIPTION_SIZE = 5;
+
 	public $tagList = array(
 		0 => "div",
 		1 => "h1",
@@ -267,5 +270,22 @@ class Text extends CActiveRecord
 			$this->text = $text["text"];
 			$this->save();
 		}
+	}
+
+	public function getDefaultTextModel()
+	{
+		$model = new self;
+		$model->rows = self::DEFAULT_TEXT_SIZE;
+		$model->editor = 1;
+
+		return $model;
+	}
+
+	public function getDefaultDescriptionModel()
+	{
+		$model = new self;
+		$model->rows = self::DEFAULT_DESCRIPTION_SIZE;
+
+		return $model;
 	}
 }

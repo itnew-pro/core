@@ -96,7 +96,7 @@ return array(
 		"baseUrl"     => "",
 		"siteId"      => SITE_ID,
 		"domain"      => DOMAIN,
-		"migrateTime" => "2014-01-25 00:00:00",
+		"migrateTime" => "2014-03-04 00:00:00",
 
 		"admin" => array(
 			"login"    => ADMIN_LOGIN,

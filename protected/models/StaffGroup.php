@@ -6,7 +6,7 @@
  * The followings are the available columns in table 'staff_group':
  * @property integer $id
  * @property integer $staff_id
- * @property integer $seo_id
+ * @property string $name
  * @property integer $sort
  *
  * The followings are the available model relations:
@@ -32,11 +32,12 @@ class StaffGroup extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('staff_id, seo_id, sort', 'required'),
-			array('staff_id, seo_id, sort', 'numerical', 'integerOnly'=>true),
+			array('staff_id, sort', 'required'),
+			array('staff_id, sort', 'numerical', 'integerOnly'=>true),
+			array("name", "length", "max" => 512),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, staff_id, seo_id, sort', 'safe', 'on'=>'search'),
+			array('id, staff_id, name, sort', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -49,7 +50,7 @@ class StaffGroup extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'staffContent' => array(self::HAS_MANY, 'StaffContent', 'group_id'),
-			'seo' => array(self::BELONGS_TO, 'Seo', 'seo_id'),
+			'seo' => array(self::BELONGS_TO, 'Seo', 'name'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
 	}
@@ -87,7 +88,7 @@ class StaffGroup extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('staff_id',$this->staff_id);
-		$criteria->compare('seo_id',$this->seo_id);
+		$criteria->compare('name',$this->name);
 		$criteria->compare('sort',$this->sort);
 
 		return new CActiveDataProvider($this, array(
@@ -104,5 +105,37 @@ class StaffGroup extends CActiveRecord
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
+	}
+
+	public function saveGroup()
+	{
+		$attributes = Yii::app()->request->getPost("StaffGroup");
+
+		$model = null;
+		if ($attributes["id"]) {
+			$model = $this->findByPk($attributes["id"]);
+			if ($model) {
+				$model->name = $attributes["name"];
+				$model->save();
+			}
+		} else {
+			$model = new self;
+			$model->name = $attributes["name"];
+			$model->staff_id = $attributes["staff_id"];
+			$model->sort = $this->_getNewSort();
+			$model->save();
+		}
+
+		if ($model) {
+			return $model->staff_id;
+		}
+	}
+
+	private function _getNewSort()
+	{
+		$criteria = new CDbCriteria;
+		$criteria->select = "MAX(sort) AS sort";
+		$row = $this->find($criteria);
+		return $row["sort"] + 10;
 	}
 }

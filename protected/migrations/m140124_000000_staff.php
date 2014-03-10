@@ -63,6 +63,9 @@ class m140124_000000_staff extends CDbMigration
 			$this->addForeignKey(
 				"staff_content_group_id", "staff_content", "group_id", "staff_group", "id"
 			);
+			$this->createIndex(
+				"staff_content_sort", "staff_content", "sort"
+			);
 		}
 	}
 
@@ -74,6 +77,7 @@ class m140124_000000_staff extends CDbMigration
 			$this->dropForeignKey("staff_content_description", "staff_content");
 			$this->dropForeignKey("staff_content_text", "staff_content");
 			$this->dropForeignKey("staff_content_group_id", "staff_content");
+			$this->dropIndex("staff_content_sort", "staff_content");
 			$this->dropTable("staff_content");
 		}
 

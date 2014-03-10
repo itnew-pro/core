@@ -1,3 +1,4 @@
+php_value date.timezone "Europe/Moscow"
 php_value upload_max_filesize 1024M
 php_value post_max_size 1024M
 

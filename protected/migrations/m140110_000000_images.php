@@ -38,6 +38,9 @@ class m140110_000000_images extends CDbMigration
 			$this->addForeignKey(
 				"images_content_images_id", "images_content", "images_id", "images", "id"
 			);
+			$this->createIndex(
+				"images_content_sort", "images_content", "sort"
+			);
 		}
 	}
 
@@ -45,6 +48,7 @@ class m140110_000000_images extends CDbMigration
 	{
 		if (Yii::app()->db->schema->getTable("images_content")) {
 			$this->dropForeignKey("images_content_images_id", "images_content");
+			$this->dropIndex("images_content_sort", "images_content");
 			$this->dropTable("images_content");
 		}
 

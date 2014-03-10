@@ -168,15 +168,20 @@ class ContentController extends CController
 	 *
 	 * @return void
 	 */
-	public function actionWindow()
+	public function actionWindow($pk = false)
 	{
-		if (Yii::app()->request->getQuery("id")) {
-			$model = $this->loadModel(Yii::app()->request->getQuery("id"));
+		$return = true;
+		if (!$pk) {
+			$pk = Yii::app()->request->getQuery("id");
+			$return = false;
+		}
+		if ($pk) {
+			$model = $this->loadModel($pk);
 			if ($model) {
 				$this->layout = "window";
 				$this->windowType = Yii::app()->controller->id;
-				$this->windowTitle = Yii::app()->request->getQuery("name");
-				$this->render("window", compact("model"));
+				$this->windowTitle = $model->block->name;
+				return $this->render("window", compact("model"), $return);
 			}
 		}
 	}

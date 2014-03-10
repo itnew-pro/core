@@ -262,9 +262,17 @@
 	.form-block {
 		margin: 15px 0;
 	}
+	.form-block-container {
+		margin: -30px -10px 0 -30px;
+		padding: 30px 5px 5px 37px;
+		background: #f6f6f6;
+		border-radius: 5px;
+	}
+	.form-block-container .form-block {
+		margin: 10px;
+	}
 	.checkbox-label {
 		cursor: pointer;
-		margin-left: 5px;
 		line-height: 24px;
 	}
 	.blue-form {
@@ -348,6 +356,7 @@
 		position: absolute;
 		top: 50%;
 		margin-top: -20px;
+		left: 10px;
 	}
 	.content-menu-block-item .loader-window {
 		left: 10px;
@@ -404,6 +413,9 @@
 	}
 	i.c-staff {
 		background-position: 0px -320px;
+	}
+	i.c-records {
+		background-position: 0px -280px;
 	}
 /* icons content */
 
@@ -512,13 +524,20 @@
 		right: 15px;
 		top: 50%;
 		margin-top: -10px;
-		display: none;
-	}
-	.move-item:hover .delete,
-	.move-item:hover .edit {
-		display: block;
 	}
 	.move-item .edit {
 		right: 45px;
 	}
 /* move-item */
+
+/* common window */
+	.window .cover {
+		float: left;
+		width: 170px;
+		height: 133px;
+		overflow: hidden;
+	}
+	.content-with-cover {
+		margin-left: 190px;
+	}
+/* common window */

@@ -20,7 +20,15 @@
 
 <?php
 	Yii::app()->clientScript->registerScript("window", '
-		var obj = $(".window-' . $id . '");
-		obj.css("margin-top", "-" + (obj.height() / 2) + "px");
+		setWindow = function() {
+			var $obj = $(".window-' . $id . '");
+			$obj.find(".scroll-container").css("max-height", $(window).height() - 250);
+			$obj.css("margin-top", "-" + ($obj.height() / 2) + "px");
+		}
+
+		setWindow();
+		$(window).resize(function(){
+			setWindow();
+		});
 	');
 ?>

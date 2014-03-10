@@ -39,6 +39,9 @@ class m140113_000000_menu extends CDbMigration
 			$this->addForeignKey(
 				"menu_content_block_id", "menu_content", "block_id", "block", "id"
 			);
+			$this->createIndex(
+				"menu_content_sort", "menu_content", "sort"
+			);
 		}
 	}
 
@@ -48,6 +51,7 @@ class m140113_000000_menu extends CDbMigration
 			$this->dropForeignKey("menu_content_menu_id", "menu_content");
 			$this->dropForeignKey("menu_content_section_id", "menu_content");
 			$this->dropForeignKey("menu_content_block_id", "menu_content");
+			$this->dropIndex("menu_content_sort", "menu_content");
 			$this->dropTable("menu_content");
 		}
 

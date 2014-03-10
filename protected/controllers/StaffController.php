@@ -23,11 +23,13 @@ class StaffController extends ContentController
 	{
 		$this->windowTitle = Yii::app()->request->getQuery("name");
 
+		$model = null;
 		if (Yii::app()->request->getQuery("id")) {
 			$model = StaffGroup::model()->findByPk(Yii::app()->request->getQuery("id"));
 			$this->windowTitle .= " - " . Yii::t("staff", "Edit group");
 		} else {
 			$model = new StaffGroup;
+			$model->staff_id = Yii::app()->request->getQuery("staff_id");
 			$this->windowTitle .= " - " . Yii::t("staff", "Add group");
 		}
 
@@ -42,9 +44,19 @@ class StaffController extends ContentController
 
 	public function actionSaveGroup()
 	{
-		if (Yii::app()->request->getQuery("id")) {
-			if ($model = $this->loadModel(Yii::app()->request->getQuery("id"))) {
-				$model->saveContent();
+		$pk = StaffGroup::model()->saveGroup();
+		if ($pk) {
+			echo $this->actionWindow($pk);
+		}
+	}
+
+	public function actionDeleteGroup()
+	{
+		$pk = Yii::app()->request->getQuery("id");
+		if ($pk) {
+			$model = StaffGroup::model()->findByPk($pk);
+			if ($model) {
+				$model->delete();
 			}
 		}
 	}

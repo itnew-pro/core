@@ -13,6 +13,10 @@
  */
 class Staff extends CActiveRecord
 {
+	public $groupIds;
+
+	const SORT_STEP = 10;
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -176,5 +180,24 @@ class Staff extends CActiveRecord
 		}
 
 		return null;
+	}
+
+	public function saveContent()
+	{
+		$attributes = Yii::app()->request->getPost("Staff");
+		if ($attributes) {
+			if (!empty($attributes["groupIds"])) {
+				$sort = self::SORT_STEP;
+				foreach (explode(",", $attributes["groupIds"]) as $pk) {
+					if ($pk) {
+						if ($model = StaffGroup::model()->findByPk($pk)) {
+							$model->sort = $sort;
+							$model->save();
+							$sort += self::SORT_STEP;
+						}
+					}
+				}
+			}
+		}
 	}
 }

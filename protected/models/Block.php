@@ -20,6 +20,7 @@ class Block extends CActiveRecord
 	const TYPE_IMAGE = 2;
 	const TYPE_MENU = 3;
 	const TYPE_STAFF = 4;
+	const TYPE_RECORDS = 5;
 
 	/**
 	 * Content types
@@ -31,6 +32,7 @@ class Block extends CActiveRecord
 		self::TYPE_IMAGE => "images",
 		self::TYPE_MENU => "menu",
 		self::TYPE_STAFF => "staff",
+		self::TYPE_RECORDS => "records",
 	);
 
 	/**
