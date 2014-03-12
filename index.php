@@ -1,5 +1,5 @@
 <?php
-echo 111;
+
 $dbHost = "localhost";
 $dbUser = "itnew";
 $dbPass = "mypasS77";
