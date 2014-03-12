@@ -29,6 +29,12 @@ if (
 		define("ADMIN_PASSWORD", $array["admin_password"]);
 
 		/**
+		 * 
+		 */
+		session_start();
+		$_SESSION["siteId"] = SITE_ID;
+
+		/**
 		 * Yii protected path
 		 */
 		$protectedDir = 

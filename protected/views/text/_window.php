@@ -1,8 +1,6 @@
 <?php
 	if ($model->getEditorClass()) {
 		Yii::app()->clientScript->registerScript("textWindow", '
-
-
 			tinymce.init({
 				selector: ".tinymce",
 				plugins: [
@@ -14,7 +12,7 @@
 				toolbar2: "| responsivefilemanager | link unlink anchor | image media | forecolor backcolor  | print preview code ",
 				image_advtab: true ,
 
-				external_filemanager_path:"/static/aaa/",
+				external_filemanager_path:"/include/filemanager/",
 				filemanager_title:"Responsive Filemanager" ,
 				relative_urls: false,
 				external_plugins: { "filemanager" : "plugins/responsivefilemanager/plugin.min.js"}

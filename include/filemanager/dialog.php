@@ -648,7 +648,7 @@ $files=array_merge(array($prev_folder),array($current_folder),$sorted);
 				    }
 				}
 				
-				$mini_src = $src_thumb = "/static/1/thumbs/" . $file;
+				$mini_src = $src_thumb = "/static/" . $_SESSION["siteId"] . "/thumbs/" . $file;
 
 				$is_img=true;
 				//check if is smaller than thumb
