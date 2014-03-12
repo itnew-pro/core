@@ -1,5 +1,5 @@
 <?php
-
+echo 111;
 $dbHost = "localhost";
 $dbUser = "itnew";
 $dbPass = "mypasS77";
@@ -15,7 +15,7 @@ if (
 	$query = mysql_query("SELECT * FROM sites WHERE host = '{$host}'");
 	$array = mysql_fetch_array($query);
 	if ($array) {
-		
+
 		/**
 		 * Settings
 		 */
@@ -35,6 +35,7 @@ if (
 			__DIR__ .
 			DIRECTORY_SEPARATOR .
 			"protected";
+
 
 		/**
 		 * Yii application
@@ -66,6 +67,7 @@ if (
 			DIRECTORY_SEPARATOR .
 			"settings.php";
 		require_once($settings);
+
 			
 		require_once($yii);
 		Yii::createWebApplication($config)->run();

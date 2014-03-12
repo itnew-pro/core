@@ -92,7 +92,7 @@ return array(
 	),
 
 	"params" => array(
-		"staticDir"   => "/var/www/itnew/data/_SITES_",
+		"staticDir"   => "/var/www/vhosts/__ITnew__/__SITES__",
 		"baseUrl"     => "",
 		"siteId"      => SITE_ID,
 		"domain"      => DOMAIN,
