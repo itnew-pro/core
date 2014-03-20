@@ -294,6 +294,9 @@
 	.form-small {
 		width: 40px;
 	}
+	.form-medium {
+		width: 100px;
+	}
 	.form-internal {
 		padding: 2px 0;
 	}
@@ -537,7 +540,13 @@
 		height: 133px;
 		overflow: hidden;
 	}
-	.content-with-cover {
+	.window .content-with-cover {
 		margin-left: 190px;
+	}
+	.window .date {
+		margin-left: 20px;
+	}
+	.window .is_published {
+	
 	}
 /* common window */

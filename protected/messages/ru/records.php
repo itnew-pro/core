@@ -9,4 +9,5 @@ return array(
 	"Detailed description" => "Подробное описание",
 	"Cover" => "Обложка",
 	"Images" => "Изображения",
+	"Published" => "Опубликовано",
 );

@@ -225,9 +225,12 @@ class Images extends CActiveRecord
 		return parent::afterDelete();
 	}
 
-	public function saveContent()
+	public function saveContent($images = array())
 	{
-		if ($images = Yii::app()->request->getPost("Images")) {
+		if (!$images) {
+			$images = Yii::app()->request->getPost("Images");
+		}
+		if ($images) {
 			if (!empty($images["imageContentIds"])) {
 				$sort = 1;
 				foreach (explode(",", $images["imageContentIds"]) as $pk) {

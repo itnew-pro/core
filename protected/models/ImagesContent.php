@@ -242,6 +242,11 @@ class ImagesContent extends CActiveRecord
 		return $this->_getDir() . $this->file;
 	}
 
+	public function getViewUrl()
+	{
+		return $this->_getDir() . "view_" . $this->file;
+	}
+
 	private function _getDir()
 	{
 		return Yii::app()->params["baseUrl"] .

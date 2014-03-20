@@ -96,6 +96,8 @@
 		?>
 	</div>
 
+	<?php echo CHtml::activeHiddenField($model, "contentIds"); ?>
+
 	<?php $this->renderPartial("../content/_window_button", compact("model")); ?>
 
 <?php echo CHtml::endForm(); ?>
@@ -104,11 +106,11 @@
 	Yii::app()->clientScript->registerScript("staffWindow", '
 		$(".sortable").sortable({
 			stop: function() {
-				//var sortString = "";
-				//$(this).find(".move-item").each(function(){
-				//	sortString += $(this).data("id") + ",";
-				//});
-				//$("#Staff_groupIds").val(sortString);
+				var sortString = "";
+				$(this).find(".move-item").each(function(){
+					sortString += $(this).data("id") + ",";
+				});
+				$("#Records_contentIds").val(sortString);
 			}
 		});
 	');

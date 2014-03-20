@@ -20,6 +20,8 @@
 class Records extends CActiveRecord
 {
 
+	public $contentIds = "";
+
 	const COVER_WIDTH = 120;
 	const COVER_HEIGHT = 120;
 
@@ -68,7 +70,7 @@ class Records extends CActiveRecord
 			'structure' => array(self::BELONGS_TO, 'Structure', 'structure_id'),
 			'coverRelation' => array(self::BELONGS_TO, 'Images', 'cover'),
 			'imagesRelation' => array(self::BELONGS_TO, 'Images', 'images'),
-			'recordsContent' => array(self::HAS_MANY, 'RecordsContent', 'records_id'),
+			'recordsContent' => array(self::HAS_MANY, 'RecordsContent', 'records_id', "order" => "sort DESC"),
 			"block" => array(
 				self::HAS_ONE,
 				'Block',
@@ -348,5 +350,49 @@ class Records extends CActiveRecord
 		}
 
 		return true;
+	}
+
+	public function saveContent()
+	{
+		$records = Yii::app()->request->getPost("Records");
+		if ($records) {
+			if (!empty($records["contentIds"])) {
+				$contentIds = explode(",", $records["contentIds"]);
+				$sort = count($contentIds) * RecordsContent::SORT_STEP;
+				foreach ($contentIds as $pk) {
+					if ($pk) {
+						if ($model = RecordsContent::model()->findByPk($pk)) {
+							$model->sort = $sort;
+							$model->save();
+							$sort -= RecordsContent::SORT_STEP;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public function getCoverWidth()
+	{
+		if ($this->coverRelation && $this->coverRelation->width) {
+			return $this->coverRelation->width + 15;
+		}
+
+		return COVER_WIDTH + 15;
+	}
+
+	public function getUrl()
+	{
+		$criteria = new CDbCriteria;
+		$criteria->condition = "t.block_id = :block_id";
+		$criteria->params = array(":block_id" => $this->block->id);
+		$grid = Grid::model()->find($criteria);
+
+		$criteria = new CDbCriteria;
+		$criteria->condition = "t.structure_id = :structure_id";
+		$criteria->params = array(":structure_id" => $grid->structure_id);
+		$section = Section::model()->find($criteria);
+
+		return $section->getUrl();
 	}
 }

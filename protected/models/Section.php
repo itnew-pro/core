@@ -257,12 +257,7 @@ class Section extends CActiveRecord
 	public function getLink()
 	{
 		if ($this->seo) {
-			$url = Yii::app()->params["baseUrl"] .
-				DIRECTORY_SEPARATOR .
-				Yii::app()->language .
-				DIRECTORY_SEPARATOR .
-				$this->seo->url .
-				DIRECTORY_SEPARATOR;
+			$url = $this->getUrl();
 
 			$active = null;
 			if (Yii::app()->request->url === $url) {
@@ -283,5 +278,13 @@ class Section extends CActiveRecord
 			}
 		}
 		return parent::beforeDelete();
+	}
+
+	public function getUrl()
+	{
+		return Yii::app()->createUrl("site/index", array(
+			"language" => Yii::app()->language,
+			"section" => $this->seo->url,
+		));
 	}
 }

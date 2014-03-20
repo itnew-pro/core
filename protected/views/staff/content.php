@@ -8,7 +8,7 @@
 				</div>
 
 				<?php foreach ($group->staffContent as $staff) { ?>
-					<div class="card">
+					<div class="card default-card">
 							<div class="photo">
 								<?php if ($staff->images) { ?>
 									<?php $this->renderPartial("../images/content", array("model" => $staff->images)); ?>

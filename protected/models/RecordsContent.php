@@ -25,6 +25,11 @@
  */
 class RecordsContent extends CActiveRecord
 {
+
+	const SORT_STEP = 10;
+
+	public $maxSort = 0;
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -41,8 +46,9 @@ class RecordsContent extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
+			array("date", "length", "max" => 128),
 			array('records_id, seo_id, images, text, description', 'required'),
-			array('records_id, cover, seo_id, images, text, description, sort', 'numerical', 'integerOnly'=>true),
+			array('id, is_published, maxSort, records_id, cover, seo_id, images, text, description, sort', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, records_id, cover, date, seo_id, images, text, description, sort, is_published', 'safe', 'on'=>'search'),
@@ -75,12 +81,13 @@ class RecordsContent extends CActiveRecord
 			'id' => 'ID',
 			'records_id' => 'Records',
 			'cover' => 'Cover',
-			'date' => 'Date',
+			'date' => Yii::t("records", "Date"),
 			'seo_id' => 'Seo',
 			'images' => 'Images',
 			'text' => 'Text',
 			'description' => 'Description',
 			'sort' => 'Sort',
+			'is_published' => Yii::t("records", "Published"),
 		);
 	}
 
@@ -191,7 +198,7 @@ class RecordsContent extends CActiveRecord
 						$model->images = $images->id;
 						$model->text = $text->id;
 						$model->description = $description->id;
-						$model->sort = $this->_getNewSort();
+						$model->sort = $this->_getNewSort($record->id);
 						if ($model->save()) {
 							$id = $model->id;
 							$transactionSuccess = true;
@@ -217,9 +224,15 @@ class RecordsContent extends CActiveRecord
 		);
 	}
 
-	private function _getNewSort()
+	private function _getNewSort($records_id)
 	{
-		return 10;
+		$criteria = new CDbCriteria;
+		$criteria->select = 'MAX(t.sort) as maxSort';
+		$criteria->condition = 't.records_id = :records_id';
+		$criteria->params = array(':records_id' => $records_id);
+
+		$model = $this->find($criteria);
+		return $model['maxSort'] + self::SORT_STEP;
 	}
 
 	protected function afterDelete()
@@ -286,6 +299,77 @@ class RecordsContent extends CActiveRecord
 			if ($timestamp) {
 				return date("d.m.Y", $timestamp);
 			}
+		}
+
+		return null;
+	}
+
+	public function saveForm()
+	{
+		$cover = Yii::app()->request->getPost("Cover");
+		$recordsContent = Yii::app()->request->getPost("RecordsContent");
+		$seo = Yii::app()->request->getPost("Seo");
+		$description = Yii::app()->request->getPost("Description");
+		$images = Yii::app()->request->getPost("Images");
+		$text = Yii::app()->request->getPost("Text");
+
+		if ($recordsContent && $seo && !empty($recordsContent["id"])) {
+			$model = $this->findByPk($recordsContent["id"]);
+			if ($model) {
+				$transaction = Yii::app()->db->beginTransaction();
+
+				$model->is_published = $recordsContent["is_published"];
+				if (!empty($recordsContent["date"])) {
+					$timestamp = CDateTimeParser::parse($recordsContent["date"], "dd.MM.yyyy");
+					if ($timestamp) {
+						$model->date = date("Y-m-d H:i:s", $timestamp);
+					}
+				}
+
+				if ($model->save()) {
+					if ($model->seo) {
+						$model->seo->attributes = $seo;
+						if ($model->seo->save()) {
+							if ($text && $model->textRelation) {
+								$model->textRelation->attributes = $text;
+								$model->textRelation->save();
+							}
+
+							if ($description && $model->descriptionRelation) {
+								$model->descriptionRelation->attributes = $description;
+								$model->descriptionRelation->save();
+							}
+
+							if ($images && $model->imagesRelation) {
+								$model->imagesRelation->saveContent($images);
+							}
+
+							$transaction->commit();
+
+							return $model->records->id;
+						}
+					}
+				}
+
+				$transaction->rollback();
+			}
+		}
+
+		return 0;
+	}
+
+	public function getUrl()
+	{
+		return $this->records->getUrl() . "/" . $this->seo->url . "/";
+	}
+
+	public function getModelBySeoUrlAndRecordsId($url, $recordsId)
+	{
+		if ($url && $recordsId) {
+			$criteria = new CDbCriteria;
+			$criteria->condition = "seo.url = :url AND t.records_id = :records_id";
+			$criteria->params = array(":url" => $url, ":records_id" => $recordsId);
+			return $this->with("seo")->find($criteria);
 		}
 
 		return null;

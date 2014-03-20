@@ -11,11 +11,17 @@
 	<?php } ?>
 
 	<div class="<?php if ($model->records->cover) { ?>content-with-cover<?php } ?>">
-		<?php echo CHtml::activeCheckbox($model, "is_published", array("class" => "checkbox")); ?>
-		<?php echo CHtml::activeLabel($model, "is_published", array("class" => "checkbox-label")); ?>
+		<span class="is_published">
+			<?php echo CHtml::activeCheckbox($model, "is_published", array("class" => "checkbox")); ?>
+			<?php echo CHtml::activeLabel($model, "is_published", array("class" => "checkbox-label")); ?>
+		</span>
 
-		<?php echo CHtml::activeLabel($model, "date"); ?>
-		<?php echo CHtml::activeTextField($model, "date", array("value" => $model->getWindowDate())); ?>
+		<span class="date">
+			<?php echo CHtml::activeLabel($model, "date"); ?>
+			<?php echo CHtml::activeTextField($model, "date", array("value" => $model->getWindowDate(), "class" => "blue-form form-medium")); ?>
+		</span>
+
+		<?php echo CHtml::activeHiddenField($model, "id"); ?>
 
 		<?php $this->renderPartial("../partials/_seo", array("model" => $model->getSeo())); ?>
 
@@ -33,11 +39,10 @@
 		"button" => $model->id ? "Update" : "Add",
 		"action" => "saveForm",
 		"success" => '
-			alert(data);
-			//hideWindow("records-form");
-			//hideWindow("records");
-			//$("body").append(data);
-			//showWindow("records");
+			hideWindow("records-form");
+			hideWindow("records");
+			$("body").append(data);
+			showWindow("records");
 		',
 	)); ?>
 

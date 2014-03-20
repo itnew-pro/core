@@ -84,6 +84,15 @@
 		-moz-transition: background 0.3s ease;
 		transition: background 0.3s ease;
 	}
+	.default-card {
+		margin: 2px 3px;
+		padding: 15px;
+		border-radius: 10px;
+	}
+	.default-card:hover {
+		box-shadow: 1px 1px 2px 1px rgba(177, 177, 177, 0.5);
+		background: #f3f3f3;
+	}
 /* common */
 
 /* icons */
@@ -463,16 +472,6 @@
 	.content-staff .group-title {
 		font-size: 22px;
 	}
-	.content-staff .card {
-		margin: 2px 3px;
-		padding: 15px;
-		border-radius: 10px;
-	}
-	.content-staff .card:hover {
-		background: #fcfcfc;
-		box-shadow: 1px 1px 2px 1px rgba(177, 177, 177, 0.5);
-		background: #f3f3f3;
-	}
 	.content-staff .card .photo {
 		float: left;
 		width: 100px;
@@ -495,3 +494,18 @@
 		border-bottom: 0;
 	}
 /* images */
+
+/* records */
+	.content-records {
+		padding: 3px;
+	}
+	.content-records .card-container-cover {
+		margin-left: 140px;
+	}
+	.content-records .card .cover {
+		float: left;
+	}
+	.content-records .card .cover a {
+		border-bottom: 0;
+	}
+/* records */

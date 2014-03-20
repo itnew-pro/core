@@ -90,6 +90,9 @@ class RecordsController extends ContentController
 
 	public function actionSaveForm()
 	{
-		print_r($_POST);
+		$id = RecordsContent::model()->saveForm();
+		if ($id) {
+			echo $this->actionWindow($id);
+		}
 	}
 }
