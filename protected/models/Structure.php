@@ -4,12 +4,13 @@
  * This is the model class for table "structure".
  *
  * The followings are the available columns in table 'structure':
- * @property integer $id
- * @property integer $size
- * @property integer $width
+ *
+ * @property integer   $id
+ * @property integer   $size
+ * @property integer   $width
  *
  * The followings are the available model relations:
- * @property Grid[] $grid
+ * @property Grid[]    $grid
  * @property Section[] $sections
  */
 class Structure extends CActiveRecord
@@ -19,7 +20,7 @@ class Structure extends CActiveRecord
 	 * Default grid's size
 	 */
 	const DEFAULT_SIZE = 64;
-	
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -37,10 +38,10 @@ class Structure extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('width', 'required'),
-			array('width', 'numerical', 'integerOnly'=>true),
+			array('width', 'numerical', 'integerOnly' => true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, width', 'safe', 'on'=>'search'),
+			array('id, width', 'safe', 'on' => 'search'),
 		);
 	}
 
@@ -52,7 +53,7 @@ class Structure extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'grid' => array(self::HAS_MANY, 'Grid', 'structure_id', "order" => "grid.line"),
+			'grid'     => array(self::HAS_MANY, 'Grid', 'structure_id', "order" => "grid.line"),
 			'sections' => array(self::HAS_MANY, 'Section', 'structure_id'),
 		);
 	}
@@ -63,7 +64,7 @@ class Structure extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
+			'id'    => 'ID',
 			'width' => 'Width',
 		);
 	}
@@ -84,23 +85,25 @@ class Structure extends CActiveRecord
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
-		$criteria=new CDbCriteria;
+		$criteria = new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('width',$this->width);
+		$criteria->compare('id', $this->id);
+		$criteria->compare('width', $this->width);
 
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+			'criteria' => $criteria,
 		));
 	}
 
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
+	 *
 	 * @param string $className active record class name.
+	 *
 	 * @return Structure the static model class
 	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
@@ -151,7 +154,7 @@ class Structure extends CActiveRecord
 
 	public static function isCss()
 	{
-		$file = 
+		$file =
 			__DIR__ .
 			DIRECTORY_SEPARATOR .
 			".." .
@@ -170,7 +173,7 @@ class Structure extends CActiveRecord
 
 	public static function isJs()
 	{
-		$file = 
+		$file =
 			__DIR__ .
 			DIRECTORY_SEPARATOR .
 			".." .
@@ -252,23 +255,23 @@ class Structure extends CActiveRecord
 			$borders[] = $this->size;
 		}
 
-		$blocks = array();
-
 		for ($i = 0; $i < count($borders); $i = $i + 2) {
-			$containerWidth = ($borders[$i+1] - $borders[$i]) / $this->size * 100;
+			$containerWidth = ($borders[$i + 1] - $borders[$i]) / $this->size * 100;
 			if ($i == 0) {
-				$marginLeft = $borders[$i] / $this->size * 100;
+				$marginLeftContainer = $borders[$i] / $this->size * 100;
 			} else {
-				$marginLeft = ($borders[$i] - $borders[$i - 1]) / $this->size * 100;
+				$marginLeftContainer = ($borders[$i] - $borders[$i - 1]) / $this->size * 100;
 			}
+
+			$blocks = array();
 
 			$findIn = array();
 			foreach ($grids as $grid) {
 				if (
 					($grid->left >= $borders[$i])
 					&& (
-						empty($borders[$i+1])
-						|| (($grid->left + $grid->width) <= $borders[$i+1])
+						empty($borders[$i + 1])
+						|| (($grid->left + $grid->width) <= $borders[$i + 1])
 					)
 				) {
 					$findIn[] = $grid->id;
@@ -278,18 +281,18 @@ class Structure extends CActiveRecord
 				$containerGrids = Grid::model()->getContainerGrids($findIn);
 				if ($containerGrids) {
 					foreach ($containerGrids as $grid) {
-						$blockWidth = $grid->width / ($borders[$i+1] - $borders[$i]) * 100;
-						$marginLeft = ($grid->left - $borders[$i]) * 100 / ($borders[$i+1] - $borders[$i]);
+						$blockWidth = $grid->width / ($borders[$i + 1] - $borders[$i]) * 100;
+						$marginLeft = ($grid->left - $borders[$i]) * 100 / ($borders[$i + 1] - $borders[$i]);
 						$blocks[] = array(
 							"width" => $blockWidth,
-							"left" => $marginLeft,
+							"left"  => $marginLeft,
 							"model" => $grid->block
 						);
 					}
 				}
 			}
 
-			$tree[] = array("width" => $containerWidth, "left" => $marginLeft, "blocks" => $blocks);
+			$tree[] = array("width" => $containerWidth, "left" => $marginLeftContainer, "blocks" => $blocks);
 		}
 
 		return $tree;
