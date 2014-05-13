@@ -123,12 +123,23 @@ class Block extends CActiveRecord
 		return parent::model($className);
 	}
 
-	public function getHtml()
+	public function getContentModel()
+	{
+		$modelName = ucfirst($this->getType());
+		$model = new $modelName;
+		if ($this->content_id) {
+			return $model->findByPk($this->content_id);
+		}
+
+		return null;
+	}
+
+	public function getType()
 	{
 		if (!empty($this->types[$this->type])) {
-			list($controller) = Yii::app()->createController($this->types[$this->type]);
-			return $controller->getContent($this->content_id);
+			return $this->types[$this->type];
 		}
+
 		return null;
 	}
 

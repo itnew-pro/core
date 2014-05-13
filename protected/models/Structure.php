@@ -186,4 +186,112 @@ class Structure extends CActiveRecord
 
 		return false;
 	}
+
+	public function getLines()
+	{
+		$list = array();
+
+		foreach ($this->grid as $grid) {
+			$list[$grid->line][] = $grid;
+		}
+
+		return $list;
+	}
+
+	public function getWidth()
+	{
+		$width = "100%";
+
+		if ($this->width) {
+			$width = "{$this->width}px";
+		}
+
+		return $width;
+	}
+
+	public function getMargin()
+	{
+		$margin = "0";
+
+		if ($this->width) {
+			$margin = "0 auto";
+		}
+
+		return $margin;
+	}
+
+	/**
+	 * Получает дерево для линии
+	 *
+	 * @param Grid[] $grids массив из ячеек
+	 *
+	 * @return string[]
+	 */
+	public function getLineTree($grids)
+	{
+		$tree = array();
+
+		$lineFlags = array();
+		for ($i = 0; $i < $this->size; $i++) {
+			$lineFlags[$i] = 0;
+		}
+		foreach ($grids as $grid) {
+			for ($i = $grid->left; $i < ($grid->left + $grid->width); $i++) {
+				$lineFlags[$i] = 1;
+			}
+		}
+		$flag = 0;
+		$borders = array();
+		foreach ($lineFlags as $key => $value) {
+			if ($flag != $value) {
+				$flag = $value;
+				$borders[] = $key;
+			}
+		}
+		if (count($borders) % 2) {
+			$borders[] = $this->size;
+		}
+
+		$blocks = array();
+
+		for ($i = 0; $i < count($borders); $i = $i + 2) {
+			$containerWidth = ($borders[$i+1] - $borders[$i]) / $this->size * 100;
+			if ($i == 0) {
+				$marginLeft = $borders[$i] / $this->size * 100;
+			} else {
+				$marginLeft = ($borders[$i] - $borders[$i - 1]) / $this->size * 100;
+			}
+
+			$findIn = array();
+			foreach ($grids as $grid) {
+				if (
+					($grid->left >= $borders[$i])
+					&& (
+						empty($borders[$i+1])
+						|| (($grid->left + $grid->width) <= $borders[$i+1])
+					)
+				) {
+					$findIn[] = $grid->id;
+				}
+			}
+			if ($findIn) {
+				$containerGrids = Grid::model()->getContainerGrids($findIn);
+				if ($containerGrids) {
+					foreach ($containerGrids as $grid) {
+						$blockWidth = $grid->width / ($borders[$i+1] - $borders[$i]) * 100;
+						$marginLeft = ($grid->left - $borders[$i]) * 100 / ($borders[$i+1] - $borders[$i]);
+						$blocks[] = array(
+							"width" => $blockWidth,
+							"left" => $marginLeft,
+							"model" => $grid->block
+						);
+					}
+				}
+			}
+
+			$tree[] = array("width" => $containerWidth, "left" => $marginLeft, "blocks" => $blocks);
+		}
+
+		return $tree;
+	}
 }

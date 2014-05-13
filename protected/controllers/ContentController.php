@@ -109,7 +109,7 @@ class ContentController extends CController
 	}
 
 	/**
-	 * Получает html-код панели
+	 * Получает html-код контента
 	 *
 	 * @param int $pk идентификатор модели
 	 *
