@@ -1,20 +1,19 @@
 <?php
 
 /**
- * Version class file.
+ * Файл класса Version.
  *
- * Check the latest version.
- * Update the DB and the user's files and folders.
+ * Проверяет текущую версию ядра и применяет ее к данному сайту.
  *
- * @author Mikhail Vasilyev <mail@itnew.pro>
- * @link http://www.itnew.pro/
- * @copyright 2014-3014 ITnew
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package components
  */
 class Version extends CComponent
 {
 
 	/**
-	 * Verification and upgrade
+	 * Производит проверку и обновление до текущей версии
 	 *
 	 * @return void
 	 */
@@ -27,13 +26,13 @@ class Version extends CComponent
 
 			$files = array();
 			if ($handle = opendir($dir)) {
-				while (false !== ($file = readdir($handle))) { 
+				while (false !== ($file = readdir($handle))) {
 					if ($file != "." && $file != "..") {
 						$time = CDateTimeParser::parse(substr($file, 1, 13), "yyMMdd_HHmmss");
 						$files[$time] = $file;
-					} 
+					}
 				}
-				closedir($handle); 
+				closedir($handle);
 			}
 
 			if ($files) {
@@ -41,19 +40,21 @@ class Version extends CComponent
 
 				$migrationsDown = array();
 				$migrationsUp = array();
-			
+
 				foreach ($files as $time => $file) {
 					if ($time > $migrateTimes["to"]) {
 						$migrationsDown[$time] = $file;
-					} else if ($time > $migrateTimes["from"]) {
-						$migrationsUp[$time] = $file;
+					} else {
+						if ($time > $migrateTimes["from"]) {
+							$migrationsUp[$time] = $file;
+						}
 					}
 				}
 
 				if ($migrationsDown) {
 					krsort($migrationsDown);
 					foreach ($migrationsDown as $file) {
-						require ($dir . DIRECTORY_SEPARATOR . $file);
+						require($dir . DIRECTORY_SEPARATOR . $file);
 						$className = substr($file, 0, -4);
 						$class = new $className;
 						$class->safeDown();
@@ -63,7 +64,7 @@ class Version extends CComponent
 				if ($migrationsUp) {
 					ksort($migrationsUp);
 					foreach ($migrationsUp as $file) {
-						require ($dir . DIRECTORY_SEPARATOR . $file);
+						require($dir . DIRECTORY_SEPARATOR . $file);
 						$className = substr($file, 0, -4);
 						$class = new $className;
 						$class->safeUp();
@@ -73,10 +74,15 @@ class Version extends CComponent
 				Yii::app()->db->schema->refresh();
 
 				echo "</div>";
-			}			
+			}
 		}
 	}
 
+	/**
+	 * Получает диапазон времени для непримененных миграций
+	 *
+	 * @return string[]
+	 */
 	private function _getMigrateTimes()
 	{
 		$from = 0;

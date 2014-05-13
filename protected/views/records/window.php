@@ -1,117 +1,122 @@
 <?php echo CHtml::form(); ?>
 
 	<div class="sortable">
-		<?php if ($model->recordsContent) { foreach ($model->recordsContent as $record) { ?>
-			<div class="move-item" data-id="<?php echo $record->id; ?>" id="record-<?php echo $record->id; ?>">
+		<?php if ($model->recordsContent) {
+			foreach ($model->recordsContent as $record) { ?>
+				<div class="move-item" data-id="<?php echo $record->id; ?>" id="record-<?php echo $record->id; ?>">
 
-				<?php
+					<?php
 					echo CHtml::ajaxLink(
 						$record->seo->name,
 						$this->createUrl(
 							"ajax/index",
 							array(
 								"controller" => "records",
-								"action" => "windowForm",
-								"language" => Yii::app()->language,
-								"id" => $record->id,
+								"action"     => "windowForm",
+								"language"   => Yii::app()->language,
+								"id"         => $record->id,
 							)
-						), 
+						),
 						array(
 							"beforeSend" => 'function(){
 
 							}',
-							"success" => 'function(data) {
+							"success"    => 'function(data) {
 								$("body").append(data);
 								showWindow("records-form");
 							}',
 						),
 						array(
 							"class" => "dotted",
-							"id" => uniqid(),
-							"live" => false,
+							"id"    => uniqid(),
+							"live"  => false,
 						)
 					);
-				?>
+					?>
 
-				<?php
+					<?php
 					echo CHtml::ajaxLink(
 						"<i class=\"close\"></i>",
 						$this->createUrl(
 							"ajax/index",
 							array(
 								"controller" => "records",
-								"action" => "deleteRecordsContent",
-								"language" => Yii::app()->language,
-								"id" => $record->id,
+								"action"     => "deleteRecordsContent",
+								"language"   => Yii::app()->language,
+								"id"         => $record->id,
 							)
-						), 
+						),
 						array(
 							"beforeSend" => 'function(){
 
 							}',
-							"success" => 'function(data) {
+							"success"    => 'function(data) {
 								$(".window #record-' . $record->id . '").remove();
 							}',
 						),
 						array(
-							"class" => "none-decoration delete",
-							"id" => uniqid(),
-							"live" => false,
+							"class"   => "none-decoration delete",
+							"id"      => uniqid(),
+							"live"    => false,
 							"onclick" => "if (!confirm('Восстановить будет невозможно! \\r\\n Вы действительно хотите удалить безвозвратно?')){return;}",
 						)
 					);
-				?>
-			</div>
-		<?php } } ?>
+					?>
+				</div>
+			<?php }
+		} ?>
 	</div>
 
 	<div class="window-bottom">
 		<?php
-			echo CHtml::ajaxLink(
-				Yii::t("common", "Add"),
-				$this->createUrl(
-					"ajax/index",
-					array(
-						"controller" => "records",
-						"action"     => "windowAdd",
-						"language"   => Yii::app()->language,
-						"id"         => $model->id,
-					)
-				), 
+		echo CHtml::ajaxLink(
+			Yii::t("common", "Add"),
+			$this->createUrl(
+				"ajax/index",
 				array(
-					"beforeSend" => 'function(){
+					"controller" => "records",
+					"action"     => "windowAdd",
+					"language"   => Yii::app()->language,
+					"id"         => $model->id,
+				)
+			),
+			array(
+				"beforeSend" => 'function(){
 						
 					}',
-					"success" => 'function(data) {
+				"success"    => 'function(data) {
 						$("body").append(data);
 						showWindow("records-add");
 					}',
-				),
-				array(
-					"class" => "link dotted",
-					"id" => uniqid(),
-					"live" => false,
-				)
-			);
+			),
+			array(
+				"class" => "link dotted",
+				"id"    => uniqid(),
+				"live"  => false,
+			)
+		);
 		?>
 	</div>
 
-	<?php echo CHtml::activeHiddenField($model, "contentIds"); ?>
+<?php echo CHtml::activeHiddenField($model, "contentIds"); ?>
 
-	<?php $this->renderPartial("../content/_window_button", compact("model")); ?>
+<?php $this->renderPartial("../content/_window_button", compact("model")); ?>
 
 <?php echo CHtml::endForm(); ?>
 
 <?php
-	Yii::app()->clientScript->registerScript("staffWindow", '
-		$(".sortable").sortable({
-			stop: function() {
-				var sortString = "";
-				$(this).find(".move-item").each(function(){
-					sortString += $(this).data("id") + ",";
-				});
-				$("#Records_contentIds").val(sortString);
-			}
-		});
-	');
+Yii::app()->clientScript->registerScript(
+	"staffWindow",
+	'
+			$(".sortable").sortable({
+				stop: function() {
+					var sortString = "";
+					$(this).find(".move-item").each(function(){
+						sortString += $(this).data("id") + ",";
+					});
+					$("#Records_contentIds").val(sortString);
+				}
+			});
+		'
+);
 ?>

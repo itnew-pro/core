@@ -1,7 +1,8 @@
 <div class="section-list">
-	<?php if ($sections) { foreach ($sections as $section) { ?>
-		<div class="section-item section-<?php echo $section->id; ?>">
-			<?php
+	<?php if ($sections) {
+		foreach ($sections as $section) { ?>
+			<div class="section-item section-<?php echo $section->id; ?>">
+				<?php
 				echo $section->seo->name;
 
 				echo CHtml::ajaxButton(
@@ -10,9 +11,9 @@
 						"ajax/index",
 						array(
 							"controller" => "section",
-							"action" => "settings",
-							"language" => Yii::app()->language,
-							"id" => $section->id,
+							"action"     => "settings",
+							"language"   => Yii::app()->language,
+							"id"         => $section->id,
 						)
 					),
 					array(
@@ -20,7 +21,7 @@
 							$("#panel .section-' . $section->id . '")
 								.find(".loader-section-settings").show();
 						}',
-						"success" => 'function(data) {
+						"success"    => 'function(data) {
 							$("#panel .section-' . $section->id . '")
 								.find(".loader-section-settings").hide();
 							$("#subpanel").remove();
@@ -34,23 +35,24 @@
 					),
 					array(
 						"class" => "settings",
-						"id" => uniqid(),
-						"live" => false,
+						"id"    => uniqid(),
+						"live"  => false,
 					)
 				);
 
 				echo Html::loader("section-settings");
 
 				if ($section->main) {
-			?>
+					?>
 
-			<i class="home"></i>
+					<i class="home"></i>
 
-			<?php } ?>
-		</div>
-	<?php } } ?>
+				<?php } ?>
+			</div>
+		<?php }
+	} ?>
 </div>
 
-<?php 
-	$this->renderPartial("../partials/_add_panel");
+<?php
+$this->renderPartial("../partials/_add_panel");
 ?>

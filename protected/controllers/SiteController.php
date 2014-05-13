@@ -1,7 +1,9 @@
 <?php
 
 /**
- * SiteController class file.
+ * Файл класса SiteController.
+ *
+ * Главный контроллер. Выводит страницу на экран.
  *
  * @author  Mikhail Vasilyev <mail@itnew.pro>
  * @link    http://www.itnew.pro/
@@ -11,13 +13,12 @@ class SiteController extends CController
 {
 
 	/**
-	 * Displays the page to the screen
+	 * Выводит страницу на экран
 	 *
 	 * @return void
 	 */
 	public function actionIndex()
 	{
-		//phpinfo();
 		$version = new Version;
 		$version->update();
 		if (Yii::app()->db->schema->getTable("site")) {

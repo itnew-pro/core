@@ -1,7 +1,9 @@
 <?php
 
 /**
- * PanelController class file.
+ * Файл класса SectionController.
+ *
+ * Контроллер для работы с разделами
  *
  * @author  Mikhail Vasilyev <mail@itnew.pro>
  * @link    http://www.itnew.pro/
@@ -11,37 +13,37 @@ class SectionController extends CController
 {
 
 	/**
-	 * Panel type.
+	 * Тип панели.
 	 *
-	 * @return string
+	 * @var string
 	 */
 	public $panelType = "section";
 
 	/**
-	 * Panel title.
+	 * Заголовок панели.
 	 *
-	 * @return string
+	 * @var string
 	 */
 	public $panelTitle = "Sections";
 
 	/**
-	 * Panel description.
+	 * Описание панели.
 	 *
-	 * @return string
+	 * @var string
 	 */
 	public $panelDescription = "";
 
 	/**
-	 * Subpanel title.
+	 * Заголовок субпанели.
 	 *
-	 * @return string
+	 * @var string
 	 */
 	public $subpanelTitle = "Edit section";
 
 	/**
-	 * Returns the filter configurations.
+	 * Получает фильтр настроек.
 	 *
-	 * @return string[]
+	 * @var string[]
 	 */
 	public function filters()
 	{
@@ -51,7 +53,7 @@ class SectionController extends CController
 	}
 
 	/**
-	 * Returns the access rules for this controller.
+	 * Получает права доступа для данного контроллера.
 	 *
 	 * @return string[]
 	 */
@@ -66,11 +68,12 @@ class SectionController extends CController
 	}
 
 	/**
-	 * Section's panel
+	 * Панель управления
+	 * Выводит на экран или получает html-код
 	 *
-	 * @param bool $return parameter for render
+	 * @param bool $return получить ли html-код (в противном случае выводит на экран)
 	 *
-	 * @return void
+	 * @return string|void
 	 */
 	public function actionPanel($return = false)
 	{
@@ -89,7 +92,7 @@ class SectionController extends CController
 	}
 
 	/**
-	 * Section's subpanel
+	 * Субпанель настроек
 	 *
 	 * @return void
 	 */
@@ -112,8 +115,8 @@ class SectionController extends CController
 	}
 
 	/**
-	 * Save subpanel form
-	 * Gets error class, panel content and new sections seo
+	 * Сохраняет настройки
+	 * Получает css-класс ошибки
 	 *
 	 * @return string
 	 */
@@ -129,12 +132,17 @@ class SectionController extends CController
 		$json = array(
 			"error" => $errorClass,
 			"panel" => $this->actionPanel(true),
-			"seo" => $seo,
+			"seo"   => $seo,
 		);
 
 		echo json_encode($json);
 	}
 
+	/**
+	 * Удаляет раздел
+	 *
+	 * @return void
+	 */
 	public function actionDelete()
 	{
 		if (Yii::app()->request->getQuery("id")) {
@@ -143,10 +151,14 @@ class SectionController extends CController
 				$model->delete();
 				echo $this->actionPanel(true);
 			}
-			
 		}
 	}
 
+	/**
+	 * Дублирует раздел
+	 *
+	 * @return void
+	 */
 	public function actionDuplicate()
 	{
 		if (Yii::app()->request->getQuery("id")) {

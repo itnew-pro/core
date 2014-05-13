@@ -1,7 +1,10 @@
 <?php
 
 /**
- * ContentController class file.
+ * Файл класса ContentController.
+ *
+ * Является базовым классом для панели управления контентом.
+ * Является как классом-родителем, так и самостоятельным классом.
  *
  * @author  Mikhail Vasilyev <mail@itnew.pro>
  * @link    http://www.itnew.pro/
@@ -11,66 +14,56 @@ class ContentController extends CController
 {
 
 	/**
-	 * Panel type.
+	 * Тип панели.
 	 *
 	 * @var string
 	 */
 	public $panelType = "content";
 
 	/**
-	 * Panel title.
+	 * Заголовок панели.
 	 *
 	 * @var string
 	 */
 	public $panelTitle = "";
 
 	/**
-	 * Panel description.
+	 * Описание панели.
 	 *
 	 * @var string
 	 */
 	public $panelDescription = "";
 
 	/**
-	 * Subpanel title.
+	 * Заголовок субпанели.
 	 *
 	 * @var string
 	 */
 	public $subpanelTitle = "";
 
 	/**
-	 * Window title.
+	 * Заголовок окна.
 	 *
 	 * @var string
 	 */
 	public $windowTitle = "";
 
 	/**
-	 * Window level.
+	 * Уровень окна.
 	 *
 	 * @var int
 	 */
 	public $windowLevel = 1;
 
 	/**
-	 * Window type.
+	 * Тип окна.
 	 *
 	 * @var string
 	 */
 	public $windowType = "";
 
-	protected function loadModel($pk = false)
-	{
-		$modelName = ucfirst($this->id);
-		$model = new $modelName;
-		if ($pk) {
-			$model = $model->findByPk($pk);
-		}
-		return $model;
-	}
-
 	/**
-	 * Returns the filter configurations.
+	 * Получает фильтр настроек.
 	 *
 	 * @var string[]
 	 */
@@ -82,7 +75,7 @@ class ContentController extends CController
 	}
 
 	/**
-	 * Returns the access rules for this controller.
+	 * Получает права доступа для данного контроллера.
 	 *
 	 * @return string[]
 	 */
@@ -98,11 +91,29 @@ class ContentController extends CController
 	}
 
 	/**
-	 * Gets content
+	 * Получает модель данного контроллера
 	 *
-	 * @param int $pk
+	 * @param int $pk идентификатор модели
 	 *
-	 * @return string
+	 * @return object
+	 */
+	protected function loadModel($pk = 0)
+	{
+		$modelName = ucfirst($this->id);
+		$model = new $modelName;
+		if ($pk) {
+			$model = $model->findByPk($pk);
+		}
+
+		return $model;
+	}
+
+	/**
+	 * Получает html-код панели
+	 *
+	 * @param int $pk идентификатор модели
+	 *
+	 * @return string|null
 	 */
 	public function getContent($pk)
 	{
@@ -118,11 +129,12 @@ class ContentController extends CController
 	}
 
 	/**
-	 * Panel
+	 * Панель управления
+	 * Выводит на экран или получает html-код
 	 *
-	 * @param bool $return parameter for render
+	 * @param bool $return получить ли html-код (в противном случае выводит на экран)
 	 *
-	 * @return void
+	 * @return string|void
 	 */
 	public function actionPanel($return = false)
 	{
@@ -141,11 +153,14 @@ class ContentController extends CController
 	}
 
 	/**
-	 * Content panel
+	 * Панель управления блоков одной тематики
+	 * Выводит на экран или получает html-код
 	 *
-	 * @param bool $return parameter for render
+	 * @param bool   $return      получить ли html-код (в противном случае выводит на экран)
+	 * @param string $title       заголовок
+	 * @param string $description описание
 	 *
-	 * @return void
+	 * @return string|void
 	 */
 	public function actionContentPanel($return = false, $title = "", $description = "")
 	{
@@ -164,11 +179,14 @@ class ContentController extends CController
 	}
 
 	/**
-	 * Window
+	 * Окно
+	 * Выводит на экран или получает html-код
 	 *
-	 * @return void
+	 * @param int $pk идентификатор модели
+	 *
+	 * @return string|void|null
 	 */
-	public function actionWindow($pk = false)
+	public function actionWindow($pk = 0)
 	{
 		$return = true;
 		if (!$pk) {
@@ -184,10 +202,12 @@ class ContentController extends CController
 				return $this->render("window", compact("model"), $return);
 			}
 		}
+
+		return null;
 	}
 
 	/**
-	 * Update content
+	 * Сохраняет модель в окне
 	 *
 	 * @return void
 	 */
@@ -201,7 +221,7 @@ class ContentController extends CController
 	}
 
 	/**
-	 * Settings
+	 * Субпанель настроек
 	 *
 	 * @return void
 	 */
@@ -222,7 +242,7 @@ class ContentController extends CController
 	}
 
 	/**
-	 * Saves settings
+	 * Сохраняет настройки
 	 *
 	 * @return void
 	 */
@@ -239,7 +259,7 @@ class ContentController extends CController
 	}
 
 	/**
-	 * Delete
+	 * Удаляет модель
 	 *
 	 * @return void
 	 */
@@ -254,7 +274,7 @@ class ContentController extends CController
 	}
 
 	/**
-	 * Duplicate
+	 * Дублирует модель
 	 *
 	 * @return void
 	 */

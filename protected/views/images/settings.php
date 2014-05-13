@@ -1,7 +1,7 @@
 <?php echo CHtml::form(); ?>
 
-	<?php $this->renderPartial("../partials/_delete_duplicate", compact("model")); ?>
-	<?php $this->renderPartial("../content/_block_name", compact("model")); ?>
+<?php $this->renderPartial("../partials/_delete_duplicate", compact("model")); ?>
+<?php $this->renderPartial("../content/_block_name", compact("model")); ?>
 
 	<div class="form-block">
 		<div class="form-internal">
@@ -17,7 +17,8 @@
 	</div>
 
 	<div class="form-block">
-		<?php $imageUniqId = uniqid(); echo CHtml::activeLabel($model, "view"); ?>
+		<?php $imageUniqId = uniqid();
+		echo CHtml::activeLabel($model, "view"); ?>
 		<?php echo CHtml::activeDropDownList($model, "view", $model->getViewList(), array("id" => $imageUniqId)); ?>
 	</div>
 
@@ -34,14 +35,16 @@
 		</div>
 	</div>
 
-	<?php $this->renderPartial("../content/_save_settings", compact("model")); ?>
+<?php $this->renderPartial("../content/_save_settings", compact("model")); ?>
 
 <?php echo CHtml::endForm(); ?>
 
 <?php
-	Yii::app()->clientScript->registerScript("imageSettings", '
-		showImageStyleParams();
-		$("#'. $imageUniqId .'").change(function() {
+Yii::app()->clientScript->registerScript(
+	"imageSettings",
+	'
+			showImageStyleParams();
+			$("#' . $imageUniqId . '").change(function() {
 			showImageStyleParams();
 		});
 		
@@ -53,5 +56,6 @@
 				$(".form-thumb-' . $imageUniqId . '").removeClass("hide");
 			}
 		}
-	');
+	'
+);
 ?>

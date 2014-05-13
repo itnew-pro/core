@@ -1,15 +1,17 @@
 <?php echo CHtml::form(); ?>
 
-	<?php $this->renderPartial("../partials/_seo", array("model" => $model->getSeo())); ?>
+<?php $this->renderPartial("../partials/_seo", array("model" => $model->getSeo())); ?>
 
-	<?php echo CHtml::activeHiddenField($model, "records_id"); ?>
+<?php echo CHtml::activeHiddenField($model, "records_id"); ?>
 
-	<?php $this->renderPartial("../content/_window_button", array(
-		"model" => $model,
-		"button" => "Add",
+<?php $this->renderPartial(
+	"../content/_window_button",
+	array(
+		"model"    => $model,
+		"button"   => "Add",
 		"dataType" => "JSON",
-		"action" => "saveAdd",
-		"success" => '
+		"action"   => "saveAdd",
+		"success"  => '
 			if (data["errorClass"]) {
 				$(".window-records-add ." + data["errorClass"]).show();
 			} else {
@@ -21,6 +23,7 @@
 				showWindow("records");
 			}
 		',
-	)); ?>
+	)
+); ?>
 
 <?php echo CHtml::endForm(); ?>

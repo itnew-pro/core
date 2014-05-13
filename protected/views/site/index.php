@@ -1,1 +1,5 @@
-<?php if ($model) { echo Grid::model()->getHtml($model); } ?>
+<?php
+if ($model) {
+	echo Grid::model()->getHtml($model);
+}
+?>

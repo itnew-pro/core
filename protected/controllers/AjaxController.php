@@ -1,7 +1,9 @@
 <?php
 
 /**
- * AjaxController class file.
+ * Файл класса AjaxController.
+ *
+ * Обрабатывает все ajax-запросы
  *
  * @author  Mikhail Vasilyev <mail@itnew.pro>
  * @link    http://www.itnew.pro/
@@ -11,13 +13,13 @@ class AjaxController extends CController
 {
 
 	/**
-	 * Main action
+	 * Обрабатывает ajax-запрос
+	 * Проверяет необходимые входные данные и передает действие соответствующему контроллеру
 	 *
 	 * @return void
 	 */
 	public function actionIndex()
 	{
-		//sleep(2);
 		if (Yii::app()->request->isAjaxRequest) {
 
 			if (
@@ -33,5 +35,4 @@ class AjaxController extends CController
 			}
 		}
 	}
-
 }

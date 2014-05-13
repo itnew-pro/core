@@ -1,8 +1,22 @@
 <?php
 
+/**
+ * Файл класса m140304_000000_records.
+ *
+ * Миграция для записей
+ *
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package migrations
+ */
 class m140304_000000_records extends CDbMigration
 {
 
+	/**
+	 * Применяет миграцию в трансакции
+	 *
+	 * @return bool
+	 */
 	public function safeUp()
 	{
 		if (!Yii::app()->db->schema->getTable("records")) {
@@ -19,15 +33,9 @@ class m140304_000000_records extends CDbMigration
 				"ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci"
 			);
 
-			$this->addForeignKey(
-				"records_cover", "records", "cover", "images", "id"
-			);
-			$this->addForeignKey(
-				"records_images", "records", "images", "images", "id"
-			);
-			$this->addForeignKey(
-				"records_structure_id", "records", "structure_id", "structure", "id"
-			);
+			$this->addForeignKey("records_cover", "records", "cover", "images", "id");
+			$this->addForeignKey("records_images", "records", "images", "images", "id");
+			$this->addForeignKey("records_structure_id", "records", "structure_id", "structure", "id");
 		}
 
 		if (!Yii::app()->db->schema->getTable("records_clone")) {
@@ -45,9 +53,7 @@ class m140304_000000_records extends CDbMigration
 				"ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci"
 			);
 
-			$this->addForeignKey(
-				"records_clone_records_id", "records_clone", "records_id", "records", "id"
-			);
+			$this->addForeignKey("records_clone_records_id", "records_clone", "records_id", "records", "id");
 		}
 
 		if (!Yii::app()->db->schema->getTable("records_content")) {
@@ -68,30 +74,21 @@ class m140304_000000_records extends CDbMigration
 				"ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci"
 			);
 
-			$this->addForeignKey(
-				"records_content_records_id", "records_content", "records_id", "records", "id"
-			);
-			$this->addForeignKey(
-				"records_content_cover", "records_content", "cover", "images", "id"
-			);
-			$this->addForeignKey(
-				"records_content_seo_id", "records_content", "seo_id", "seo", "id"
-			);
-			$this->addForeignKey(
-				"records_content_images", "records_content", "images", "images", "id"
-			);
-			$this->addForeignKey(
-				"records_content_text", "records_content", "text", "text", "id"
-			);
-			$this->addForeignKey(
-				"records_content_description", "records_content", "description", "text", "id"
-			);
-			$this->createIndex(
-				"records_content_sort", "records_content", "sort"
-			);
+			$this->addForeignKey("records_content_records_id", "records_content", "records_id", "records", "id");
+			$this->addForeignKey("records_content_cover", "records_content", "cover", "images", "id");
+			$this->addForeignKey("records_content_seo_id", "records_content", "seo_id", "seo", "id");
+			$this->addForeignKey("records_content_images", "records_content", "images", "images", "id");
+			$this->addForeignKey("records_content_text", "records_content", "text", "text", "id");
+			$this->addForeignKey("records_content_description", "records_content", "description", "text", "id");
+			$this->createIndex("records_content_sort", "records_content", "sort");
 		}
 	}
 
+	/**
+	 * Откатывает миграцию в трансакции
+	 *
+	 * @return bool
+	 */
 	public function safeDown()
 	{
 		if (Yii::app()->db->schema->getTable("records_content")) {

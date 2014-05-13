@@ -1,15 +1,29 @@
 <?php
 
+/**
+ * Файл класса m140113_000000_menu.
+ *
+ * Миграция для меню
+ *
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package migrations
+ */
 class m140113_000000_menu extends CDbMigration
 {
 
+	/**
+	 * Применяет миграцию в трансакции
+	 *
+	 * @return bool
+	 */
 	public function safeUp()
 	{
 		if (!Yii::app()->db->schema->getTable("menu")) {
 			$this->createTable(
 				"menu",
 				array(
-					"id" => "pk",
+					"id"   => "pk",
 					"type" => "INT NOT NULL",
 				),
 				"ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci"
@@ -20,31 +34,28 @@ class m140113_000000_menu extends CDbMigration
 			$this->createTable(
 				"menu_content",
 				array(
-					"id" => "pk",
-					"menu_id" => "INT NOT NULL",
+					"id"         => "pk",
+					"menu_id"    => "INT NOT NULL",
 					"section_id" => "INT",
-					"block_id" => "INT",
-					"sort" => "INT",
-					"parent_id" => "INT",
+					"block_id"   => "INT",
+					"sort"       => "INT",
+					"parent_id"  => "INT",
 				),
 				"ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci"
 			);
 
-			$this->addForeignKey(
-				"menu_content_menu_id", "menu_content", "menu_id", "menu", "id"
-			);
-			$this->addForeignKey(
-				"menu_content_section_id", "menu_content", "section_id", "section", "id"
-			);
-			$this->addForeignKey(
-				"menu_content_block_id", "menu_content", "block_id", "block", "id"
-			);
-			$this->createIndex(
-				"menu_content_sort", "menu_content", "sort"
-			);
+			$this->addForeignKey("menu_content_menu_id", "menu_content", "menu_id", "menu", "id");
+			$this->addForeignKey("menu_content_section_id", "menu_content", "section_id", "section", "id");
+			$this->addForeignKey("menu_content_block_id", "menu_content", "block_id", "block", "id");
+			$this->createIndex("menu_content_sort", "menu_content", "sort");
 		}
 	}
 
+	/**
+	 * Откатывает миграцию в трансакции
+	 *
+	 * @return bool
+	 */
 	public function safeDown()
 	{
 		if (Yii::app()->db->schema->getTable("menu_content")) {

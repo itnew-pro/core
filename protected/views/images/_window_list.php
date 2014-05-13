@@ -7,11 +7,15 @@
 	} ?>
 	<div class="add-images image-float">
 		<?php $id = uniqid();
-			echo CHtml::fileField("imageFiles", null, array(
+		echo CHtml::fileField(
+			"imageFiles",
+			null,
+			array(
 				"multiple" => empty($notMultiple) ? true : false,
-				"id" => $id,
-				"class" => "image-file-field",
-			));
+				"id"       => $id,
+				"class"    => "image-file-field",
+			)
+		);
 		?>
 		<i class="c c-image"></i>
 		<?php echo Html::loader("add-images"); ?>
@@ -21,21 +25,27 @@
 
 <div class="clear"></div>
 
-<?php echo CHtml::activeHiddenField($model, "imageContentIds", array(
-	"name" => !empty($name) ? "{$name}[imageContentIds]" : get_class($model) . "[imageContentIds]",
-	"id" => !empty($name) ? "{$name}_imageContentIds" : get_class($model) . "_imageContentIds",
-)); ?>
+<?php echo CHtml::activeHiddenField(
+	$model,
+	"imageContentIds",
+	array(
+		"name" => !empty($name) ? "{$name}[imageContentIds]" : get_class($model) . "[imageContentIds]",
+		"id"   => !empty($name) ? "{$name}_imageContentIds" : get_class($model) . "_imageContentIds",
+	)
+); ?>
 
 <?php
-	Yii::app()->clientScript->registerScript("image-file-field-{$model->id}", '
-		$(".sortable").sortable({
-			items: "> .image-window-item",
-			stop: function() {
-				var sortString = "";
-				$(this).find(".image-window-item").each(function(){
-					sortString += $(this).data("id") + ",";
-				});
-				$("#' . (!empty($name) ? $name : get_class($model)) . '_imageContentIds").val(sortString);
+Yii::app()->clientScript->registerScript(
+	"image-file-field-{$model->id}",
+	'
+			$(".sortable").sortable({
+				items: "> .image-window-item",
+				stop: function() {
+					var sortString = "";
+					$(this).find(".image-window-item").each(function(){
+						sortString += $(this).data("id") + ",";
+					});
+					$("#' . (!empty($name) ? $name : get_class($model)) . '_imageContentIds").val(sortString);
 			}
 		});
 
@@ -59,15 +69,15 @@
 					contentType: false,
 					processData: false,
 					url: "' .
-					$this->createUrl(
-						"ajax/index",
-						array(
-							"controller" => "images",
-							"action" => "upload",
-							"language" => Yii::app()->language,
-							"id" => $model->id,
-						)
-					) . '",
+	$this->createUrl(
+		"ajax/index",
+		array(
+			"controller" => "images",
+			"action"     => "upload",
+			"language"   => Yii::app()->language,
+			"id"         => $model->id,
+		)
+	) . '",
 					data: formData,
 					success: function(data) {
 						if (data) {
@@ -83,5 +93,6 @@
 				$object.parent().find("i.c").show();
 			}
 		}
-	');
+	'
+);
 ?>

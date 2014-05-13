@@ -1,7 +1,9 @@
 <?php
 
 /**
- * RecordsController class file.
+ * Файл класса RecordsController.
+ *
+ * Контроллер для работы с записями
  *
  * @author  Mikhail Vasilyev <mail@itnew.pro>
  * @link    http://www.itnew.pro/
@@ -10,6 +12,14 @@
 class RecordsController extends ContentController
 {
 
+	/**
+	 * Панель управления
+	 * Выводит на экран или получает html-код
+	 *
+	 * @param bool $return получить ли html-код (в противном случае выводит на экран)
+	 *
+	 * @return string|void
+	 */
 	public function actionPanel($return = false)
 	{
 		return $this->actionContentPanel(
@@ -19,6 +29,13 @@ class RecordsController extends ContentController
 		);
 	}
 
+	/**
+	 * Редактирование записи
+	 *
+	 * @param bool $return получить ли html-код (в противном случае выводит на экран)
+	 *
+	 * @return string|void
+	 */
 	public function actionWindowForm($return = false)
 	{
 		if (!$return) {
@@ -46,6 +63,11 @@ class RecordsController extends ContentController
 		} 
 	}
 
+	/**
+	 * Добавление записи (окно)
+	 *
+	 * @return void
+	 */
 	public function actionWindowAdd()
 	{
 		$id = Yii::app()->request->getQuery("id");
@@ -66,6 +88,11 @@ class RecordsController extends ContentController
 		}
 	}
 
+	/**
+	 * Добавление записи (обработка данных)
+	 *
+	 * @return void
+	 */
 	public function actionSaveAdd()
 	{
 		$array = RecordsContent::model()->saveAdd();
@@ -77,6 +104,11 @@ class RecordsController extends ContentController
 		));
 	}
 
+	/**
+	 * Удаление записи
+	 *
+	 * @return void
+	 */
 	public function actionDeleteRecordsContent()
 	{
 		$id = Yii::app()->request->getQuery("id");
@@ -88,6 +120,11 @@ class RecordsController extends ContentController
 		}
 	}
 
+	/**
+	 * Сохранение порядка записей
+	 *
+	 * @return void
+	 */
 	public function actionSaveForm()
 	{
 		$id = RecordsContent::model()->saveForm();

@@ -1,7 +1,9 @@
 <?php
 
 /**
- * StaffController class file.
+ * Файл класса StaffController.
+ *
+ * Контроллер для работы с сотрудниками
  *
  * @author  Mikhail Vasilyev <mail@itnew.pro>
  * @link    http://www.itnew.pro/
@@ -10,6 +12,14 @@
 class StaffController extends ContentController
 {
 
+	/**
+	 * Панель управления
+	 * Выводит на экран или получает html-код
+	 *
+	 * @param bool $return получить ли html-код (в противном случае выводит на экран)
+	 *
+	 * @return string|void
+	 */
 	public function actionPanel($return = false)
 	{
 		return $this->actionContentPanel(
@@ -19,6 +29,12 @@ class StaffController extends ContentController
 		);
 	}
 
+	/**
+	 * Группа сотрудников.
+	 * Окно. Админка
+	 *
+	 * @return void
+	 */
 	public function actionWindowGroup()
 	{
 		$this->windowTitle = Yii::app()->request->getQuery("name");
@@ -37,11 +53,16 @@ class StaffController extends ContentController
 			$this->layout = "window";
 			$this->windowType = "staff-group";
 			$this->windowLevel = 2;
-			
+
 			$this->render("window_group", compact("model"));
 		}
 	}
 
+	/**
+	 * Сохраняет группу
+	 *
+	 * @return void
+	 */
 	public function actionSaveGroup()
 	{
 		$pk = StaffGroup::model()->saveGroup();
@@ -50,6 +71,11 @@ class StaffController extends ContentController
 		}
 	}
 
+	/**
+	 * Удаляет группу
+	 *
+	 * @return void
+	 */
 	public function actionDeleteGroup()
 	{
 		$pk = Yii::app()->request->getQuery("id");

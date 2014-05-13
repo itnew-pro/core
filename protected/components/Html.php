@@ -1,9 +1,26 @@
 <?php
 
+/**
+ * Файл класса Html.
+ *
+ * Класс с набором статических методов.
+ * Получает html-код различных сущностей и прочего.
+ *
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package components
+ */
 class Html extends CHtml
 {
 
-	public static function loader($class = false)
+	/**
+	 * Получает html-код лоадера
+	 *
+	 * @param string $class название класса-вспомогателя
+	 *
+	 * @return string
+	 */
+	public static function loader($class = null)
 	{
 		if ($class) {
 			$class = " loader-{$class}";
@@ -23,7 +40,9 @@ class Html extends CHtml
 	}
 
 	/**
-	 * Gets submit button text for subpanel
+	 * Получает текст кнопки ("Добавить" или "Редактировать")
+	 *
+	 * @param object $model модель, для которой создается кнопка
 	 *
 	 * @return string
 	 */
@@ -36,5 +55,4 @@ class Html extends CHtml
 		}
 		return Yii::t("common", "Add");
 	}
-
 }

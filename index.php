@@ -19,17 +19,17 @@ if (
 		/**
 		 * Settings
 		 */
-		define("SITE_ID",        $array["id"]);
-		define("DB_USERNAME",    $array["db_user"]);
-		define("DB_PASSWORD",    $array["db_pass"]);
-		define("DB_NAME",        $array["db_name"]);
-		define("LANG",           $array["lang"]);
-		define("DOMAIN",         $array["host"]);
-		define("ADMIN_LOGIN",    $array["admin_login"]);
+		define("SITE_ID", $array["id"]);
+		define("DB_USERNAME", $array["db_user"]);
+		define("DB_PASSWORD", $array["db_pass"]);
+		define("DB_NAME", $array["db_name"]);
+		define("LANG", $array["lang"]);
+		define("DOMAIN", $array["host"]);
+		define("ADMIN_LOGIN", $array["admin_login"]);
 		define("ADMIN_PASSWORD", $array["admin_password"]);
 
 		/**
-		 * 
+		 *
 		 */
 		session_start();
 		$_SESSION["siteId"] = SITE_ID;
@@ -37,16 +37,15 @@ if (
 		/**
 		 * Yii protected path
 		 */
-		$protectedDir = 
+		$protectedDir =
 			__DIR__ .
 			DIRECTORY_SEPARATOR .
 			"protected";
 
-
 		/**
 		 * Yii application
 		 */
-		$yii = 
+		$yii =
 			$protectedDir .
 			DIRECTORY_SEPARATOR .
 			"vendors" .
@@ -74,9 +73,7 @@ if (
 			"settings.php";
 		require_once($settings);
 
-			
 		require_once($yii);
 		Yii::createWebApplication($config)->run();
-
 	}
 }
