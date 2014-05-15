@@ -1,24 +1,32 @@
 <?php
 
 /**
- * This is the model class for table "admin".
+ * Файл класса Admin.
  *
- * The followings are the available columns in table "admin":
+ * Модель для таблицы "admin"
  *
- * @property integer $id
- * @property string  $login
- * @property string  $password
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
+ *
+ * @property integer $id       идентификатор
+ * @property string  $login    логин
+ * @property string  $password пароль
  */
 class Admin extends CActiveRecord
 {
 
 	/**
+	 * Флаг. Запомнить ли администратора
+	 *
 	 * @var bool
 	 */
 	public $remember = false;
 
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -26,7 +34,9 @@ class Admin extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
@@ -38,7 +48,9 @@ class Admin extends CActiveRecord
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
@@ -46,7 +58,9 @@ class Admin extends CActiveRecord
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает подписей полей
+	 *
+	 * @return string[]
 	 */
 	public function attributeLabels()
 	{
@@ -59,16 +73,9 @@ class Admin extends CActiveRecord
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Получает список моделей на основе условий поиска / фильтров.
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
-	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
+	 * @return CActiveDataProvider
 	 */
 	public function search()
 	{
@@ -84,12 +91,11 @@ class Admin extends CActiveRecord
 	}
 
 	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
+	 * Возвращает статическую модель указанного класса.
 	 *
-	 * @param string $className active record class name.
+	 * @param string $className название класса
 	 *
-	 * @return Admin the static model class
+	 * @return self
 	 */
 	public static function model($className = __CLASS__)
 	{
@@ -97,25 +103,25 @@ class Admin extends CActiveRecord
 	}
 
 	/**
-	 * Login
+	 * Производит авторизацию.
+	 * Возвращает CSS-класс ошибки
 	 *
-	 * @return string error class
+	 * @return string
 	 */
 	public static function login()
 	{
 		$admin = Yii::app()->request->getPost("Admin");
 		$identity = new UserIdentity($admin["login"], $admin["password"]);
-		if($identity->authenticate()) {
+		if ($identity->authenticate()) {
 			$remember = false;
 			if ($admin["remember"]) {
 				$remember = 60 * 60 * 24 * 30;
 			}
 			Yii::app()->user->login($identity, $remember);
-		}
-		else {
+		} else {
 			return $identity->errorClass;
 		}
 
-		return;
+		return null;
 	}
 }
