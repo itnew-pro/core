@@ -119,7 +119,6 @@ class m140101_000000_core extends CDbMigration
 				"structure",
 				array(
 					"id"    => "pk",
-					"size"  => "INT NOT NULL",
 					"width" => "INT NOT NULL",
 				),
 				"ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci"

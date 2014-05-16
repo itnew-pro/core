@@ -23,15 +23,15 @@ class SiteController extends CController
 		$version->update();
 
 		if (Yii::app()->db->schema->getTable("site")) {
-			$model = Structure::getModel();
-			if ($model) {
-				if (!Yii::app()->user->isGuest) {
-					Yii::app()->session["structureId"] = $model->id;
-				}
 
-				$this->layout = "page";
-				$this->render("index", compact("model"));
+			$model = Structure::getModel();
+
+			if ($model && !Yii::app()->user->isGuest) {
+				Yii::app()->session["structureId"] = $model->id;
 			}
+
+			$this->layout = "page";
+			$this->render("index", compact("model"));
 		}
 	}
 }

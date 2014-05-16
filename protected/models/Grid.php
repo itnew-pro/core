@@ -117,8 +117,8 @@ class Grid extends CActiveRecord
 	public function getContainerGrids($findIn)
 	{
 		$criteria = new CDbCriteria();
-		$criteria->addInCondition("id", $findIn);
-		$criteria->order = "top";
+		$criteria->addInCondition("t.id", $findIn);
+		$criteria->order = "t.top, t.left";
 
 		return $this->findAll($criteria);
 	}

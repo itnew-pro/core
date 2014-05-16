@@ -166,8 +166,7 @@ class Section extends CActiveRecord
 			$model->seo_id = $model->seo->id;
 
 			$model->structure = new Structure;
-			$model->structure->size = Structure::DEFAULT_SIZE;
-			$model->structure->width = 0;
+			$model->structure->width = Structure::WIDTH;
 			$model->structure->save();
 			$model->structure_id = $model->structure->id;
 

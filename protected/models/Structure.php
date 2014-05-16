@@ -6,7 +6,6 @@
  * The followings are the available columns in table 'structure':
  *
  * @property integer   $id
- * @property integer   $size
  * @property integer   $width
  *
  * The followings are the available model relations:
@@ -17,9 +16,18 @@ class Structure extends CActiveRecord
 {
 
 	/**
-	 * Default grid's size
+	 * Размер сетки
+	 *
+	 * @var int
 	 */
-	const DEFAULT_SIZE = 64;
+	const GRID_SIZE = 12;
+
+	/**
+	 * Ширина контейнера
+	 *
+	 * @var int
+	 */
+	const WIDTH = 987;
 
 	/**
 	 * @return string the associated database table name
@@ -53,7 +61,7 @@ class Structure extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'grid'     => array(self::HAS_MANY, 'Grid', 'structure_id', "order" => "grid.line"),
+			'grid'     => array(self::HAS_MANY, 'Grid', 'structure_id', "order" => "grid.top"),
 			'sections' => array(self::HAS_MANY, 'Section', 'structure_id'),
 		);
 	}
@@ -117,7 +125,8 @@ class Structure extends CActiveRecord
 	{
 		if (!Yii::app()->request->getQuery("controller")) {
 			if (!Yii::app()->request->getQuery("content")) {
-				if ($section = Section::model()->getActive()) {
+				$section = Section::model()->getActive();
+				if ($section) {
 					return $section->structure;
 				}
 			}
@@ -234,6 +243,61 @@ class Structure extends CActiveRecord
 	{
 		$tree = array();
 
+		$doubleGrid = array();
+		for ($i = 0; $i < self::GRID_SIZE * 2; $i++) {
+			$doubleGrid[$i] = 0;
+		}
+		foreach ($grids as $grid) {
+			for ($i = $grid->left * 2; $i < ($grid->left + $grid->width) * 2 - 1; $i++) {
+				$doubleGrid[$i] = 1;
+			}
+		}
+
+		$borders = array();
+		$flag = 0;
+		foreach ($doubleGrid as $left => $val) {
+			if ($val != $flag) {
+				$borders[] = $left;
+				$flag = $val;
+			}
+		}
+
+		if ($borders) {
+			for ($i = 0; $i < count($borders); $i = $i + 2) {
+				if (!$i) {
+					$offset = $borders[$i] / 2;
+				} else {
+					$offset = ($borders[$i] - $borders[$i - 1] - 1) / 2;
+				}
+
+				$gridsList = array();
+				foreach ($grids as $grid) {
+					if (
+						$grid->left >= $borders[$i] / 2
+						&& $grid->left < $borders[$i + 1] / 2
+						&& $grid->width <= ($borders[$i + 1] - $borders[$i] + 1) / 2
+					) {
+						$gridsList[] = array(
+							"block"  => $grid->block,
+							"col"    => $grid->width,
+							"top"    => $grid->top,
+							"offset" => $borders[$i] / 2 - $grid->left,
+						);
+					}
+				}
+
+				$tree[] = array(
+					"col"    => ($borders[$i + 1] - $borders[$i] + 1) / 2,
+					"offset" => $offset,
+					"grids"  => $gridsList,
+				);
+			}
+		}
+
+		//echo "<pre>";
+		//var_dump($containers);
+
+		/**
 		$lineFlags = array();
 		for ($i = 0; $i < $this->size; $i++) {
 			$lineFlags[$i] = 0;
@@ -286,6 +350,7 @@ class Structure extends CActiveRecord
 						$blocks[] = array(
 							"width" => $blockWidth,
 							"left"  => $marginLeft,
+							"top"   => $grid->top,
 							"model" => $grid->block
 						);
 					}
@@ -294,6 +359,7 @@ class Structure extends CActiveRecord
 
 			$tree[] = array("width" => $containerWidth, "left" => $marginLeftContainer, "blocks" => $blocks);
 		}
+		*/
 
 		return $tree;
 	}
