@@ -13,7 +13,7 @@
 						<?php foreach ($model->getLineTree($grids) as $gridContainer) { ?>
 							<div class="col-<?php echo $gridContainer["col"]; ?> col-offset-<?php echo $gridContainer["offset"]; ?>">
 								<div class="container">
-									<div class="row">
+									<div class="row row-offset-<?php echo (12 - $gridContainer["col"]); ?>">
 										<?php $top = 0; foreach ($gridContainer["grids"] as $grid) { ?>
 											<?php if ($top < $grid["top"]) { $top = $grid["top"]; ?>
 												<div class="clear"></div>

@@ -61,7 +61,7 @@ class Structure extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'grid'     => array(self::HAS_MANY, 'Grid', 'structure_id', "order" => "grid.top"),
+			'grid'     => array(self::HAS_MANY, 'Grid', 'structure_id', "order" => "grid.top, grid.left"),
 			'sections' => array(self::HAS_MANY, 'Section', 'structure_id'),
 		);
 	}
@@ -271,6 +271,7 @@ class Structure extends CActiveRecord
 				}
 
 				$gridsList = array();
+				$right = 0;
 				foreach ($grids as $grid) {
 					if (
 						$grid->left >= $borders[$i] / 2
@@ -281,8 +282,9 @@ class Structure extends CActiveRecord
 							"block"  => $grid->block,
 							"col"    => $grid->width,
 							"top"    => $grid->top,
-							"offset" => $borders[$i] / 2 - $grid->left,
+							"offset" => $grid->left - $borders[$i] / 2 - $right,
 						);
+						$right = $grid->left - $borders[$i] / 2 + $grid->width;
 					}
 				}
 
@@ -293,73 +295,6 @@ class Structure extends CActiveRecord
 				);
 			}
 		}
-
-		//echo "<pre>";
-		//var_dump($containers);
-
-		/**
-		$lineFlags = array();
-		for ($i = 0; $i < $this->size; $i++) {
-			$lineFlags[$i] = 0;
-		}
-		foreach ($grids as $grid) {
-			for ($i = $grid->left; $i < ($grid->left + $grid->width); $i++) {
-				$lineFlags[$i] = 1;
-			}
-		}
-		$flag = 0;
-		$borders = array();
-		foreach ($lineFlags as $key => $value) {
-			if ($flag != $value) {
-				$flag = $value;
-				$borders[] = $key;
-			}
-		}
-		if (count($borders) % 2) {
-			$borders[] = $this->size;
-		}
-
-		for ($i = 0; $i < count($borders); $i = $i + 2) {
-			$containerWidth = ($borders[$i + 1] - $borders[$i]) / $this->size * 100;
-			if ($i == 0) {
-				$marginLeftContainer = $borders[$i] / $this->size * 100;
-			} else {
-				$marginLeftContainer = ($borders[$i] - $borders[$i - 1]) / $this->size * 100;
-			}
-
-			$blocks = array();
-
-			$findIn = array();
-			foreach ($grids as $grid) {
-				if (
-					($grid->left >= $borders[$i])
-					&& (
-						empty($borders[$i + 1])
-						|| (($grid->left + $grid->width) <= $borders[$i + 1])
-					)
-				) {
-					$findIn[] = $grid->id;
-				}
-			}
-			if ($findIn) {
-				$containerGrids = Grid::model()->getContainerGrids($findIn);
-				if ($containerGrids) {
-					foreach ($containerGrids as $grid) {
-						$blockWidth = $grid->width / ($borders[$i + 1] - $borders[$i]) * 100;
-						$marginLeft = ($grid->left - $borders[$i]) * 100 / ($borders[$i + 1] - $borders[$i]);
-						$blocks[] = array(
-							"width" => $blockWidth,
-							"left"  => $marginLeft,
-							"top"   => $grid->top,
-							"model" => $grid->block
-						);
-					}
-				}
-			}
-
-			$tree[] = array("width" => $containerWidth, "left" => $marginLeftContainer, "blocks" => $blocks);
-		}
-		*/
 
 		return $tree;
 	}
