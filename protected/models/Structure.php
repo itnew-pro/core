@@ -61,7 +61,7 @@ class Structure extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'grid'     => array(self::HAS_MANY, 'Grid', 'structure_id', "order" => "grid.top, grid.left"),
+			'grid'     => array(self::HAS_MANY, 'Grid', 'structure_id', "order" => "grid.line, grid.top, grid.left"),
 			'sections' => array(self::HAS_MANY, 'Section', 'structure_id'),
 		);
 	}

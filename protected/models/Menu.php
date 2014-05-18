@@ -130,11 +130,28 @@ class Menu extends CActiveRecord
 		return new Block;
 	}
 
-	public function getTypeList()
+	const TYPE_VERTICAL = 0;
+	const TYPE_HORIZONTAL = 1;
+
+	private $_typeList = array(
+		self::TYPE_VERTICAL => "vertical",
+		self::TYPE_HORIZONTAL => "horizontal",
+	);
+
+	public function getType()
+	{
+		if (!empty($this->_typeList[$this->type])) {
+			return $this->_typeList[$this->type];
+		}
+
+		return null;
+	}
+
+	public function getTypeListLabels()
 	{
 		$list = array();
-		$list[0] = Yii::t("menu", "Vertical");
-		$list[1] = Yii::t("menu", "Horizontal");
+		$list[self::TYPE_VERTICAL] = Yii::t("menu", "Vertical");
+		$list[self::TYPE_HORIZONTAL] = Yii::t("menu", "Horizontal");
 		return $list;
 	}
 

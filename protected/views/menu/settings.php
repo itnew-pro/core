@@ -6,7 +6,7 @@
 	<div class="form-block">
 		<?php $imageUniqId = uniqid();
 		echo CHtml::activeLabel($model, "type"); ?>
-		<?php echo CHtml::activeDropDownList($model, "type", $model->getTypeList()); ?>
+		<?php echo CHtml::activeDropDownList($model, "type", $model->getTypeListLabels()); ?>
 	</div>
 
 <?php $this->renderPartial("../content/_save_settings", compact("model")); ?>

@@ -19,6 +19,9 @@
 	<link rel="stylesheet"
 		  href="<?php echo Yii::app()->params["baseUrl"]; ?>/css/fancybox/jquery.fancybox-buttons.css"/>
 	<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/fancybox/jquery.fancybox-buttons.js"></script>
+
+	<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/jquery.id.chopslider-2.2.0.free.min.js"></script>
+	<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/jquery.id.cstransitions-1.2.min.js"></script>
 	<!-- убрать -->
 
 	<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/css/css.css"/>
