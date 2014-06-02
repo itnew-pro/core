@@ -1,5 +1,11 @@
 <?php
 
+namespace itnew\controllers;
+
+use CController;
+use Yii;
+use itnew\models\Admin;
+
 /**
  * Файл класса LoginController.
  *
@@ -54,7 +60,7 @@ class LoginController extends CController
 	 */
 	public function actionLogin()
 	{
-		echo Admin::login();
+		echo Admin::login(Yii::app()->request->getPost("itnew_models_Admin"));
 	}
 
 	/**

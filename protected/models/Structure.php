@@ -1,16 +1,29 @@
 <?php
 
+namespace itnew\models;
+
+use itnew\models\Grid;
+use itnew\models\Section;
+use CActiveRecord;
+use Yii;
+use CActiveDataProvider;
+use CDbCriteria;
+use CHttpCookie;
+
 /**
- * This is the model class for table "structure".
+ * Файл класса Structure.
  *
- * The followings are the available columns in table 'structure':
+ * Модель для работы с таблицей "structure"
  *
- * @property integer   $id
- * @property integer   $width
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
  *
- * The followings are the available model relations:
- * @property Grid[]    $grid
- * @property Section[] $sections
+ * @property integer   $id       идентификатор структуры
+ * @property integer   $width    ширина контейнера
+ *
+ * @property Grid[]    $grid     модели ячеек структуры
+ * @property Section[] $sections модель раздела структуры
  */
 class Structure extends CActiveRecord
 {
@@ -30,7 +43,9 @@ class Structure extends CActiveRecord
 	const WIDTH = 987;
 
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -38,78 +53,54 @@ class Structure extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
 			array('width', 'required'),
 			array('width', 'numerical', 'integerOnly' => true),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, width', 'safe', 'on' => 'search'),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
-			'grid'     => array(self::HAS_MANY, 'Grid', 'structure_id', "order" => "grid.line, grid.top, grid.left"),
-			'sections' => array(self::HAS_MANY, 'Section', 'structure_id'),
+			'grid'     => array(
+				self::HAS_MANY,
+				'itnew\models\Grid',
+				'structure_id',
+				"order" => "grid.line, grid.top, grid.left"
+			),
+			'sections' => array(self::HAS_MANY, 'itnew\models\Section', 'structure_id'),
 		);
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает подписей полей
+	 *
+	 * @return string[]
 	 */
 	public function attributeLabels()
 	{
 		return array(
-			'id'    => 'ID',
 			'width' => 'Width',
 		);
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает статическую модель указанного класса.
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 * @param string $className название класса
 	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria = new CDbCriteria;
-
-		$criteria->compare('id', $this->id);
-		$criteria->compare('width', $this->width);
-
-		return new CActiveDataProvider($this, array(
-			'criteria' => $criteria,
-		));
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 *
-	 * @param string $className active record class name.
-	 *
-	 * @return Structure the static model class
+	 * @return Structure
 	 */
 	public static function model($className = __CLASS__)
 	{
@@ -117,22 +108,26 @@ class Structure extends CActiveRecord
 	}
 
 	/**
-	 * Gets strusture of current page
+	 * Получает структуру текущего раздела
 	 *
-	 * @return self|null
+	 * @param string $controller контроллер
+	 * @param string $content    контент
+	 * @param string $section    раздел
+	 *
+	 * @return Structure|null
 	 */
-	public static function getModel()
+	public static function getModel($controller, $content, $section)
 	{
-		if (!Yii::app()->request->getQuery("controller")) {
-			if (!Yii::app()->request->getQuery("content")) {
-				$section = Section::model()->getActive();
-				if ($section) {
-					return $section->structure;
-				}
-			}
+		if ($controller && $content) {
+			return null;
 		}
 
-		return null;
+		$section = Section::model()->getActive($section);
+		if (!$section) {
+			return null;
+		}
+
+		return $section->structure;
 	}
 
 	public static function isContentShowPage()
@@ -153,11 +148,10 @@ class Structure extends CActiveRecord
 
 	public function beforeDelete()
 	{
-		if ($this->grid) {
-			foreach ($this->grid as $grid) {
-				$grid->delete();
-			}
+		foreach ($this->grid as $grid) {
+			$grid->delete();
 		}
+
 		return parent::beforeDelete();
 	}
 

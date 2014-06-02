@@ -1,5 +1,9 @@
 <?php
 
+namespace itnew\components;
+
+use CHtml;
+
 /**
  * Файл класса Html.
  *

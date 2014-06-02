@@ -1,5 +1,15 @@
 <?php
 
+namespace itnew\models;
+
+use itnew\models\Seo;
+use itnew\models\Language;
+use itnew\models\Structure;
+use CActiveRecord;
+use Yii;
+use CActiveDataProvider;
+use CDbCriteria;
+
 /**
  * This is the model class for table "section".
  *
@@ -49,10 +59,9 @@ class Section extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'seo' => array(self::BELONGS_TO, 'Seo', 'seo_id'),
-			'language' => array(self::BELONGS_TO, 'Language', 'language_id'),
-			'structure' => array(self::BELONGS_TO, 'Structure', 'structure_id'),
-			'menuContent' => array(self::HAS_MANY, 'MenuContent', 'section_id'),
+			'seo' => array(self::BELONGS_TO, 'itnew\models\Seo', 'seo_id'),
+			'language' => array(self::BELONGS_TO, 'itnew\models\Language', 'language_id'),
+			'structure' => array(self::BELONGS_TO, 'itnew\models\Structure', 'structure_id'),
 		);
 	}
 
@@ -111,13 +120,13 @@ class Section extends CActiveRecord
 	 *
 	 * @return self
 	 */
-	public function getActive()
+	public function getActive($section)
 	{
-		if (Yii::app()->request->getQuery("section")) {
+		if ($section) {
 			return $this->with("seo")->find(
 				"seo.url = :url AND t.language_id = :language_id",
 				array(
-					":url" => Yii::app()->request->getQuery("section"),
+					":url" => $section,
 					":language_id" => Language::getActiveId()
 				)
 			);

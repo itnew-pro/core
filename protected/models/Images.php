@@ -1,5 +1,13 @@
 <?php
 
+namespace itnew\models;
+
+use itnew\models\ImagesContent;
+use CActiveRecord;
+use Yii;
+use CActiveDataProvider;
+use CDbCriteria;
+
 /**
  * This is the model class for table "images".
  *
@@ -60,7 +68,7 @@ class Images extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'imagesContent' => array(self::HAS_MANY, 'ImagesContent', 'images_id', "order" => "sort"),
+			'imagesContent' => array(self::HAS_MANY, 'itnew\models\ImagesContent', 'images_id', "order" => "sort"),
 			"block" => array(
 				self::HAS_ONE,
 				'Block',

@@ -1,5 +1,12 @@
 <?php
 
+namespace itnew\components;
+
+use CComponent;
+use CDateTimeParser;
+use Yii;
+use itnew\models\Site;
+
 /**
  * Файл класса Version.
  *

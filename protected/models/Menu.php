@@ -1,5 +1,13 @@
 <?php
 
+namespace itnew\models;
+
+use itnew\models\MenuContent;
+use CActiveRecord;
+use Yii;
+use CActiveDataProvider;
+use CDbCriteria;
+
 /**
  * This is the model class for table "menu".
  *
@@ -44,7 +52,7 @@ class Menu extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'menuContent' => array(self::HAS_MANY, 'MenuContent', 'menu_id', "order" => "sort"),
+			'menuContent' => array(self::HAS_MANY, 'itnew\models\MenuContent', 'menu_id', "order" => "sort"),
 			"block" => array(
 				self::HAS_ONE,
 				'Block',

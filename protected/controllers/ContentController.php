@@ -1,5 +1,11 @@
 <?php
 
+namespace itnew\controllers;
+
+use itnew\models\Structure;
+use CController;
+use Yii;
+
 /**
  * Файл класса ContentController.
  *

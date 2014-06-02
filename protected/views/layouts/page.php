@@ -1,10 +1,20 @@
+<?php
+use itnew\models\Structure;
+use itnew\components\Html;
+
+/**
+ * @var string $content
+ */
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
 	<title><?php echo $this->pageTitle; ?></title>
 
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,800,300,700&subset=latin,cyrillic-ext' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,800,300,700&subset=latin,cyrillic-ext'
+		  rel='stylesheet' type='text/css'>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
 	<!-- убрать -->
@@ -38,8 +48,10 @@
 	<?php if (Structure::isCss()) { ?>
 		<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/static/<?php
 		echo Yii::app()->params["siteId"]; ?>/css.css"/>
-	<?php }
-	if (Structure::isJs()) { ?>
+	<?php
+	}
+	if (Structure::isJs()) {
+		?>
 		<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/static/<?php
 		echo Yii::app()->params["siteId"]; ?>/js.js"></script>
 	<?php } ?>

@@ -1,5 +1,13 @@
 <?php
 
+namespace itnew\models;
+
+use itnew\models\Structure;
+use CActiveRecord;
+use Yii;
+use CActiveDataProvider;
+use CDbCriteria;
+
 /**
  * This is the model class for table "records".
  *

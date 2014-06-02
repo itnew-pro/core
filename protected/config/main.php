@@ -8,17 +8,11 @@
  * @package config
  */
 
-Yii::setPathOfAlias(
-	"cms",
-	__DIR__ .
-	DIRECTORY_SEPARATOR .
-	".." .
-	DIRECTORY_SEPARATOR .
-	".." .
-	DIRECTORY_SEPARATOR
-);
+Yii::setPathOfAlias("itnew", __DIR__ . DIRECTORY_SEPARATOR . "..");
 
 return array(
+	'controllerNamespace' => '\itnew\controllers',
+	'controllerPath'      => __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "controllers",
 	"sourceLanguage" => "en_us",
 	"language"       => LANG,
 	"basePath"       => dirname(__FILE__) . DIRECTORY_SEPARATOR . "..",

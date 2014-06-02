@@ -1,5 +1,11 @@
 <?php
 
+namespace itnew\components;
+
+use CUserIdentity;
+use CDbCriteria;
+use itnew\models\Admin;
+
 /**
  * Файл класса UserIdentity.
  *
@@ -33,6 +39,9 @@ class UserIdentity extends CUserIdentity
 			if (!$this->password) {
 				$this->errorClass = "password-empty";
 			} else {
+				$criteria = new CDbCriteria;
+				$criteria->condition = "t.login = :login";
+				$criteria->params["login"] => $this->username;
 				$model = Admin::model()->find("login = :login", array(":login" => $this->username));
 				if (!$model) {
 					$this->errorClass = "user-not-exist";

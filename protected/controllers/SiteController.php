@@ -1,5 +1,13 @@
 <?php
 
+namespace itnew\controllers;
+
+use CController;
+use Yii;
+use Exception;
+use itnew\components\Version;
+use itnew\models\Structure;
+
 /**
  * Файл класса SiteController.
  *
@@ -22,16 +30,25 @@ class SiteController extends CController
 		$version = new Version;
 		$version->update();
 
-		if (Yii::app()->db->schema->getTable("site")) {
-
-			$model = Structure::getModel();
-
-			if ($model && !Yii::app()->user->isGuest) {
-				Yii::app()->session["structureId"] = $model->id;
-			}
-
-			$this->layout = "page";
-			$this->render("index", compact("model"));
+		if (!Yii::app()->db->schema->getTable("site")) {
+			throw new Exception("Table \"site\" was not found.");
 		}
+
+		$model = Structure::getModel(
+			Yii::app()->request->getQuery("controller"),
+			Yii::app()->request->getQuery("content"),
+			Yii::app()->request->getQuery("section")
+		);
+
+		if (!$model) {
+			throw new Exception("There is no structure for this section");
+		}
+
+		if (!Yii::app()->user->isGuest) {
+			Yii::app()->session["structureId"] = $model->id;
+		}
+
+		$this->layout = "page";
+		$this->render("index", compact("model"));
 	}
 }

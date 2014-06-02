@@ -1,5 +1,14 @@
 <?php
 
+namespace itnew\models;
+
+use itnew\models\Block;
+use itnew\models\Structure;
+use CActiveRecord;
+use Yii;
+use CActiveDataProvider;
+use CDbCriteria;
+
 /**
  * This is the model class for table "grid".
  *
@@ -51,8 +60,8 @@ class Grid extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'block' => array(self::BELONGS_TO, 'Block', 'block_id'),
-			'structure' => array(self::BELONGS_TO, 'Structure', 'structure_id'),
+			'block' => array(self::BELONGS_TO, 'itnew\models\Block', 'block_id'),
+			'structure' => array(self::BELONGS_TO, 'itnew\models\Structure', 'structure_id'),
 		);
 	}
 

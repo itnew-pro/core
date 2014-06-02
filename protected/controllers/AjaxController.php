@@ -1,5 +1,10 @@
 <?php
 
+namespace itnew\controllers;
+
+use CController;
+use Yii;
+
 /**
  * Файл класса AjaxController.
  *

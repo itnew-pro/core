@@ -1,5 +1,13 @@
 <?php
 
+namespace itnew\models;
+
+use itnew\models\Structure;
+use CActiveRecord;
+use Yii;
+use CActiveDataProvider;
+use CDbCriteria;
+
 /**
  * This is the model class for table "block".
  *
@@ -125,7 +133,7 @@ class Block extends CActiveRecord
 
 	public function getContentModel()
 	{
-		$modelName = ucfirst($this->getType());
+		$modelName = "itnew\models\\" . ucfirst($this->getType());
 		$model = new $modelName;
 		if ($this->content_id) {
 			return $model->findByPk($this->content_id);

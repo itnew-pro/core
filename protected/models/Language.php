@@ -1,5 +1,12 @@
 <?php
 
+namespace itnew\models;
+
+use CActiveRecord;
+use Yii;
+use CActiveDataProvider;
+use CDbCriteria;
+
 /**
  * This is the model class for table "language".
  *

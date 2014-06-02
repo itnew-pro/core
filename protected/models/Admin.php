@@ -1,5 +1,13 @@
 <?php
 
+namespace itnew\models;
+
+use CActiveRecord;
+use Yii;
+use CActiveDataProvider;
+use CDbCriteria;
+use itnew\components\UserIdentity;
+
 /**
  * Файл класса Admin.
  *
@@ -73,29 +81,11 @@ class Admin extends CActiveRecord
 	}
 
 	/**
-	 * Получает список моделей на основе условий поиска / фильтров.
-	 *
-	 * @return CActiveDataProvider
-	 */
-	public function search()
-	{
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("id", $this->id);
-		$criteria->compare("login", $this->login, true);
-		$criteria->compare("password", $this->password, true);
-
-		return new CActiveDataProvider($this, array(
-			"criteria" => $criteria,
-		));
-	}
-
-	/**
 	 * Возвращает статическую модель указанного класса.
 	 *
 	 * @param string $className название класса
 	 *
-	 * @return self
+	 * @return Admin
 	 */
 	public static function model($className = __CLASS__)
 	{
@@ -106,15 +96,16 @@ class Admin extends CActiveRecord
 	 * Производит авторизацию.
 	 * Возвращает CSS-класс ошибки
 	 *
+	 * @param string[] $post данные переданные через $_POST при входе в панель управления
+	 *
 	 * @return string
 	 */
-	public static function login()
+	public static function login($post = array())
 	{
-		$admin = Yii::app()->request->getPost("Admin");
-		$identity = new UserIdentity($admin["login"], $admin["password"]);
+		$identity = new UserIdentity($post["login"], $post["password"]);
 		if ($identity->authenticate()) {
 			$remember = false;
-			if ($admin["remember"]) {
+			if ($post["remember"]) {
 				$remember = 60 * 60 * 24 * 30;
 			}
 			Yii::app()->user->login($identity, $remember);
