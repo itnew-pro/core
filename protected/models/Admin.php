@@ -4,8 +4,6 @@ namespace itnew\models;
 
 use CActiveRecord;
 use Yii;
-use CActiveDataProvider;
-use CDbCriteria;
 use itnew\components\UserIdentity;
 
 /**
@@ -17,7 +15,7 @@ use itnew\components\UserIdentity;
  * @link    http://www.itnew.pro/
  * @package models
  *
- * @property integer $id       идентификатор
+ * @property int     $id       идентификатор
  * @property string  $login    логин
  * @property string  $password пароль
  */
@@ -53,16 +51,6 @@ class Admin extends CActiveRecord
 			array("login, password", "length", "max" => 255),
 			array("id, login, password", "safe", "on" => "search"),
 		);
-	}
-
-	/**
-	 * Возвращает связи между объектами
-	 *
-	 * @return string[]
-	 */
-	public function relations()
-	{
-		return array();
 	}
 
 	/**
@@ -103,15 +91,15 @@ class Admin extends CActiveRecord
 	public static function login($post = array())
 	{
 		$identity = new UserIdentity($post["login"], $post["password"]);
-		if ($identity->authenticate()) {
-			$remember = false;
-			if ($post["remember"]) {
-				$remember = 60 * 60 * 24 * 30;
-			}
-			Yii::app()->user->login($identity, $remember);
-		} else {
+		if (!$identity->authenticate()) {
 			return $identity->errorClass;
 		}
+
+		$remember = false;
+		if ($post["remember"]) {
+			$remember = 60 * 60 * 24 * 30;
+		}
+		Yii::app()->user->login($identity, $remember);
 
 		return null;
 	}

@@ -3,42 +3,78 @@
 namespace itnew\models;
 
 use itnew\models\ImagesContent;
+use itnew\models\Block;
+use itnew\models\Language;
 use CActiveRecord;
 use Yii;
-use CActiveDataProvider;
 use CDbCriteria;
 
 /**
- * This is the model class for table "images".
+ * Файл класса Images.
  *
- * The followings are the available columns in table 'images':
- * @property integer $id
- * @property integer $many
- * @property integer $view
- * @property integer $width
- * @property integer $height
- * @property integer $thumb_width
- * @property integer $thumb_height
+ * Модель для таблицы "images"
  *
- * The followings are the available model relations:
- * @property ImagesContent[] $imagesContent
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
+ *
+ * @property int             $id            идентификатор
+ * @property int             $many          флаг множества изображений в группе
+ * @property int             $view          тип отображения
+ * @property int             $width         ширина
+ * @property int             $height        высота
+ * @property int             $thumb_width   ширина миниатюрки
+ * @property int             $thumb_height  высота миниатюрки
+ *
+ * @property ImagesContent[] $imagesContent модели изображений группы
+ * @property Block           $block         блок
  */
 class Images extends CActiveRecord
 {
+
+	/**
+	 * Идентификаторы изображений
+	 *
+	 * @var string
+	 */
 	public $imageContentIds = "";
 
+	/**
+	 * Тип отображения. Простое изображение
+	 *
+	 * @var int
+	 */
 	const TYPE_SIMPLE = 0;
+
+	/**
+	 * Тип отображения. Увеличение
+	 *
+	 * @var int
+	 */
 	const TYPE_LITEBOX = 1;
+
+	/**
+	 * Тип отображения. Слайдер
+	 *
+	 * @var int
+	 */
 	const TYPE_SLIDER = 2;
 
+	/**
+	 * Типы отображений
+	 *
+	 * @var string[]
+	 */
 	private $_views = array(
-		self::TYPE_SIMPLE => "simple",
+		self::TYPE_SIMPLE  => "simple",
 		self::TYPE_LITEBOX => "litebox",
-		self::TYPE_SLIDER => "slider",
+		self::TYPE_SLIDER  => "slider",
 	);
 
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -46,35 +82,32 @@ class Images extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
-			array('many, view, width, height, thumb_width, thumb_height', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, many, view, width, height, thumb_width, thumb_height', 'safe', 'on'=>'search'),
+			array('many, view, width, height, thumb_width, thumb_height', 'numerical', 'integerOnly' => true),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
 			'imagesContent' => array(self::HAS_MANY, 'itnew\models\ImagesContent', 'images_id', "order" => "sort"),
-			"block" => array(
+			"block"         => array(
 				self::HAS_ONE,
-				'Block',
+				'itnew\models\Block',
 				'content_id',
 				"condition" => "block.type = :type",
-				"params" => array(
+				"params"    => array(
 					":type" => Block::TYPE_IMAGE,
 				),
 			),
@@ -82,93 +115,126 @@ class Images extends CActiveRecord
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает подписей полей
+	 *
+	 * @return string[]
 	 */
 	public function attributeLabels()
 	{
 		return array(
-			'view' => Yii::t("images", "View"),
-			'width' => Yii::t("images", "Max width"),
-			'height' => Yii::t("images", "Max height"),
-			'thumb_width' => Yii::t("images", "Thumbnail width"),
+			'view'         => Yii::t("images", "View"),
+			'width'        => Yii::t("images", "Max width"),
+			'height'       => Yii::t("images", "Max height"),
+			'thumb_width'  => Yii::t("images", "Thumbnail width"),
 			'thumb_height' => Yii::t("images", "Thumbnail height"),
 		);
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает статическую модель указанного класса.
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 * @param string $className название класса
 	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
+	 * @return Images
 	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('many',$this->many);
-		$criteria->compare('view',$this->view);
-		$criteria->compare('width',$this->width);
-		$criteria->compare('height',$this->height);
-		$criteria->compare('thumb_width',$this->thumb_width);
-		$criteria->compare('thumb_height',$this->thumb_height);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return Images the static model class
-	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
 
+	/**
+	 * Получает заголовок
+	 *
+	 * @return string
+	 */
 	public function getTitle()
 	{
 		return Yii::t("images", "Images");
 	}
 
+	/**
+	 * Получает все
+	 *
+	 * @return Block[]
+	 */
 	public function getAllContentBlocks()
 	{
-		$model = new Block;
-		return $model->findAll(
-			"t.language_id = :language_id AND type = :type",
-			array(
-				":language_id" => Language::getActiveId(),
-				":type" => Block::TYPE_IMAGE,
-			)
-		);
+		$criteria = new CDbCriteria;
+		$criteria->condition = "t.language_id = :language_id AND type = :type";
+		$criteria->params["language_id"] = Language::getActiveId();
+		$criteria->params["type"] = Block::TYPE_IMAGE;
+
+		return Block::model()->findAll();
 	}
 
+	/**
+	 * Получает блок
+	 *
+	 * @return Block
+	 */
 	public function getBlock()
 	{
 		if ($this->block) {
 			return $this->block;
 		}
+
 		return new Block;
 	}
 
+	/**
+	 * Список типов отображения
+	 *
+	 * @return string[]
+	 */
 	public function getViewList()
 	{
-		$list = array();
-		$list[0] = Yii::t("images", "Simple image");
-		$list[1] = Yii::t("images", "Increasing thumbnail");
-		$list[2] = Yii::t("images", "Slider");
-		return $list;
+		return array(
+			self::TYPE_SIMPLE  => Yii::t("images", "Simple image"),
+			self::TYPE_LITEBOX => Yii::t("images", "Increasing thumbnail"),
+			self::TYPE_SLIDER  => Yii::t("images", "Slider"),
+		);
+	}
+
+	/**
+	 * Вызывается перед удалением модели
+	 *
+	 * @return bool
+	 */
+	public function beforeDelete()
+	{
+		foreach ($this->imagesContent as $model) {
+			$model->delete();
+		}
+
+		return parent::beforeDelete();
+	}
+
+	/**
+	 * Вызывается после удаления модели
+	 *
+	 * @return bool
+	 */
+	protected function afterDelete()
+	{
+		if ($this->block) {
+			$this->block->delete();
+		}
+
+		return parent::afterDelete();
+	}
+
+	/**
+	 * Получает название шаблона
+	 *
+	 * @return string
+	 */
+	public function getTemplateName()
+	{
+		if (empty($this->_views[$this->view])) {
+			return "_" . $this->_views[0];
+		}
+
+		return "_" . $this->_views[$this->view];
 	}
 
 	public function saveSettings()
@@ -189,9 +255,7 @@ class Images extends CActiveRecord
 					$transaction->rollback();
 				}
 			}
-		} 
-
-		else {
+		} else {
 			$model = new self;
 			$block = new Block;
 			$model->attributes = Yii::app()->request->getPost("Images");
@@ -215,24 +279,6 @@ class Images extends CActiveRecord
 		return;
 	}
 
-	public function beforeDelete()
-	{
-		if ($this->imagesContent) {
-			foreach ($this->imagesContent as $model) {
-				$model->delete();
-			}
-		}
-		return parent::beforeDelete();
-	}
-
-	protected function afterDelete()
-	{
-		if ($this->block) {
-			$this->block->delete();
-		}
-		return parent::afterDelete();
-	}
-
 	public function saveContent($images = array())
 	{
 		if (!$images) {
@@ -252,14 +298,5 @@ class Images extends CActiveRecord
 				}
 			}
 		}
-	}
-
-	public function getTemplateName()
-	{
-		if (!empty($this->_views[$this->view])) {
-			return "_" . $this->_views[$this->view];
-		}
-
-		return  "_" . $this->_views[0];
 	}
 }

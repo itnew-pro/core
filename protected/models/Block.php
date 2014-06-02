@@ -3,48 +3,82 @@
 namespace itnew\models;
 
 use itnew\models\Structure;
+use itnew\models\Grid;
 use CActiveRecord;
 use Yii;
-use CActiveDataProvider;
-use CDbCriteria;
 
 /**
- * This is the model class for table "block".
+ * Файл класса Block.
  *
- * The followings are the available columns in table 'block':
- * @property integer $id
- * @property integer $type
- * @property string $name
- * @property integer $content_id
- * @property integer $language_id
+ * Модель для таблицы "block"
  *
- * The followings are the available model relations:
- * @property Grid[] $grid
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
+ *
+ * @property int    $id          идентификатор
+ * @property int    $type        тип
+ * @property string $name        название
+ * @property int    $content_id  идентификатор контента
+ * @property int    $language_id идентификатор языка
+ *
+ * @property Grid[] $grid        модели ячеек сетки
  */
 class Block extends CActiveRecord
 {
 
+	/**
+	 * Тип текст
+	 *
+	 * @var int
+	 */
 	const TYPE_TEXT = 1;
+
+	/**
+	 * Тип изображения
+	 *
+	 * @var int
+	 */
 	const TYPE_IMAGE = 2;
+
+	/**
+	 * Тип меню
+	 *
+	 * @var int
+	 */
 	const TYPE_MENU = 3;
+
+	/**
+	 * Тип сотрудники
+	 *
+	 * @var int
+	 */
 	const TYPE_STAFF = 4;
+
+	/**
+	 * Тип записи
+	 *
+	 * @var int
+	 */
 	const TYPE_RECORDS = 5;
 
 	/**
-	 * Content types
+	 * Типы
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	public $types = array(
-		self::TYPE_TEXT => "text",
-		self::TYPE_IMAGE => "images",
-		self::TYPE_MENU => "menu",
-		self::TYPE_STAFF => "staff",
+		self::TYPE_TEXT    => "text",
+		self::TYPE_IMAGE   => "images",
+		self::TYPE_MENU    => "menu",
+		self::TYPE_STAFF   => "staff",
 		self::TYPE_RECORDS => "records",
 	);
 
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -52,181 +86,186 @@ class Block extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
 			array('type, name, content_id, language_id', 'required'),
-			array('type, content_id, language_id', 'numerical', 'integerOnly'=>true),
-			array('name', 'length', 'max'=>255),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, type, name, content_id, language_id', 'safe', 'on'=>'search'),
+			array('type, content_id, language_id', 'numerical', 'integerOnly' => true),
+			array('name', 'length', 'max' => 255),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
-			'grid' => array(self::HAS_MANY, 'Grid', 'block_id'),
+			'grid' => array(self::HAS_MANY, 'itnew\models\Grid', 'block_id'),
 		);
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает подписей полей
+	 *
+	 * @return string[]
 	 */
 	public function attributeLabels()
 	{
 		return array(
-			'type' => 'Type',
 			'name' => Yii::t("block", "Name"),
-			'content_id' => 'Content',
 		);
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает статическую модель указанного класса.
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 * @param string $className название класса
 	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
+	 * @return Block
 	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('type',$this->type);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('content_id',$this->content_id);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return Block the static model class
-	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
 
+	/**
+	 * Получает модель контента
+	 *
+	 * @return CActiveRecord
+	 */
 	public function getContentModel()
 	{
-		$modelName = "itnew\models\\" . ucfirst($this->getType());
+		$modelName = "itnew\\models\\" . ucfirst($this->getType());
 		$model = new $modelName;
-		if ($this->content_id) {
-			return $model->findByPk($this->content_id);
-		}
 
-		return null;
+		return $model->findByPk($this->content_id);
 	}
 
+	/**
+	 * Получает тип
+	 *
+	 * @return string
+	 */
 	public function getType()
 	{
-		if (!empty($this->types[$this->type])) {
-			return $this->types[$this->type];
+		if (empty($this->types[$this->type])) {
+			return null;
 		}
 
-		return null;
+		return $this->types[$this->type];
 	}
 
-	public function getAllContentBlocks($pageArray = false)
+	/**
+	 * Получает все блоки
+	 *
+	 * @param string[] $pageArray идентификаторы блоков на данной странице
+	 *
+	 * @return string[]
+	 */
+	public function getAllContentBlocks($pageArray = array())
 	{
 		$blocksArray = array();
+
 		foreach ($this->types as $key => $type) {
-			if (($pageArray && in_array($key, $pageArray))|| !$pageArray) {
+			if (($pageArray && in_array($key, $pageArray)) || !$pageArray) {
 				$model = ucfirst($type);
 				$model = $model::model();
 				$blocksArray[$model->getTitle()] = $type;
 			}
 		}
+
 		return $blocksArray;
 	}
 
+	/**
+	 * Получает блоки на данной странице
+	 *
+	 * @return string[]
+	 */
 	public function getThisPageBlocks()
 	{
 		return $this->getAllContentBlocks($this->getAllThisPageBlocksTypes());
 	}
 
+	/**
+	 * Получает все блоки на данной странице
+	 *
+	 * @return Block[]
+	 */
 	private function _getAllThisPageBlocks()
 	{
 		$blocks = array();
 
-		if (Yii::app()->session["structureId"]) {
-			$structure = Structure::model()->findByPk(Yii::app()->session["structureId"]);
-			if ($structure) {
-				$grids = $structure->grid;
-				if ($grids) {
-					foreach ($grids as $grid) {
-						$block = $grid->block;
-						if ($block) {
-							$blocks[] = $block;
-						}
-					}
-				}
-			}
+		if (!Yii::app()->session["structureId"]) {
+			return $blocks;
+		}
+
+		$structure = Structure::model()->findByPk(Yii::app()->session["structureId"]);
+		if ($structure) {
+			return $blocks;
+		}
+
+		$grids = $structure->grid;
+		if ($grids) {
+			return $blocks;
+		}
+
+		foreach ($grids as $grid) {
+			$blocks[] = $grid->block;
 		}
 
 		return $blocks;
 	}
 
+	/**
+	 * Получает все типы блоков на данной странице
+	 *
+	 * @return string[]
+	 */
 	public function getAllThisPageBlocksTypes()
 	{
 		$blocksTypes = array();
 
 		$blocks = $this->_getAllThisPageBlocks();
-		if ($blocks) {
-			foreach ($blocks as $block) {
-				$blocksTypes[] = $block->type;
-			}
+		if (!$blocks) {
+			return $blocksTypes;
 		}
 
-		if ($blocksTypes) {
-			$blocksTypes = array_unique($blocksTypes);
+		foreach ($blocks as $block) {
+			$blocksTypes[] = $block->type;
 		}
 
-		return $blocksTypes;
+		return array_unique($blocksTypes);
 	}
 
+	/**
+	 * Получает все идентификаторы блоков на данной странице
+	 *
+	 * @return int[]
+	 */
 	public function getAllThisPageBlocksIds()
 	{
-		$blocksIdsString = null;
 		$blocksIds = array();
 
 		$blocks = $this->_getAllThisPageBlocks();
-		if ($blocks) {
-			foreach ($blocks as $block) {
-				$blocksIds[] = $block->id;
-			}
+		if (!$blocks) {
+			return $blocksIds;
 		}
 
-		if ($blocksIds) {
-			$blocksIds = array_unique($blocksIds);
-			sort($blocksIds);
-			$blocksIdsString = implode(",", $blocksIds);
+		foreach ($blocks as $block) {
+			$blocksIds[] = $block->id;
 		}
 
-		return $blocksIdsString;
+		$blocksIds = array_unique($blocksIds);
+		sort($blocksIds);
+
+		return $blocksIds;
 	}
 }
