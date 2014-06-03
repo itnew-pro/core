@@ -83,7 +83,10 @@ echo CHtml::ajaxButton(
 				$(".loader-login-button").hide();
 				$("body").append(html);
 				showWindow("login");
-			}'
+			}',
+		"error" => 'function (xhr) {
+			getExceptionError(xhr);
+		}'
 	),
 	array(
 		"id"    => "login-button",

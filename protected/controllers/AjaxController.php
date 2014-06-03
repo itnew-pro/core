@@ -4,6 +4,7 @@ namespace itnew\controllers;
 
 use CController;
 use Yii;
+use CHttpException;
 
 /**
  * Файл класса AjaxController.
@@ -18,26 +19,35 @@ class AjaxController extends CController
 {
 
 	/**
+	 * Ошибка
+	 *
+	 * @var string
+	 */
+	public static $error = "";
+
+	/**
 	 * Обрабатывает ajax-запрос
 	 * Проверяет необходимые входные данные и передает действие соответствующему контроллеру
+	 *
+	 * @throws CHttpException
 	 *
 	 * @return void
 	 */
 	public function actionIndex()
 	{
-		if (Yii::app()->request->isAjaxRequest) {
+		$controller = Yii::app()->request->getQuery("controller");
+		$action = Yii::app()->request->getQuery("action");
+		$language = Yii::app()->request->getQuery("language");
 
-			if (
-				Yii::app()->request->getQuery("controller")
-				&& Yii::app()->request->getQuery("action")
-				&& Yii::app()->request->getQuery("language")
-			) {
-				$this->forward(
-					Yii::app()->request->getQuery("controller") .
-					DIRECTORY_SEPARATOR .
-					Yii::app()->request->getQuery("action")
-				);
-			}
+		if (
+			!Yii::app()->request->isAjaxRequest
+			|| !$controller
+			|| !$action
+			|| !$language
+		) {
+			throw new CHttpException(404, Yii::t("errors", "Invalid AJAX request"));
 		}
+
+		$this->forward("{$controller}/{$action}");
 	}
 }

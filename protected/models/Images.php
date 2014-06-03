@@ -279,22 +279,23 @@ class Images extends CActiveRecord
 		return;
 	}
 
-	public function saveContent($images = array())
+	public function saveContent($post = array())
 	{
-		if (!$images) {
-			$images = Yii::app()->request->getPost("Images");
+		if (!$post) {
+			return false;
 		}
-		if ($images) {
-			if (!empty($images["imageContentIds"])) {
-				$sort = 1;
-				foreach (explode(",", $images["imageContentIds"]) as $pk) {
-					if ($pk) {
-						if ($model = ImagesContent::model()->findByPk($pk)) {
-							$model->sort = $sort;
-							$model->save();
-							$sort++;
-						}
-					}
+
+		if (empty($post["imageContentIds"])) {
+			return false;
+		}
+
+		$sort = 10;
+		foreach (explode(",", $images["imageContentIds"]) as $pk) {
+			if ($pk) {
+				if ($model = ImagesContent::model()->findByPk($pk)) {
+					$model->sort = $sort;
+					$model->save();
+					$sort = $sort + 10;
 				}
 			}
 		}

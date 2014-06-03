@@ -5,6 +5,7 @@ namespace itnew\controllers;
 use itnew\models\Structure;
 use CController;
 use Yii;
+use CHtml;
 
 /**
  * Файл класса ContentController.
@@ -215,15 +216,21 @@ class ContentController extends CController
 	/**
 	 * Сохраняет модель в окне
 	 *
-	 * @return void
+	 * @return bool|void
 	 */
 	public function actionSaveWindow()
 	{
-		if (Yii::app()->request->getQuery("id")) {
-			if ($model = $this->loadModel(Yii::app()->request->getQuery("id"))) {
-				$model->saveContent();
-			}
+		$id = Yii::app()->request->getQuery("id");
+		if (!$id) {
+			return false;
 		}
+
+		$model = $this->loadModel($id);
+		if (!$model) {
+			return false;
+		}
+
+		$model->saveContent(Yii::app()->request->getPost(CHtml::modelName($model)));
 	}
 
 	/**

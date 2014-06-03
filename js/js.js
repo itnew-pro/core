@@ -34,3 +34,12 @@ String.prototype.translit = (function() {
 		return this.replace(r, k).replace(/[^a-zA-Z0-9_-]/g, "").replace(/_+/g, "_");
 	};
 })();
+
+function getExceptionError(xhr) {
+	var str = xhr.responseText.match(/<h2>[^<>]*<\/h2>/gi)[0];
+	str = str.replace(/<h2>/i, "");
+	str = str.replace(/<\/h2>/i, "");
+	$(".loader").hide();
+
+	alert(str);
+}
