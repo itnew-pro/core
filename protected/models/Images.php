@@ -101,7 +101,12 @@ class Images extends CActiveRecord
 	public function relations()
 	{
 		return array(
-			'imagesContent' => array(self::HAS_MANY, 'itnew\models\ImagesContent', 'images_id', "order" => "sort"),
+			'imagesContent' => array(
+				self::HAS_MANY,
+				'itnew\models\ImagesContent',
+				'images_id',
+				"order" => "sort"
+			),
 			"block"         => array(
 				self::HAS_ONE,
 				'itnew\models\Block',
@@ -237,48 +242,79 @@ class Images extends CActiveRecord
 		return "_" . $this->_views[$this->view];
 	}
 
-	public function saveSettings()
+	/**
+	 * Обновляет настройки модели
+	 *
+	 * @param int $id идентификатор
+	 *
+	 * @return Images|null
+	 */
+	public function updateSettings($id, $blockPost, $modelPost)
 	{
-		if (Yii::app()->request->getQuery("id")) {
-			if ($model = $this->findByPk(Yii::app()->request->getQuery("id"))) {
-				if ($block = $model->getBlock()) {
-					$model->attributes = Yii::app()->request->getPost("Images");
-					$block->attributes = Yii::app()->request->getPost("Block");
-
-					$transaction = Yii::app()->db->beginTransaction();
-					if ($block->save()) {
-						if ($model->save()) {
-							$transaction->commit();
-							return $model;
-						}
-					}
-					$transaction->rollback();
-				}
-			}
-		} else {
-			$model = new self;
-			$block = new Block;
-			$model->attributes = Yii::app()->request->getPost("Images");
-			$block->attributes = Yii::app()->request->getPost("Block");
-
-			$transaction = Yii::app()->db->beginTransaction();
-
-			if ($model->save()) {
-				$block->content_id = $model->id;
-				$block->type = Block::TYPE_IMAGE;
-				$block->language_id = Language::getActiveId();
-
-				if ($block->save()) {
-					$transaction->commit();
-					return $model;
-				}
-			}
-			$transaction->rollback();
+		$model = $this->findByPk($id);
+		if (!$model) {
+			return null;
 		}
 
-		return;
+		$block = $model->getBlock();
+		if (!$block) {
+			return null;
+		}
+
+		$model->attributes = $modelPost;
+		$block->attributes = $blockPost;
+
+		$transaction = Yii::app()->db->beginTransaction();
+		if ($block->save()) {
+			if ($model->save()) {
+				$transaction->commit();
+				return $model;
+			}
+		}
+		$transaction->rollback();
+
+		return null;
 	}
 
+	/**
+	 * Добавляет настройки
+	 *
+	 * @param string[] $blockPost данные POST для блока
+	 * @param string[] $modelPost данные POST для модели
+	 *
+	 * @return Text|null
+	 */
+	public function addSettings($blockPost, $modelPost)
+	{
+		$model = new self;
+		$block = new Block;
+		$model->attributes = $modelPost;
+		$block->attributes = $blockPost;
+
+		$transaction = Yii::app()->db->beginTransaction();
+
+		if ($model->save()) {
+			$block->content_id = $model->id;
+			$block->type = Block::TYPE_IMAGE;
+			$block->language_id = Language::getActiveId();
+
+			if ($block->save()) {
+				$transaction->commit();
+				return $model;
+			}
+		}
+		$transaction->rollback();
+
+		return null;
+	}
+
+	/**
+	 * Сохраняет контент
+	 *
+	 * @param string $post даныне через POST
+	 *
+	 * @return bool
+	 */
 	public function saveContent($post = array())
 	{
 		if (!$post) {
@@ -292,12 +328,15 @@ class Images extends CActiveRecord
 		$sort = 10;
 		foreach (explode(",", $images["imageContentIds"]) as $pk) {
 			if ($pk) {
-				if ($model = ImagesContent::model()->findByPk($pk)) {
+				$model = ImagesContent::model()->findByPk($pk);
+				if ($model) {
 					$model->sort = $sort;
 					$model->save();
 					$sort = $sort + 10;
 				}
 			}
 		}
+
+		return true;
 	}
 }

@@ -2,6 +2,7 @@
 
 namespace itnew\controllers;
 
+use itnew\models\StaffGroup;
 use CController;
 use Yii;
 
@@ -70,7 +71,7 @@ class StaffController extends ContentController
 	 */
 	public function actionSaveGroup()
 	{
-		$pk = StaffGroup::model()->saveGroup();
+		$pk = StaffGroup::model()->saveGroup(Yii::app()->request->getPost("StaffGroup"));
 		if ($pk) {
 			echo $this->actionWindow($pk);
 		}

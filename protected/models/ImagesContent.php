@@ -2,37 +2,80 @@
 
 namespace itnew\models;
 
+use itnew\models\Images;
 use CActiveRecord;
 use Yii;
 use CActiveDataProvider;
 use CDbCriteria;
+use CUploadedFile;
 
 /**
- * This is the model class for table "images_content".
+ * Файл класса ImagesContent.
  *
- * The followings are the available columns in table 'images_content':
- * @property integer $id
- * @property string $file
- * @property integer $images_id
- * @property integer $sort
- * @property string $alt
- * @property string $link
+ * Модель для таблицы "images_content"
  *
- * The followings are the available model relations:
- * @property Images $images
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
+ *
+ * @property int    $id        идентификатор
+ * @property string $file      путь до файла
+ * @property int    $images_id идентификатор изображений
+ * @property int    $sort      сортировка
+ * @property string $alt       описание
+ * @property string $link      ссылка
+ *
+ * @property Images $images    модель изображений
  */
 class ImagesContent extends CActiveRecord
 {
 
+	/**
+	 * Стандартная ширина
+	 *
+	 * @var int
+	 */
 	const SIZE_WIDTH = 1280;
+
+	/**
+	 * Стандартная высота
+	 *
+	 * @var int
+	 */
 	const SIZE_HEIGHT = 800;
+
+	/**
+	 * Стандартная ширина миниатюрки
+	 *
+	 * @var int
+	 */
 	const SIZE_THUMB_WIDTH = 200;
+
+	/**
+	 * Стандартная высота миниатюрки
+	 *
+	 * @var int
+	 */
 	const SIZE_THUMB_HEIGHT = 200;
+
+	/**
+	 * Ширина миниатюрки для окна
+	 *
+	 * @var int
+	 */
 	const SIZE_WINDOW_WIDTH = 150;
+
+	/**
+	 * Высота миниатюрки для окна
+	 *
+	 * @var int
+	 */
 	const SIZE_WINDOW_HEIGHT = 113;
 
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -40,125 +83,111 @@ class ImagesContent extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
-			array('images_id, sort', 'numerical', 'integerOnly'=>true),
-			array('alt, link', 'length', 'max'=>255),
+			array('images_id, sort', 'numerical', 'integerOnly' => true),
+			array('alt, link', 'length', 'max' => 255),
 			array('file', 'file', 'types' => 'jpg, jpeg, gif, png', 'allowEmpty' => true),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, file, images_id, sort, alt, link', 'safe', 'on'=>'search'),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
-			'images' => array(self::BELONGS_TO, 'Images', 'images_id'),
+			'images' => array(
+				self::BELONGS_TO,
+				'itnew\models\Images',
+				'images_id'
+			),
 		);
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает подписей полей
+	 *
+	 * @return string[]
 	 */
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'file' => 'File',
+			'id'        => 'ID',
+			'file'      => 'File',
 			'images_id' => 'Images',
-			'sort' => 'Sort',
-			'alt' => 'Alt',
-			'link' => 'Link',
+			'sort'      => 'Sort',
+			'alt'       => 'Alt',
+			'link'      => 'Link',
 		);
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает статическую модель указанного класса.
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 * @param string $className название класса
 	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
+	 * @return ImagesContent|null
 	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('file',$this->file,true);
-		$criteria->compare('images_id',$this->images_id);
-		$criteria->compare('sort',$this->sort);
-		$criteria->compare('alt',$this->alt,true);
-		$criteria->compare('link',$this->link,true);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return ImagesContent the static model class
-	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
 
-	public function upload($images = null)
+	/**
+	 * Загружает и обрезает изображение
+	 *
+	 * @param Images $images объект изображений
+	 *
+	 * @return ImagesContent
+	 */
+	public function upload(Images $images = null)
 	{
-		if ($images) {
-			$name = substr(md5(microtime(1)), 0, 10) . ".jpg";
-
-			$sizes = $this->_getSizes($images);
-
-			$model = new self;
-			$model->images_id = $images->id;
-			$model->file = $name;
-			if($model->save()){
-				if (CUploadedFile::getInstance($model, "file")->saveAs($model->_getUploadDir() . $name)) {
-					
-					$image = Yii::app()->image->load($model->_getUploadDir() . $name);
-					$image->
-						resize($sizes["width"], $sizes["height"])->
-						quality(90)->
-						save($model->_getUploadDir() . "view_" . $name);
-					$image->
-						resize($sizes["thumbWidth"], $sizes["thumbHeight"])->
-						quality(90)->
-						save($model->_getUploadDir() . "thumb_" . $name);
-					$image->
-						resize($sizes["windowWidth"], $sizes["windowHeight"])->
-						quality(90)->
-						save($model->_getUploadDir() . "window_" . $name);
-
-					return $model;
-				}
-			}
+		if (!$images) {
+			return null;
 		}
 
-		return;
+		$name = substr(md5(microtime(1)), 0, 10) . ".jpg";
+
+		$sizes = $this->_getSizes($images);
+
+		$model = new self;
+		$model->images_id = $images->id;
+		$model->file = $name;
+		if (
+			$model->save()
+			&& CUploadedFile::getInstance($model, "file")->saveAs($model->_getUploadDir() . $name)
+		) {
+			$image = Yii::app()->image->load($model->_getUploadDir() . $name);
+			$image->resize($sizes["width"], $sizes["height"])->quality(90)->save(
+				$model->_getUploadDir() . "view_" . $name
+			);
+			$image->resize($sizes["thumbWidth"], $sizes["thumbHeight"])->quality(90)->save(
+				$model->_getUploadDir() . "thumb_" . $name
+			);
+			$image->resize($sizes["windowWidth"], $sizes["windowHeight"])->quality(90)->save(
+				$model->_getUploadDir() . "window_" . $name
+			);
+
+			return $model;
+		}
+
+		return null;
 	}
 
+	/**
+	 * Получает путь до папки с изображениями
+	 * Используется для загрузки
+	 *
+	 * @return string
+	 */
 	private function _getUploadDir()
 	{
 		return Yii::app()->params["staticDir"] .
@@ -169,6 +198,13 @@ class ImagesContent extends CActiveRecord
 			DIRECTORY_SEPARATOR;
 	}
 
+	/**
+	 * Получает URL изображения
+	 *
+	 * @param string $type тип
+	 *
+	 * @return string
+	 */
 	public function getUrl($type = "view")
 	{
 		switch ($type) {
@@ -189,7 +225,14 @@ class ImagesContent extends CActiveRecord
 		return $this->_getDir() . $name;
 	}
 
-	private function _getSizes($images)
+	/**
+	 * Получает размеры для сжатия изображения
+	 *
+	 * @param Images $images модель изображений
+	 *
+	 * @return string[]
+	 */
+	private function _getSizes(Images $images)
 	{
 		$sizes = array();
 
@@ -221,6 +264,11 @@ class ImagesContent extends CActiveRecord
 		return $sizes;
 	}
 
+	/**
+	 * Выполняется после удаления модели
+	 *
+	 * @return void
+	 */
 	public function afterDelete()
 	{
 		if (file_exists($this->_getUploadDir() . $this->file)) {
@@ -235,25 +283,45 @@ class ImagesContent extends CActiveRecord
 		if (file_exists($this->_getUploadDir() . "window_" . $this->file)) {
 			unlink($this->_getUploadDir() . "window_" . $this->file);
 		}
-		
+
 		parent::afterDelete();
 	}
 
+	/**
+	 * Получает URL миниатюрки
+	 *
+	 * @return string
+	 */
 	public function getThumbUrl()
 	{
 		return $this->_getDir() . "thumb_" . $this->file;
 	}
 
+	/**
+	 * Получает URL на оригинал
+	 *
+	 * @return string
+	 */
 	public function getFullUrl()
 	{
 		return $this->_getDir() . $this->file;
 	}
 
+	/**
+	 * Получает URL миниатюрки для окна
+	 *
+	 * @return string
+	 */
 	public function getViewUrl()
 	{
 		return $this->_getDir() . "view_" . $this->file;
 	}
 
+	/**
+	 * Получает физический путь до папки с изображениями
+	 *
+	 * @return string
+	 */
 	private function _getDir()
 	{
 		return Yii::app()->params["baseUrl"] .

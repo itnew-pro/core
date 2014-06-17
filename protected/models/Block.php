@@ -107,7 +107,11 @@ class Block extends CActiveRecord
 	public function relations()
 	{
 		return array(
-			'grid' => array(self::HAS_MANY, 'itnew\models\Grid', 'block_id'),
+			'grid' => array(
+				self::HAS_MANY,
+				'itnew\models\Grid',
+				'block_id'
+			),
 		);
 	}
 

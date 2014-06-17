@@ -61,8 +61,16 @@ class Grid extends CActiveRecord
 	public function relations()
 	{
 		return array(
-			'block'     => array(self::BELONGS_TO, 'itnew\models\Block', 'block_id'),
-			'structure' => array(self::BELONGS_TO, 'itnew\models\Structure', 'structure_id'),
+			'block'     => array(
+				self::BELONGS_TO,
+				'itnew\models\Block',
+				'block_id'
+			),
+			'structure' => array(
+				self::BELONGS_TO,
+				'itnew\models\Structure',
+				'structure_id'
+			),
 		);
 	}
 

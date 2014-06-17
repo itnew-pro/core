@@ -3,6 +3,7 @@
 namespace itnew\controllers;
 
 use itnew\models\Structure;
+use itnew\models\Block;
 use CController;
 use Yii;
 use CHtml;
@@ -257,18 +258,31 @@ class ContentController extends CController
 	/**
 	 * Сохраняет настройки
 	 *
-	 * @return void
+	 * @return void|bool
 	 */
 	public function actionSaveSettings()
 	{
-		if ($model = $this->loadModel()->saveSettings()) {
-			$json = array(
-				"panel"   => $this->actionPanel(true),
-				"content" => $this->getContent($model->id),
-			);
+		$id = Yii::app()->request->getQuery("id");
+		$model = $this->loadModel();
+		$blockPost = Yii::app()->request->getPost(CHtml::modelName(new Block));
+		$modelPost = Yii::app()->request->getPost(CHtml::modelName($model));
 
-			echo json_encode($json);
+		if ($id) {
+			$model = $model->updateSettings($id, $blockPost, $modelPost);
+		} else {
+			$model = $model->addSettings($blockPost, $modelPost);
 		}
+
+		if (!$model) {
+			return false;
+		}
+
+		$json = array(
+			"panel"   => $this->actionPanel(true),
+			"content" => $this->getContent($model->id),
+		);
+
+		echo json_encode($json);
 	}
 
 	/**

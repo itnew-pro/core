@@ -3,27 +3,50 @@
 namespace itnew\models;
 
 use itnew\models\Structure;
+use itnew\models\Block;
+use itnew\models\Language;
 use CActiveRecord;
 use Yii;
 use CActiveDataProvider;
 use CDbCriteria;
 
 /**
- * This is the model class for table "text".
+ * Файл класса Text.
  *
- * The followings are the available columns in table 'text':
- * @property integer $id
- * @property integer $rows
- * @property integer $editor
- * @property integer $tag
- * @property string $text
+ * Модель для таблицы "text"
+ *
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
+ *
+ * @property int    $id     идентификатор
+ * @property int    $rows   количество строк
+ * @property int    $editor редактор
+ * @property int    $tag    идентификатор тега
+ * @property string $text   текст
  */
 class Text extends CActiveRecord
 {
 
+	/**
+	 * Стандартное количество строк в редакторе
+	 *
+	 * @var int
+	 */
 	const DEFAULT_TEXT_SIZE = 15;
+
+	/**
+	 * Стандартное количество строк в мини редакторе
+	 *
+	 * @var int
+	 */
 	const DEFAULT_DESCRIPTION_SIZE = 5;
 
+	/**
+	 * Теги
+	 *
+	 * @var string[]
+	 */
 	public $tagList = array(
 		0 => "div",
 		1 => "h1",
@@ -35,7 +58,9 @@ class Text extends CActiveRecord
 	);
 
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -43,35 +68,32 @@ class Text extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
 			array('text', 'length'),
 			array('rows, editor, tag', 'numerical', 'integerOnly' => true),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, rows, editor, tag, text', 'safe', 'on'=>'search'),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
 			"block" => array(
 				self::HAS_ONE,
-				'Block',
+				'itnew\models\Block',
 				'content_id',
 				"condition" => "block.type = :type",
-				"params" => array(
+				"params"    => array(
 					":type" => Block::TYPE_TEXT,
 				),
 			),
@@ -79,184 +101,229 @@ class Text extends CActiveRecord
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает подписей полей
+	 *
+	 * @return string[]
 	 */
 	public function attributeLabels()
 	{
 		return array(
-			'rows' => Yii::t("text", "Rows"),
+			'rows'   => Yii::t("text", "Rows"),
 			'editor' => Yii::t("text", "Editor"),
-			'tag' => Yii::t("text", "Tag"),
+			'tag'    => Yii::t("text", "Tag"),
 		);
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает статическую модель указанного класса.
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 * @param string $className название класса
 	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
+	 * @return Text
 	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('rows',$this->rows);
-		$criteria->compare('editor',$this->editor);
-		$criteria->compare('tag',$this->tag);
-		$criteria->compare('text',$this->text,true);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return Text the static model class
-	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
 
 	/**
-	 * Get HTML tag's name
+	 * Получает название тега
 	 *
 	 * @return string
 	 */
 	public function getTag()
 	{
-		if (!empty($this->tagList[$this->tag])) {
-			return $this->tagList[$this->tag];
+		if (empty($this->tagList[$this->tag])) {
+			return $this->tagList[0];
 		}
-		return $this->tagList[0];
+
+		return $this->tagList[$this->tag];
 	}
 
+	/**
+	 * Получает название
+	 *
+	 * @return string
+	 */
 	public function getTitle()
 	{
 		return Yii::t("text", "Text");
 	}
 
-	public function getAllContentBlocks($notIn = null)
+	/**
+	 * Получает все блоки контента
+	 *
+	 * @param int[] $in идентификаторы блоков
+	 *
+	 * @return Block[]
+	 */
+	public function getAllContentBlocks($in = array())
 	{
 		$criteria = new CDbCriteria;
 		$criteria->condition = "language_id = :language_id AND type = :type";
 		$criteria->params = array(
 			":language_id" => Language::getActiveId(),
-			":type" => Block::TYPE_TEXT
+			":type"        => Block::TYPE_TEXT
 		);
 
-		if ($notIn) {
-			$criteria->condition .= " AND id IN ({$notIn})";
+		if ($in) {
+			$criteria->addInCondition("t.id", $in);
 		}
 
 		return Block::model()->findAll($criteria);
 	}
 
+	/**
+	 * Получает все блоки на текущей странице
+	 *
+	 * @return Block[]
+	 */
 	public function getThisPageBlocks()
 	{
 		return $this->getAllContentBlocks(Block::model()->getAllThisPageBlocksIds());
 	}
 
+	/**
+	 * Получает название класса редактора
+	 *
+	 * @return string
+	 */
 	public function getEditorClass()
 	{
 		if ($this->editor) {
 			return " tinymce";
 		}
+
 		return null;
 	}
 
-	public function saveSettings()
+	/**
+	 * Обновляет настройки модели
+	 *
+	 * @param int $id идентификатор
+	 *
+	 * @return Text|null
+	 */
+	public function updateSettings($id, $blockPost, $modelPost)
 	{
-		if (Yii::app()->request->getQuery("id")) {
-			if ($model = $this->findByPk(Yii::app()->request->getQuery("id"))) {
-				if ($block = $model->getBlock()) {
-					$model->attributes = Yii::app()->request->getPost("Text");
-					$block->attributes = Yii::app()->request->getPost("Block");
-
-					$transaction = Yii::app()->db->beginTransaction();
-					if ($block->save()) {
-						if ($model->save()) {
-							$transaction->commit();
-							return $model;
-						}
-					}
-					$transaction->rollback();
-				}
-			}
-		} 
-
-		else {
-			$model = new self;
-			$block = new Block;
-			$model->attributes = Yii::app()->request->getPost("Text");
-			$block->attributes = Yii::app()->request->getPost("Block");
-
-			$transaction = Yii::app()->db->beginTransaction();
-			if ($model->save()) {
-				$block->content_id = $model->id;
-				$block->type = Block::TYPE_TEXT;
-				$block->language_id = Language::getActiveId();
-				if ($block->save()) {
-					$transaction->commit();
-					return $model;
-				}
-			}
-			$transaction->rollback();
+		$model = $this->findByPk($id);
+		if (!$model) {
+			return null;
 		}
 
-		return;
+		$block = $model->getBlock();
+		if (!$block) {
+			return null;
+		}
+
+		$model->attributes = $modelPost;
+		$block->attributes = $blockPost;
+
+		$transaction = Yii::app()->db->beginTransaction();
+		if ($block->save()) {
+			if ($model->save()) {
+				$transaction->commit();
+
+				return $model;
+			}
+		}
+		$transaction->rollback();
+
+		return null;
 	}
 
+	/**
+	 * Добавляет настройки
+	 *
+	 * @param string[] $blockPost данные POST для блока
+	 * @param string[] $modelPost данные POST для модели
+	 *
+	 * @return Text|null
+	 */
+	public function addSettings($blockPost, $modelPost)
+	{
+		$model = new self;
+		$block = new Block;
+		$model->attributes = $modelPost;
+		$block->attributes = $blockPost;
+
+		$transaction = Yii::app()->db->beginTransaction();
+		if ($model->save()) {
+			$block->content_id = $model->id;
+			$block->type = Block::TYPE_TEXT;
+			$block->language_id = Language::getActiveId();
+			if ($block->save()) {
+				$transaction->commit();
+
+				return $model;
+			}
+		}
+		$transaction->rollback();
+
+		return null;
+	}
+
+	/**
+	 * Получает список с количеством строк редактора
+	 *
+	 * @return int[]
+	 */
 	public function getRowsList()
 	{
 		$rows = array();
+
 		$rows[0] = Yii::t("text", "Max");
-		for ($i = 1; $i < 21; $i++) { 
+		for ($i = 1; $i < 21; $i++) {
 			$rows[$i] = $i;
 		}
+
 		return $rows;
 	}
 
+	/**
+	 * Получает блок
+	 *
+	 * @return Block
+	 */
 	public function getBlock()
 	{
 		if ($this->block) {
 			return $this->block;
 		}
+
 		return new Block;
 	}
 
+	/**
+	 * Вызывается после удаления модели
+	 *
+	 * @return void
+	 */
 	protected function afterDelete()
 	{
 		if ($this->block) {
 			$this->block->delete();
 		}
+
 		return parent::afterDelete();
 	}
 
+	/**
+	 * Делает дубликат
+	 *
+	 * @return bool
+	 */
 	public function duplicate()
 	{
-		$transaction = Yii::app()->db->beginTransaction();
-
 		$textCopy = new Text;
 		$textCopy->rows = $this->rows;
 		$textCopy->editor = $this->editor;
 		$textCopy->tag = $this->tag;
 		$textCopy->text = $this->text;
-	
+
+		$transaction = Yii::app()->db->beginTransaction();
 		if ($textCopy->save()) {
-				
+
 			$blockCopy = new Block;
 			$blockCopy->type = $this->block->type;
 			$blockCopy->name = $this->block->name . " - " . Yii::t("common", "copy");
@@ -265,22 +332,40 @@ class Text extends CActiveRecord
 
 			if ($blockCopy->save()) {
 				$transaction->commit();
+
 				return true;
 			}
 		}
-
 		$transaction->rollback();
+
 		return false;
 	}
 
+	/**
+	 * Сохраняет контент
+	 *
+	 * @return bool
+	 */
 	public function saveContent()
 	{
-		if ($text = Yii::app()->request->getPost("Text")) {
-			$this->text = $text["text"];
-			$this->save();
+		$text = Yii::app()->request->getPost("Text");
+		if (!$text) {
+			return false;
 		}
+
+		$this->text = $text["text"];
+		if ($this->save()) {
+			return true;
+		}
+
+		return false;
 	}
 
+	/**
+	 * Получает новую стандартную модель для текста
+	 *
+	 * @return Text
+	 */
 	public function getDefaultTextModel()
 	{
 		$model = new self;
@@ -290,6 +375,11 @@ class Text extends CActiveRecord
 		return $model;
 	}
 
+	/**
+	 * Получает новую стандартную модель для описания
+	 *
+	 * @return Text
+	 */
 	public function getDefaultDescriptionModel()
 	{
 		$model = new self;

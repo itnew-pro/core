@@ -79,7 +79,11 @@ class Structure extends CActiveRecord
 				'structure_id',
 				"order" => "grid.line, grid.top, grid.left"
 			),
-			'sections' => array(self::HAS_MANY, 'itnew\models\Section', 'structure_id'),
+			'sections' => array(
+				self::HAS_MANY,
+				'itnew\models\Section',
+				'structure_id'
+			),
 		);
 	}
 
@@ -130,6 +134,11 @@ class Structure extends CActiveRecord
 		return $section->structure;
 	}
 
+	/**
+	 * Определяет, включен ли показ блоков на данной странице
+	 *
+	 * @return bool
+	 */
 	public static function isContentShowPage()
 	{
 		if (Yii::app()->request->getQuery("contentShow")) {
@@ -146,6 +155,11 @@ class Structure extends CActiveRecord
 		return false;
 	}
 
+	/**
+	 * Вызывается перед удалением модели
+	 *
+	 * @return bool
+	 */
 	public function beforeDelete()
 	{
 		foreach ($this->grid as $grid) {
@@ -155,44 +169,58 @@ class Structure extends CActiveRecord
 		return parent::beforeDelete();
 	}
 
-	public static function isCss()
+	/**
+	 * Проверяет наличие файла css
+	 *
+	 * @return bool
+	 */
+	public function isCss()
 	{
-		$file =
-			__DIR__ .
-			DIRECTORY_SEPARATOR .
-			".." .
-			DIRECTORY_SEPARATOR .
-			".." .
-			DIRECTORY_SEPARATOR .
-			"static/" .
-			Yii::app()->params["siteId"] .
-			"/css.css";
-		if (file_exists($file)) {
+		if (file_exists($this->_getStaticDirPath() . "css.css")) {
 			return true;
 		}
 
 		return false;
 	}
 
-	public static function isJs()
+	/**
+	 * Проверяет наличие файла js
+	 *
+	 * @return bool
+	 */
+	public function isJs()
 	{
-		$file =
-			__DIR__ .
-			DIRECTORY_SEPARATOR .
-			".." .
-			DIRECTORY_SEPARATOR .
-			".." .
-			DIRECTORY_SEPARATOR .
-			"static/" .
-			Yii::app()->params["siteId"] .
-			"/js.js";
-		if (file_exists($file)) {
+		if (file_exists($this->_getStaticDirPath() . "js.js")) {
 			return true;
 		}
 
 		return false;
 	}
 
+	/**
+	 * Получает физический путь до папки со статикой
+	 *
+	 * @return string
+	 */
+	private function _getStaticDirPath()
+	{
+		return __DIR__ .
+		DIRECTORY_SEPARATOR .
+		".." .
+		DIRECTORY_SEPARATOR .
+		".." .
+		DIRECTORY_SEPARATOR .
+		"static" .
+		DIRECTORY_SEPARATOR .
+		Yii::app()->params["siteId"] .
+		DIRECTORY_SEPARATOR;
+	}
+
+	/**
+	 * Получает линии
+	 *
+	 * @return string[]
+	 */
 	public function getLines()
 	{
 		$list = array();
@@ -204,6 +232,11 @@ class Structure extends CActiveRecord
 		return $list;
 	}
 
+	/**
+	 * Получает ширину
+	 *
+	 * @return string
+	 */
 	public function getWidth()
 	{
 		$width = "100%";
@@ -215,6 +248,11 @@ class Structure extends CActiveRecord
 		return $width;
 	}
 
+	/**
+	 * Получает отступы
+	 *
+	 * @return string
+	 */
 	public function getMargin()
 	{
 		$margin = "0";
@@ -256,38 +294,40 @@ class Structure extends CActiveRecord
 			}
 		}
 
-		if ($borders) {
-			for ($i = 0; $i < count($borders); $i = $i + 2) {
-				if (!$i) {
-					$offset = $borders[$i] / 2;
-				} else {
-					$offset = ($borders[$i] - $borders[$i - 1] - 1) / 2;
-				}
+		if (!$borders) {
+			return $tree;
+		}
 
-				$gridsList = array();
-				$right = 0;
-				foreach ($grids as $grid) {
-					if (
-						$grid->left >= $borders[$i] / 2
-						&& $grid->left < $borders[$i + 1] / 2
-						&& $grid->width <= ($borders[$i + 1] - $borders[$i] + 1) / 2
-					) {
-						$gridsList[] = array(
-							"block"  => $grid->block,
-							"col"    => $grid->width,
-							"top"    => $grid->top,
-							"offset" => $grid->left - $borders[$i] / 2 - $right,
-						);
-						$right = $grid->left - $borders[$i] / 2 + $grid->width;
-					}
-				}
-
-				$tree[] = array(
-					"col"    => ($borders[$i + 1] - $borders[$i] + 1) / 2,
-					"offset" => $offset,
-					"grids"  => $gridsList,
-				);
+		for ($i = 0; $i < count($borders); $i = $i + 2) {
+			if ($i) {
+				$offset = ($borders[$i] - $borders[$i - 1] - 1) / 2;
+			} else {
+				$offset = $borders[$i] / 2;
 			}
+
+			$gridsList = array();
+			$right = 0;
+			foreach ($grids as $grid) {
+				if (
+					$grid->left >= $borders[$i] / 2
+					&& $grid->left < $borders[$i + 1] / 2
+					&& $grid->width <= ($borders[$i + 1] - $borders[$i] + 1) / 2
+				) {
+					$gridsList[] = array(
+						"block"  => $grid->block,
+						"col"    => $grid->width,
+						"top"    => $grid->top,
+						"offset" => $grid->left - $borders[$i] / 2 - $right,
+					);
+					$right = $grid->left - $borders[$i] / 2 + $grid->width;
+				}
+			}
+
+			$tree[] = array(
+				"col"    => ($borders[$i + 1] - $borders[$i] + 1) / 2,
+				"offset" => $offset,
+				"grids"  => $gridsList,
+			);
 		}
 
 		return $tree;

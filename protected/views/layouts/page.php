@@ -45,15 +45,13 @@ use itnew\components\Html;
 
 	<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/js.js"></script>
 
-	<?php if (Structure::isCss()) { ?>
+	<?php if (Structure::model()->isCss()) { ?>
 		<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/static/<?php
-		echo Yii::app()->params["siteId"]; ?>/css.css"/>
-	<?php
-	}
-	if (Structure::isJs()) {
-		?>
+			echo Yii::app()->params["siteId"]; ?>/css.css"/>
+	<?php } ?>
+	<?php if (Structure::model()->isJs()) { ?>
 		<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/static/<?php
-		echo Yii::app()->params["siteId"]; ?>/js.js"></script>
+			echo Yii::app()->params["siteId"]; ?>/js.js"></script>
 	<?php } ?>
 </head>
 <body>
