@@ -3,25 +3,57 @@
 namespace itnew\models;
 
 use itnew\models\MenuContent;
+use itnew\models\Block;
 use CActiveRecord;
 use Yii;
 use CActiveDataProvider;
 use CDbCriteria;
 
 /**
- * This is the model class for table "menu".
+ * Файл класса Menu.
  *
- * The followings are the available columns in table 'menu':
- * @property integer $id
- * @property integer $type
+ * Модель для таблицы "menu"
  *
- * The followings are the available model relations:
- * @property MenuContent[] $menuContent
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
+ *
+ * @property int           $id          идентификатор
+ * @property int           $type        тип
+ *
+ * @property MenuContent[] $menuContent модели элементов меню
  */
 class Menu extends CActiveRecord
 {
+
 	/**
-	 * @return string the associated database table name
+	 * Тип. вертикальное меню
+	 *
+	 * @var int
+	 */
+	const TYPE_VERTICAL = 0;
+
+	/**
+	 * Тип. горизонтальное меню
+	 *
+	 * @var int
+	 */
+	const TYPE_HORIZONTAL = 1;
+
+	/**
+	 * Список типов
+	 *
+	 * @var string
+	 */
+	private $_typeList = array(
+		self::TYPE_VERTICAL   => "vertical",
+		self::TYPE_HORIZONTAL => "horizontal",
+	);
+
+	/**
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -29,36 +61,38 @@ class Menu extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
 			array('type', 'required'),
-			array('type', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, type', 'safe', 'on'=>'search'),
+			array('type', 'numerical', 'integerOnly' => true),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
-			'menuContent' => array(self::HAS_MANY, 'itnew\models\MenuContent', 'menu_id', "order" => "sort"),
-			"block" => array(
+			'menuContent' => array(
+				self::HAS_MANY,
+				'itnew\models\MenuContent',
+				'menu_id',
+				"order" => "sort"
+			),
+			"block"       => array(
 				self::HAS_ONE,
-				'Block',
+				'itnew\models\Block',
 				'content_id',
 				"condition" => "block.type = :type",
-				"params" => array(
+				"params"    => array(
 					":type" => Block::TYPE_MENU,
 				),
 			),
@@ -66,70 +100,57 @@ class Menu extends CActiveRecord
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает подписей полей
+	 *
+	 * @return string[]
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
-			'type' => 'Type',
-		);
+		return array();
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает статическую модель указанного класса.
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 * @param string $className название класса
 	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
+	 * @return Menu
 	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('type',$this->type);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return Menu the static model class
-	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
 
+	/**
+	 * Получает заголовок
+	 *
+	 * @return string
+	 */
 	public function getTitle()
 	{
 		return Yii::t("menu", "Menu");
 	}
 
+	/**
+	 * Получает все блоки
+	 *
+	 * @return Block[]
+	 */
 	public function getAllContentBlocks()
 	{
-		$model = new Block;
-		return $model->findAll(
-			"t.language_id = :language_id AND type = :type",
-			array(
-				":language_id" => Language::getActiveId(),
-				":type" => Block::TYPE_MENU,
-			)
-		);
+		$criteria = new CDbCriteria;
+		$criteria->condition = "t.language_id = :language_id AND type = :type";
+		$criteria->params["language_id"] = Language::getActiveId();
+		$criteria->params["type"] = Block::TYPE_MENU;
+
+		return Block::model()->findAll();
 	}
 
+	/**
+	 * Получает блок
+	 *
+	 * @return Block
+	 */
 	public function getBlock()
 	{
 		if ($this->block) {
@@ -138,90 +159,128 @@ class Menu extends CActiveRecord
 		return new Block;
 	}
 
-	const TYPE_VERTICAL = 0;
-	const TYPE_HORIZONTAL = 1;
-
-	private $_typeList = array(
-		self::TYPE_VERTICAL => "vertical",
-		self::TYPE_HORIZONTAL => "horizontal",
-	);
-
+	/**
+	 * Получает тип
+	 *
+	 * @return string
+	 */
 	public function getType()
 	{
 		if (!empty($this->_typeList[$this->type])) {
-			return $this->_typeList[$this->type];
+			return null;
 		}
+
+		return $this->_typeList[$this->type];
+	}
+
+	/**
+	 * Названия типов
+	 *
+	 * @return string[]
+	 */
+	public function getTypeListLabels()
+	{
+		$list = array();
+
+		$list[self::TYPE_VERTICAL] = Yii::t("menu", "Vertical");
+		$list[self::TYPE_HORIZONTAL] = Yii::t("menu", "Horizontal");
+
+		return $list;
+	}
+
+	/**
+	 * Обновляет настройки модели
+	 *
+	 * @param int $id идентификатор
+	 *
+	 * @return Menu|null
+	 */
+	public function updateSettings($id, $blockPost, $modelPost)
+	{
+		$model = $this->findByPk($id);
+		if (!$model) {
+			return null;
+		}
+
+		$block = $model->getBlock();
+		if (!$block) {
+			return null;
+		}
+
+		$model->attributes = $modelPost;
+		$block->attributes = $blockPost;
+
+		$transaction = Yii::app()->db->beginTransaction();
+		if ($block->save()) {
+			if ($model->save()) {
+				$transaction->commit();
+				return $model;
+			}
+		}
+		$transaction->rollback();
 
 		return null;
 	}
 
-	public function getTypeListLabels()
+	/**
+	 * Добавляет настройки
+	 *
+	 * @param string[] $blockPost данные POST для блока
+	 * @param string[] $modelPost данные POST для модели
+	 *
+	 * @return Menu|null
+	 */
+	public function addSettings($blockPost, $modelPost)
 	{
-		$list = array();
-		$list[self::TYPE_VERTICAL] = Yii::t("menu", "Vertical");
-		$list[self::TYPE_HORIZONTAL] = Yii::t("menu", "Horizontal");
-		return $list;
-	}
+		$model = new self;
+		$block = new Block;
+		$model->attributes = $modelPost;
+		$block->attributes = $blockPost;
 
-	public function saveSettings()
-	{
-		if (Yii::app()->request->getQuery("id")) {
-			if ($model = $this->findByPk(Yii::app()->request->getQuery("id"))) {
-				if ($block = $model->getBlock()) {
-					$model->attributes = Yii::app()->request->getPost("Menu");
-					$block->attributes = Yii::app()->request->getPost("Block");
+		$transaction = Yii::app()->db->beginTransaction();
 
-					$transaction = Yii::app()->db->beginTransaction();
-					if ($block->save()) {
-						if ($model->save()) {
-							$transaction->commit();
-							return $model;
-						}
-					}
-					$transaction->rollback();
-				}
+		if ($model->save()) {
+			$block->content_id = $model->id;
+			$block->type = Block::TYPE_MENU;
+			$block->language_id = Language::getActiveId();
+
+			if ($block->save()) {
+				$transaction->commit();
+				return $model;
 			}
-		} 
-
-		else {
-			$model = new self;
-			$block = new Block;
-			$model->attributes = Yii::app()->request->getPost("Menu");
-			$block->attributes = Yii::app()->request->getPost("Block");
-
-			$transaction = Yii::app()->db->beginTransaction();
-
-			if ($model->save()) {
-				$block->content_id = $model->id;
-				$block->type = Block::TYPE_MENU;
-				$block->language_id = Language::getActiveId();
-
-				if ($block->save()) {
-					$transaction->commit();
-					return $model;
-				}
-			}
-			$transaction->rollback();
 		}
+		$transaction->rollback();
 
-		return;
+		return null;
 	}
 
-	public function beforeDelete()
+	/**
+	 * Вызывается перед удалением модели
+	 *
+	 * @return bool
+	 */
+	protected function beforeDelete()
 	{
 		if ($this->menuContent) {
 			foreach ($this->menuContent as $model) {
 				$model->delete();
 			}
 		}
+
 		return parent::beforeDelete();
 	}
 
+	/**
+	 * Вызывается после удаления модели
+	 *
+	 * @return void
+	 */
 	protected function afterDelete()
 	{
 		if ($this->block) {
 			$this->block->delete();
 		}
+
 		return parent::afterDelete();
 	}
 
@@ -255,7 +314,7 @@ class Menu extends CActiveRecord
 
 				if ($link) {
 					$list[$menu->parent_id][] = array(
-						"id" => $menu->id,
+						"id"   => $menu->id,
 						"link" => $link,
 					);
 				}

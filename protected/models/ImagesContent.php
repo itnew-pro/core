@@ -5,8 +5,6 @@ namespace itnew\models;
 use itnew\models\Images;
 use CActiveRecord;
 use Yii;
-use CActiveDataProvider;
-use CDbCriteria;
 use CUploadedFile;
 
 /**
@@ -134,7 +132,7 @@ class ImagesContent extends CActiveRecord
 	 *
 	 * @param string $className название класса
 	 *
-	 * @return ImagesContent|null
+	 * @return ImagesContent
 	 */
 	public static function model($className = __CLASS__)
 	{

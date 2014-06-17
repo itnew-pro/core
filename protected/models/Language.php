@@ -2,33 +2,43 @@
 
 namespace itnew\models;
 
+use itnew\models\Section;
 use CActiveRecord;
 use Yii;
-use CActiveDataProvider;
-use CDbCriteria;
 
 /**
- * This is the model class for table "language".
+ * Файл класса Language.
  *
- * The followings are the available columns in table 'language':
- * @property integer $id
- * @property string $abbreviation
- * @property string $name
- * @property integer $main
+ * Модель для таблицы "language"
  *
- * The followings are the available model relations:
- * @property Section[] $sections
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
+ *
+ * @property int       $id           идентификатор
+ * @property string    $abbreviation абривиатура
+ * @property string    $name         название
+ * @property int       $main         главный
+ *
+ * @property Section[] $sections     модели разделов
  */
 class Language extends CActiveRecord
 {
 
-	private static $_abbreviationIn = array(
+	/**
+	 * Список абривиатур
+	 *
+	 * @var string[]
+	 */
+	private static $_abbreviationList = array(
 		"ru" => 1,
 		"en" => 2,
 	);
 
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -36,92 +46,68 @@ class Language extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
 			array('abbreviation, name, main', 'required'),
-			array('main', 'numerical', 'integerOnly'=>true),
-			array('abbreviation, name', 'length', 'max'=>255),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, abbreviation, name, main', 'safe', 'on'=>'search'),
+			array('main', 'numerical', 'integerOnly' => true),
+			array('abbreviation, name', 'length', 'max' => 255),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
-			'sections' => array(self::HAS_MANY, 'Section', 'language_id'),
+			'sections' => array(
+				self::HAS_MANY,
+				'itnew\models\Section',
+				'language_id'
+			),
 		);
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает подписей полей
+	 *
+	 * @return string[]
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
-			'abbreviation' => 'Abbreviation',
-			'name' => 'Name',
-			'main' => 'Main',
-		);
+		return array();
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает статическую модель указанного класса.
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 * @param string $className название класса
 	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
+	 * @return Language
 	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('abbreviation',$this->abbreviation,true);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('main',$this->main);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return Language the static model class
-	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
 
+	/**
+	 * Получает идентификатор активного языка
+	 *
+	 * @return int
+	 */
 	public static function getActiveId()
 	{
-		if (!empty(self::$_abbreviationIn[Yii::app()->language])) {
-			return self::$_abbreviationIn[Yii::app()->language];
-		} else {
-			return self::$_abbreviationIn[LANG];
+		if (empty(self::$_abbreviationList[Yii::app()->language])) {
+			return self::$_abbreviationList[LANG];
 		}
+
+		return self::$_abbreviationList[Yii::app()->language];
 	}
 }

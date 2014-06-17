@@ -158,7 +158,7 @@ class Images extends CActiveRecord
 	}
 
 	/**
-	 * Получает все
+	 * Получает все блоки
 	 *
 	 * @return Block[]
 	 */
@@ -282,7 +282,7 @@ class Images extends CActiveRecord
 	 * @param string[] $blockPost данные POST для блока
 	 * @param string[] $modelPost данные POST для модели
 	 *
-	 * @return Text|null
+	 * @return Images|null
 	 */
 	public function addSettings($blockPost, $modelPost)
 	{
