@@ -94,9 +94,7 @@ class Structure extends CActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'width' => 'Width',
-		);
+		return array();
 	}
 
 	/**
