@@ -217,7 +217,7 @@ class ContentController extends CController
 	/**
 	 * Сохраняет модель в окне
 	 *
-	 * @return bool|void
+	 * @return bool
 	 */
 	public function actionSaveWindow()
 	{
@@ -231,7 +231,13 @@ class ContentController extends CController
 			return false;
 		}
 
-		$model->saveContent(Yii::app()->request->getPost(CHtml::modelName($model)));
+		$post = Yii::app()->request->getPost(CHtml::modelName($model));
+
+		if (!$post) {
+			return false;
+		}
+
+		return $model->saveContent($post);
 	}
 
 	/**

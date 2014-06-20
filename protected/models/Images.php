@@ -120,6 +120,21 @@ class Images extends CActiveRecord
 	}
 
 	/**
+	 * Возвращает список поведений модели
+	 *
+	 * @return string[]
+	 */
+	public function behaviors()
+	{
+		return array(
+			"ContentBehavior" => array(
+				"class"     => "itnew\behaviors\ContentBehavior",
+				"blockType" => Block::TYPE_IMAGE,
+			)
+		);
+	}
+
+	/**
 	 * Возвращает подписей полей
 	 *
 	 * @return string[]
@@ -158,35 +173,6 @@ class Images extends CActiveRecord
 	}
 
 	/**
-	 * Получает все блоки
-	 *
-	 * @return Block[]
-	 */
-	public function getAllContentBlocks()
-	{
-		$criteria = new CDbCriteria;
-		$criteria->condition = "t.language_id = :language_id AND type = :type";
-		$criteria->params["language_id"] = Language::getActiveId();
-		$criteria->params["type"] = Block::TYPE_IMAGE;
-
-		return Block::model()->findAll();
-	}
-
-	/**
-	 * Получает блок
-	 *
-	 * @return Block
-	 */
-	public function getBlock()
-	{
-		if ($this->block) {
-			return $this->block;
-		}
-
-		return new Block;
-	}
-
-	/**
 	 * Список типов отображения
 	 *
 	 * @return string[]
@@ -217,15 +203,15 @@ class Images extends CActiveRecord
 	/**
 	 * Вызывается после удаления модели
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	protected function afterDelete()
 	{
+		parent::afterDelete();
+
 		if ($this->block) {
 			$this->block->delete();
 		}
-
-		return parent::afterDelete();
 	}
 
 	/**
@@ -243,84 +229,14 @@ class Images extends CActiveRecord
 	}
 
 	/**
-	 * Обновляет настройки модели
-	 *
-	 * @param int $id идентификатор
-	 *
-	 * @return Images|null
-	 */
-	public function updateSettings($id, $blockPost, $modelPost)
-	{
-		$model = $this->findByPk($id);
-		if (!$model) {
-			return null;
-		}
-
-		$block = $model->getBlock();
-		if (!$block) {
-			return null;
-		}
-
-		$model->attributes = $modelPost;
-		$block->attributes = $blockPost;
-
-		$transaction = Yii::app()->db->beginTransaction();
-		if ($block->save()) {
-			if ($model->save()) {
-				$transaction->commit();
-				return $model;
-			}
-		}
-		$transaction->rollback();
-
-		return null;
-	}
-
-	/**
-	 * Добавляет настройки
-	 *
-	 * @param string[] $blockPost данные POST для блока
-	 * @param string[] $modelPost данные POST для модели
-	 *
-	 * @return Images|null
-	 */
-	public function addSettings($blockPost, $modelPost)
-	{
-		$model = new self;
-		$block = new Block;
-		$model->attributes = $modelPost;
-		$block->attributes = $blockPost;
-
-		$transaction = Yii::app()->db->beginTransaction();
-
-		if ($model->save()) {
-			$block->content_id = $model->id;
-			$block->type = Block::TYPE_IMAGE;
-			$block->language_id = Language::getActiveId();
-
-			if ($block->save()) {
-				$transaction->commit();
-				return $model;
-			}
-		}
-		$transaction->rollback();
-
-		return null;
-	}
-
-	/**
 	 * Сохраняет контент
 	 *
-	 * @param string $post даныне через POST
+	 * @param string $post поля модели переданные через POST
 	 *
 	 * @return bool
 	 */
 	public function saveContent($post = array())
 	{
-		if (!$post) {
-			return false;
-		}
-
 		if (empty($post["imageContentIds"])) {
 			return false;
 		}

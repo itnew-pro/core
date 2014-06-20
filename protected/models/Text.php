@@ -101,6 +101,21 @@ class Text extends CActiveRecord
 	}
 
 	/**
+	 * Возвращает список поведений модели
+	 *
+	 * @return string[]
+	 */
+	public function behaviors()
+	{
+		return array(
+			"ContentBehavior" => array(
+				"class"     => "itnew\behaviors\ContentBehavior",
+				"blockType" => Block::TYPE_TEXT,
+			)
+		);
+	}
+
+	/**
 	 * Возвращает подписей полей
 	 *
 	 * @return string[]
@@ -127,6 +142,44 @@ class Text extends CActiveRecord
 	}
 
 	/**
+	 * Получает название
+	 *
+	 * @return string
+	 */
+	public function getTitle()
+	{
+		return Yii::t("text", "Text");
+	}
+
+	/**
+	 * Сохраняет контент
+	 *
+	 * @param string $post поля модели переданные через POST
+	 *
+	 * @return bool
+	 */
+	public function saveContent($post = array())
+	{
+		$this->text = $post["text"];
+
+		return $this->save();
+	}
+
+	/**
+	 * Вызывается после удаления модели
+	 *
+	 * @return void
+	 */
+	protected function afterDelete()
+	{
+		parent::afterDelete();
+
+		if ($this->block) {
+			$this->block->delete();
+		}
+	}
+
+	/**
 	 * Получает название тега
 	 *
 	 * @return string
@@ -141,49 +194,6 @@ class Text extends CActiveRecord
 	}
 
 	/**
-	 * Получает название
-	 *
-	 * @return string
-	 */
-	public function getTitle()
-	{
-		return Yii::t("text", "Text");
-	}
-
-	/**
-	 * Получает все блоки контента
-	 *
-	 * @param int[] $in идентификаторы блоков
-	 *
-	 * @return Block[]
-	 */
-	public function getAllContentBlocks($in = array())
-	{
-		$criteria = new CDbCriteria;
-		$criteria->condition = "language_id = :language_id AND type = :type";
-		$criteria->params = array(
-			":language_id" => Language::getActiveId(),
-			":type"        => Block::TYPE_TEXT
-		);
-
-		if ($in) {
-			$criteria->addInCondition("t.id", $in);
-		}
-
-		return Block::model()->findAll($criteria);
-	}
-
-	/**
-	 * Получает все блоки на текущей странице
-	 *
-	 * @return Block[]
-	 */
-	public function getThisPageBlocks()
-	{
-		return $this->getAllContentBlocks(Block::model()->getAllThisPageBlocksIds());
-	}
-
-	/**
 	 * Получает название класса редактора
 	 *
 	 * @return string
@@ -193,72 +203,6 @@ class Text extends CActiveRecord
 		if ($this->editor) {
 			return " tinymce";
 		}
-
-		return null;
-	}
-
-	/**
-	 * Обновляет настройки модели
-	 *
-	 * @param int $id идентификатор
-	 *
-	 * @return Text|null
-	 */
-	public function updateSettings($id, $blockPost, $modelPost)
-	{
-		$model = $this->findByPk($id);
-		if (!$model) {
-			return null;
-		}
-
-		$block = $model->getBlock();
-		if (!$block) {
-			return null;
-		}
-
-		$model->attributes = $modelPost;
-		$block->attributes = $blockPost;
-
-		$transaction = Yii::app()->db->beginTransaction();
-		if ($block->save()) {
-			if ($model->save()) {
-				$transaction->commit();
-
-				return $model;
-			}
-		}
-		$transaction->rollback();
-
-		return null;
-	}
-
-	/**
-	 * Добавляет настройки
-	 *
-	 * @param string[] $blockPost данные POST для блока
-	 * @param string[] $modelPost данные POST для модели
-	 *
-	 * @return Text|null
-	 */
-	public function addSettings($blockPost, $modelPost)
-	{
-		$model = new self;
-		$block = new Block;
-		$model->attributes = $modelPost;
-		$block->attributes = $blockPost;
-
-		$transaction = Yii::app()->db->beginTransaction();
-		if ($model->save()) {
-			$block->content_id = $model->id;
-			$block->type = Block::TYPE_TEXT;
-			$block->language_id = Language::getActiveId();
-			if ($block->save()) {
-				$transaction->commit();
-
-				return $model;
-			}
-		}
-		$transaction->rollback();
 
 		return null;
 	}
@@ -281,34 +225,6 @@ class Text extends CActiveRecord
 	}
 
 	/**
-	 * Получает блок
-	 *
-	 * @return Block
-	 */
-	public function getBlock()
-	{
-		if ($this->block) {
-			return $this->block;
-		}
-
-		return new Block;
-	}
-
-	/**
-	 * Вызывается после удаления модели
-	 *
-	 * @return void
-	 */
-	protected function afterDelete()
-	{
-		if ($this->block) {
-			$this->block->delete();
-		}
-
-		return parent::afterDelete();
-	}
-
-	/**
 	 * Делает дубликат
 	 *
 	 * @return bool
@@ -323,7 +239,6 @@ class Text extends CActiveRecord
 
 		$transaction = Yii::app()->db->beginTransaction();
 		if ($textCopy->save()) {
-
 			$blockCopy = new Block;
 			$blockCopy->type = $this->block->type;
 			$blockCopy->name = $this->block->name . " - " . Yii::t("common", "copy");
@@ -337,26 +252,6 @@ class Text extends CActiveRecord
 			}
 		}
 		$transaction->rollback();
-
-		return false;
-	}
-
-	/**
-	 * Сохраняет контент
-	 *
-	 * @return bool
-	 */
-	public function saveContent()
-	{
-		$text = Yii::app()->request->getPost("Text");
-		if (!$text) {
-			return false;
-		}
-
-		$this->text = $text["text"];
-		if ($this->save()) {
-			return true;
-		}
 
 		return false;
 	}

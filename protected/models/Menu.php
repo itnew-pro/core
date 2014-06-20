@@ -100,6 +100,21 @@ class Menu extends CActiveRecord
 	}
 
 	/**
+	 * Возвращает список поведений модели
+	 *
+	 * @return string[]
+	 */
+	public function behaviors()
+	{
+		return array(
+			"ContentBehavior" => array(
+				"class"     => "itnew\behaviors\ContentBehavior",
+				"blockType" => Block::TYPE_MENU,
+			)
+		);
+	}
+
+	/**
 	 * Возвращает подписей полей
 	 *
 	 * @return string[]
@@ -132,34 +147,6 @@ class Menu extends CActiveRecord
 	}
 
 	/**
-	 * Получает все блоки
-	 *
-	 * @return Block[]
-	 */
-	public function getAllContentBlocks()
-	{
-		$criteria = new CDbCriteria;
-		$criteria->condition = "t.language_id = :language_id AND type = :type";
-		$criteria->params["language_id"] = Language::getActiveId();
-		$criteria->params["type"] = Block::TYPE_MENU;
-
-		return Block::model()->findAll();
-	}
-
-	/**
-	 * Получает блок
-	 *
-	 * @return Block
-	 */
-	public function getBlock()
-	{
-		if ($this->block) {
-			return $this->block;
-		}
-		return new Block;
-	}
-
-	/**
 	 * Получает тип
 	 *
 	 * @return string
@@ -189,72 +176,6 @@ class Menu extends CActiveRecord
 	}
 
 	/**
-	 * Обновляет настройки модели
-	 *
-	 * @param int $id идентификатор
-	 *
-	 * @return Menu|null
-	 */
-	public function updateSettings($id, $blockPost, $modelPost)
-	{
-		$model = $this->findByPk($id);
-		if (!$model) {
-			return null;
-		}
-
-		$block = $model->getBlock();
-		if (!$block) {
-			return null;
-		}
-
-		$model->attributes = $modelPost;
-		$block->attributes = $blockPost;
-
-		$transaction = Yii::app()->db->beginTransaction();
-		if ($block->save()) {
-			if ($model->save()) {
-				$transaction->commit();
-				return $model;
-			}
-		}
-		$transaction->rollback();
-
-		return null;
-	}
-
-	/**
-	 * Добавляет настройки
-	 *
-	 * @param string[] $blockPost данные POST для блока
-	 * @param string[] $modelPost данные POST для модели
-	 *
-	 * @return Menu|null
-	 */
-	public function addSettings($blockPost, $modelPost)
-	{
-		$model = new self;
-		$block = new Block;
-		$model->attributes = $modelPost;
-		$block->attributes = $blockPost;
-
-		$transaction = Yii::app()->db->beginTransaction();
-
-		if ($model->save()) {
-			$block->content_id = $model->id;
-			$block->type = Block::TYPE_MENU;
-			$block->language_id = Language::getActiveId();
-
-			if ($block->save()) {
-				$transaction->commit();
-				return $model;
-			}
-		}
-		$transaction->rollback();
-
-		return null;
-	}
-
-	/**
 	 * Вызывается перед удалением модели
 	 *
 	 * @return bool
@@ -277,11 +198,11 @@ class Menu extends CActiveRecord
 	 */
 	protected function afterDelete()
 	{
+		parent::afterDelete();
+
 		if ($this->block) {
 			$this->block->delete();
 		}
-
-		return parent::afterDelete();
 	}
 
 	public function getUnusedSections()
