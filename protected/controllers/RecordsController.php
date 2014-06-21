@@ -2,8 +2,13 @@
 
 namespace itnew\controllers;
 
+use itnew\models\RecordsContent;
+use itnew\models\Seo;
+use itnew\models\Images;
+use itnew\models\Text;
 use CController;
 use Yii;
+use CHtml;
 
 /**
  * Файл класса RecordsController.
@@ -96,16 +101,25 @@ class RecordsController extends ContentController
 	/**
 	 * Добавление записи (обработка данных)
 	 *
-	 * @return void
+	 * @return bool|void
 	 */
 	public function actionSaveAdd()
 	{
-		$array = RecordsContent::model()->saveAdd();
+		$post = Yii::app()->request->getPost(CHtml::modelName(new RecordsContent));
+		$seoPost = Yii::app()->request->getPost(CHtml::modelName(new Seo));
+		if (!$post || !$seoPost) {
+			return false;
+		}
+
+		$list = RecordsContent::model()->saveAdd($post, $seoPost);
+		if (!$list) {
+			return false;
+		}
 
 		echo json_encode(array(
-			"errorClass"  => $array["errorClass"],
-			"records"     => $this->actionWindow($array["recordsId"]),
-			"recordsForm" => $this->actionWindowForm($array["id"]),
+			"errorClass"  => $list["errorClass"],
+			"records"     => $this->actionWindow($list["recordsId"]),
+			"recordsForm" => $this->actionWindowForm($list["id"]),
 		));
 	}
 
@@ -132,9 +146,17 @@ class RecordsController extends ContentController
 	 */
 	public function actionSaveForm()
 	{
-		$id = RecordsContent::model()->saveForm();
-		if ($id) {
-			echo $this->actionWindow($id);
+		$post = Yii::app()->request->getPost(CHtml::modelName(new RecordsContent));
+		$seo = Yii::app()->request->getPost(CHtml::modelName(new Seo));
+		$description = Yii::app()->request->getPost("Description");
+		$images = Yii::app()->request->getPost(CHtml::modelName(new Images));
+		$text = Yii::app()->request->getPost(CHtml::modelName(new Text));
+
+		if ($post && $seo && !empty($post["id"])) {
+			$id = RecordsContent::model()->saveForm($post, $seo, $description, $images, $text);
+			if ($id) {
+				echo $this->actionWindow($id);
+			}
 		}
 	}
 

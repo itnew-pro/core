@@ -2,45 +2,70 @@
 
 namespace itnew\models;
 
+use itnew\models\Images;
+use itnew\models\Text;
+use itnew\models\Records;
+use itnew\models\Seo;
 use CActiveRecord;
 use Yii;
-use CActiveDataProvider;
 use CDbCriteria;
+use CDateTimeParser;
 
 /**
- * This is the model class for table "records_content".
+ * Файл класса RecordsContent.
  *
- * The followings are the available columns in table 'records_content':
- * @property integer $id
- * @property integer $records_id
- * @property integer $cover
- * @property string $date
- * @property integer $seo_id
- * @property integer $images
- * @property integer $text
- * @property integer $description
- * @property integer $sort
- * @property integer is_published
+ * Модель для таблицы "records_content"
  *
- * The followings are the available model relations:
- * @property Images $cover
- * @property Text $description
- * @property Images $images
- * @property Records $records
- * @property Seo $seo
- * @property Text $text
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
+ *
+ * @property int     $id                  идентификатор
+ * @property int     $records_id          идентификатор записей
+ * @property int     $cover               идентификатор обложки
+ * @property string  $date                дата
+ * @property int     $seo_id              идентификатор СЕО
+ * @property int     $images              идентификатор изображений
+ * @property int     $text                идентификатор текста
+ * @property int     $description         идентификатор описания
+ * @property int     $sort                сортировка
+ * @property int     is_published         опубликована ли запись
+ *
+ * @property Images  $coverRelation       модель обложки
+ * @property Text    $descriptionRelation модель описания
+ * @property Images  $imagesRelation      модель изображений
+ * @property Records $records             модель записей
+ * @property Seo     $seo                 модель СЕО
+ * @property Text    $textRelation        модель текста
  */
 class RecordsContent extends CActiveRecord
 {
 
+	/**
+	 * Шаг сортировки
+	 *
+	 * @var int
+	 */
 	const SORT_STEP = 10;
 
+	/**
+	 * Отступ для обложки
+	 *
+	 * @var int
+	 */
 	const COVER_MARGIN = 15;
 
+	/**
+	 * Максимальная сортировка
+	 *
+	 * @var int
+	 */
 	public $maxSort = 0;
 
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -48,102 +73,94 @@ class RecordsContent extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
 			array("date", "length", "max" => 128),
 			array('records_id, seo_id, images, text, description', 'required'),
-			array('id, is_published, maxSort, records_id, cover, seo_id, images, text, description, sort', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, records_id, cover, date, seo_id, images, text, description, sort, is_published', 'safe', 'on'=>'search'),
+			array(
+				'id, is_published, maxSort, records_id, cover, seo_id, images, text, description, sort',
+				'numerical',
+				'integerOnly' => true
+			),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
-			'coverRelation' => array(self::BELONGS_TO, 'Images', 'cover'),
-			'descriptionRelation' => array(self::BELONGS_TO, 'Text', 'description'),
-			'imagesRelation' => array(self::BELONGS_TO, 'Images', 'images'),
-			'records' => array(self::BELONGS_TO, 'Records', 'records_id'),
-			'seo' => array(self::BELONGS_TO, 'Seo', 'seo_id'),
-			'textRelation' => array(self::BELONGS_TO, 'Text', 'text'),
+			'coverRelation'       => array(
+				self::BELONGS_TO,
+				'itnew\models\Images',
+				'cover'
+			),
+			'descriptionRelation' => array(
+				self::BELONGS_TO,
+				'itnew\models\Text',
+				'description'
+			),
+			'imagesRelation'      => array(
+				self::BELONGS_TO,
+				'itnew\models\Images',
+				'images'
+			),
+			'records'             => array(
+				self::BELONGS_TO,
+				'itnew\models\Records',
+				'records_id'
+			),
+			'seo'                 => array(
+				self::BELONGS_TO,
+				'itnew\models\Seo',
+				'seo_id'
+			),
+			'textRelation'        => array(
+				self::BELONGS_TO,
+				'itnew\models\Text',
+				'text'
+			),
 		);
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает подписей полей
+	 *
+	 * @return string[]
 	 */
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'records_id' => 'Records',
-			'cover' => 'Cover',
-			'date' => Yii::t("records", "Date"),
-			'seo_id' => 'Seo',
-			'images' => 'Images',
-			'text' => 'Text',
-			'description' => 'Description',
-			'sort' => 'Sort',
+			'date'         => Yii::t("records", "Date"),
 			'is_published' => Yii::t("records", "Published"),
 		);
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает статическую модель указанного класса.
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 * @param string $className название класса
 	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
+	 * @return RecordsContent
 	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('records_id',$this->records_id);
-		$criteria->compare('cover',$this->cover);
-		$criteria->compare('date',$this->date,true);
-		$criteria->compare('seo_id',$this->seo_id);
-		$criteria->compare('images',$this->images);
-		$criteria->compare('text',$this->text);
-		$criteria->compare('description',$this->description);
-		$criteria->compare('sort',$this->sort);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return RecordsContent the static model class
-	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
 
+	/**
+	 * Получает модель СЕО
+	 *
+	 * @return Seo
+	 */
 	public function getSeo()
 	{
 		if ($this->seo) {
@@ -153,97 +170,123 @@ class RecordsContent extends CActiveRecord
 		return new Seo;
 	}
 
-	public function saveAdd()
+	/**
+	 * Добавляет запись
+	 *
+	 * @param string[] $post    поля модели переданные через POST
+	 * @param string[] $seoPost поля модели СЕО переданные через POST
+	 *
+	 * @return bool|string[]
+	 */
+	public function saveAdd($post, $seoPost)
 	{
 		$errorClass = null;
 		$id = 0;
 
-		$seoPost = Yii::app()->request->getPost("Seo");
-		$recordsContent = Yii::app()->request->getPost("RecordsContent");
-
-		if ($seoPost && $recordsContent) {
-			if (!$seoPost["name"]) {
-				$errorClass = "error-name-empty";
-			} else if (!$seoPost["url"]) {
-				$errorClass = "error-url-empty";
-			} else {
-				$criteria = new CDbCriteria;
-				$criteria->with = "seo";
-				$criteria->condition = "seo.url = :url AND t.records_id = :records_id";
-				$criteria->params = array(
-					"url" => $seoPost["url"],
-					"records_id" => $recordsContent["records_id"],
-				);
-				if ($this->find($criteria)) {
-					$errorClass = "error-url-exist";
-				}
-			}
-
-			if (!$errorClass) {
-				$record = Records::model()->findByPk($recordsContent["records_id"]);
-				if ($record) {
-					$transaction = $this->dbConnection->beginTransaction();
-					$transactionSuccess = false;
-
-					$seo = new Seo;
-					$seo->attributes = $seoPost;
-					$cover = $record->getCoverClone();
-					$images = $record->getImagesClone();
-					$text = Text::model()->getDefaultTextModel();
-					$description = Text::model()->getDefaultDescriptionModel();
-
-					if (
-						$seo->save()
-						&& $cover->save()
-						&& $images->save()
-						&& $text->save()
-						&& $description->save()
-					) { 
-						$model = new self;
-						$model->records_id = $record->id;
-						$model->cover = $cover->id;
-						$model->date = date("Y-m-d H:i:s", time());
-						$model->seo_id = $seo->id;
-						$model->images = $images->id;
-						$model->text = $text->id;
-						$model->description = $description->id;
-						$model->sort = $this->_getNewSort($record->id);
-						if ($model->save()) {
-							$id = $model->id;
-							$transactionSuccess = true;
-						} else {
-							return $model->text;
-						}
-					}
-
-					if ($transactionSuccess) {
-						$transaction->commit();
-
-					} else {
-						$transaction->rollback();
-					}
-				}
-			}
+		if (!$seoPost["name"]) {
+			return array(
+				"errorClass" => "error-name-empty",
+				"id"         => $id,
+				"recordsId"  => $post["records_id"],
+			);
 		}
+
+		if (!$seoPost["url"]) {
+			return array(
+				"errorClass" => "error-url-empty",
+				"id"         => $id,
+				"recordsId"  => $post["records_id"],
+			);
+		}
+
+		$criteria = new CDbCriteria;
+		$criteria->with = "seo";
+		$criteria->condition = "seo.url = :url AND t.records_id = :records_id";
+		$criteria->params["url"] = $seoPost["url"];
+		$criteria->params["records_id"] = $seoPost["records_id"];
+		if ($this->find($criteria)) {
+			return array(
+				"errorClass" => "error-url-exist",
+				"id"         => $id,
+				"recordsId"  => $post["records_id"],
+			);
+		}
+
+		$record = Records::model()->findByPk($post["records_id"]);
+		if (!$record) {
+			return false;
+		}
+
+		$transaction = $this->dbConnection->beginTransaction();
+
+		$seo = new Seo;
+		$seo->attributes = $seoPost;
+		$cover = $record->getCoverClone();
+		$images = $record->getImagesClone();
+		$text = Text::model()->getDefaultTextModel();
+		$description = Text::model()->getDefaultDescriptionModel();
+
+		if (
+			!$seo->save()
+			|| !$cover->save()
+			|| !$images->save()
+			|| !$text->save()
+			|| !$description->save()
+		) {
+			return false;
+		}
+
+		$model = new self;
+		$model->records_id = $record->id;
+		$model->cover = $cover->id;
+		$model->date = date("Y-m-d H:i:s", time());
+		$model->seo_id = $seo->id;
+		$model->images = $images->id;
+		$model->text = $text->id;
+		$model->description = $description->id;
+		$model->sort = $this->_getNewSort($record->id);
+
+		if (!$model->save()) {
+			$transaction->rollback();
+			return false;
+		}
+
+		$transaction->commit();
 
 		return array(
 			"errorClass" => $errorClass,
-			"id"         => $id,
-			"recordsId"  => $recordsContent["records_id"],
+			"id"         => $model->id,
+			"recordsId"  => $post["records_id"],
 		);
 	}
 
-	private function _getNewSort($records_id)
+	/**
+	 * Получает сортировку
+	 *
+	 * @param int $recordsШd идентификатор записей
+	 *
+	 * @return int
+	 */
+	private function _getNewSort($recordsId)
 	{
 		$criteria = new CDbCriteria;
 		$criteria->select = 'MAX(t.sort) as maxSort';
 		$criteria->condition = 't.records_id = :records_id';
-		$criteria->params = array(':records_id' => $records_id);
+		$criteria->params["records_id"] = $recordsId;
 
 		$model = $this->find($criteria);
-		return $model['maxSort'] + self::SORT_STEP;
+		if ($model) {
+			return $model['maxSort'] + self::SORT_STEP;
+		}
+
+		return 0;
 	}
 
+	/**
+	 * Вызывается после удаления модели
+	 *
+	 * @return void
+	 */
 	protected function afterDelete()
 	{
 		parent::afterDelete();
@@ -265,6 +308,11 @@ class RecordsContent extends CActiveRecord
 		}
 	}
 
+	/**
+	 * Получает модель обложки
+	 *
+	 * @return Images
+	 */
 	public function getCover()
 	{
 		if ($this->coverRelation) {
@@ -274,6 +322,11 @@ class RecordsContent extends CActiveRecord
 		return new Images;
 	}
 
+	/**
+	 * Получает модель изображений
+	 *
+	 * @return Images
+	 */
 	public function getImages()
 	{
 		if ($this->imagesRelation) {
@@ -283,6 +336,11 @@ class RecordsContent extends CActiveRecord
 		return new Images;
 	}
 
+	/**
+	 * Получает модель описания
+	 *
+	 * @return Text
+	 */
 	public function getDescription()
 	{
 		if ($this->descriptionRelation) {
@@ -292,6 +350,11 @@ class RecordsContent extends CActiveRecord
 		return new Text;
 	}
 
+	/**
+	 * Получает модель текста
+	 *
+	 * @return Text
+	 */
 	public function getText()
 	{
 		if ($this->textRelation) {
@@ -301,86 +364,102 @@ class RecordsContent extends CActiveRecord
 		return new Text;
 	}
 
+	/**
+	 * Получает дату для окна
+	 *
+	 * @return string
+	 */
 	public function getWindowDate()
 	{
-		if ($this->date) {
-			$timestamp = CDateTimeParser::parse($this->date, "yyyy-MM-dd HH:mm:ss");
-			if ($timestamp) {
-				return date("d.m.Y", $timestamp);
-			}
+		if (!$this->date) {
+			return null;
+		}
+
+		$timestamp = CDateTimeParser::parse($this->date, "yyyy-MM-dd HH:mm:ss");
+		if ($timestamp) {
+			return date("d.m.Y", $timestamp);
 		}
 
 		return null;
 	}
 
-	public function saveForm()
+	public function saveForm($post, $seo, $description, $images, $text)
 	{
-		$cover = Yii::app()->request->getPost("Cover");
-		$recordsContent = Yii::app()->request->getPost("RecordsContent");
-		$seo = Yii::app()->request->getPost("Seo");
-		$description = Yii::app()->request->getPost("Description");
-		$images = Yii::app()->request->getPost("Images");
-		$text = Yii::app()->request->getPost("Text");
+		$model = $this->findByPk($post["id"]);
+		if (!$model) {
+			return 0;
+		}
 
-		if ($recordsContent && $seo && !empty($recordsContent["id"])) {
-			$model = $this->findByPk($recordsContent["id"]);
-			if ($model) {
-				$transaction = Yii::app()->db->beginTransaction();
+		$transaction = Yii::app()->db->beginTransaction();
 
-				$model->is_published = $recordsContent["is_published"];
-				if (!empty($recordsContent["date"])) {
-					$timestamp = CDateTimeParser::parse($recordsContent["date"], "dd.MM.yyyy");
-					if ($timestamp) {
-						$model->date = date("Y-m-d H:i:s", $timestamp);
-					}
-				}
-
-				if ($model->save()) {
-					if ($model->seo) {
-						$model->seo->attributes = $seo;
-						if ($model->seo->save()) {
-							if ($text && $model->textRelation) {
-								$model->textRelation->attributes = $text;
-								$model->textRelation->save();
-							}
-
-							if ($description && $model->descriptionRelation) {
-								$model->descriptionRelation->attributes = $description;
-								$model->descriptionRelation->save();
-							}
-
-							if ($images && $model->imagesRelation) {
-								$model->imagesRelation->saveContent($images);
-							}
-
-							$transaction->commit();
-
-							return $model->records->id;
-						}
-					}
-				}
-
-				$transaction->rollback();
+		$model->is_published = $post["is_published"];
+		if (!empty($post["date"])) {
+			$timestamp = CDateTimeParser::parse($post["date"], "dd.MM.yyyy");
+			if ($timestamp) {
+				$model->date = date("Y-m-d H:i:s", $timestamp);
 			}
 		}
 
-		return 0;
+		if (!$model->save() || !$model->seo) {
+			$transaction->rollback();
+			return 0;
+		}
+
+		$model->seo->attributes = $seo;
+		if (!$model->seo->save()) {
+			$transaction->rollback();
+			return 0;
+		}
+
+		if ($text && $model->textRelation) {
+			$model->textRelation->attributes = $text;
+			$model->textRelation->save();
+		}
+
+		if ($description && $model->descriptionRelation) {
+			$model->descriptionRelation->attributes = $description;
+			$model->descriptionRelation->save();
+		}
+
+		if ($images && $model->imagesRelation) {
+			$model->imagesRelation->saveContent($images);
+		}
+
+		$transaction->commit();
+
+		return $model->records->id;
 	}
 
+	/**
+	 * Получает URL
+	 *
+	 * @return string
+	 */
 	public function getUrl()
 	{
 		return $this->records->getUrl() . "/" . $this->seo->url . "/";
 	}
 
+	/**
+	 * Получает модель по URL и идентификатору записей
+	 *
+	 * @param string $url       URL
+	 * @param int    $recordsId идентификатор записей
+	 *
+	 * @return RecordsContent
+	 */
 	public function getModelBySeoUrlAndRecordsId($url, $recordsId)
 	{
-		if ($url && $recordsId) {
-			$criteria = new CDbCriteria;
-			$criteria->condition = "seo.url = :url AND t.records_id = :records_id";
-			$criteria->params = array(":url" => $url, ":records_id" => $recordsId);
-			return $this->with("seo")->find($criteria);
+		if (!$url || !$recordsId) {
+			return null;
 		}
 
-		return null;
+		$criteria = new CDbCriteria;
+		$criteria->with = array("seo");
+		$criteria->condition = "seo.url = :url AND t.records_id = :records_id";
+		$criteria->params["url"] = $url;
+		$criteria->params["records_id"] = $recordsId;
+
+		return $this->find($criteria);
 	}
 }
