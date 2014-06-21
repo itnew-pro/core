@@ -107,7 +107,7 @@ class ContentController extends CController
 	 */
 	protected function loadModel($pk = 0)
 	{
-		$modelName = ucfirst($this->id);
+		$modelName = "itnew\\models\\" . ucfirst($this->id);
 		$model = new $modelName;
 		if ($pk) {
 			$model = $model->findByPk($pk);

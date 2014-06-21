@@ -179,7 +179,7 @@ class Block extends CActiveRecord
 
 		foreach ($this->types as $key => $type) {
 			if (($pageArray && in_array($key, $pageArray)) || !$pageArray) {
-				$model = ucfirst($type);
+				$model = "itnew\\models\\" . ucfirst($type);
 				$model = $model::model();
 				$blocksArray[$model->getTitle()] = $type;
 			}
