@@ -1,4 +1,12 @@
 <?php
+use itnew\components\Html;
+
+/**
+ * @var mixed $model
+ */
+?>
+
+<?php
 echo CHtml::ajaxSubmitButton(
 	Html::getButtonText($model),
 	$this->createUrl(

@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var mixed $model
+ */
+?>
+
 <div class="form-block">
 	<?php
 	echo CHtml::activeLabel($model->getBlock(), "name");

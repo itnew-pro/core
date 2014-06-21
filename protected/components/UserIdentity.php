@@ -27,32 +27,35 @@ class UserIdentity extends CUserIdentity
 
 	/**
 	 * Проверяет наличие пользователя с заданными логином и паролем
-	 * В случае ошибки - получает CSS-класс ошибки
 	 *
-	 * @return string
+	 * @return bool
 	 */
 	public function authenticate()
 	{
 		if (!$this->username) {
 			$this->errorClass = "user-empty";
-		} else {
-			if (!$this->password) {
-				$this->errorClass = "password-empty";
-			} else {
-				$criteria = new CDbCriteria;
-				$criteria->condition = "t.login = :login";
-				$criteria->params["login"] => $this->username;
-				$model = Admin::model()->find("login = :login", array(":login" => $this->username));
-				if (!$model) {
-					$this->errorClass = "user-not-exist";
-				} else {
-					if ($model->password !== $this->password) {
-						$this->errorClass = "password-wrong";
-					}
-				}
-			}
+			return false;
 		}
 
-		return !$this->errorClass;
+		if (!$this->password) {
+			$this->errorClass = "password-empty";
+			return false;
+		}
+
+		$criteria = new CDbCriteria;
+		$criteria->condition = "t.login = :login";
+		$criteria->params["login"] = $this->username;
+		$model = Admin::model()->find($criteria);
+		if (!$model) {
+			$this->errorClass = "user-not-exist";
+			return false;
+		}
+
+		if ($model->password !== $this->password) {
+			$this->errorClass = "password-wrong";
+			return false;
+		}
+
+		return true;
 	}
 }

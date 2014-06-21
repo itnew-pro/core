@@ -1,3 +1,11 @@
+<?php
+use itnew\models\Structure;
+
+/**
+ * @var Block[] $blocks
+ */
+?>
+
 <div class="content-show-type">
 	<?php echo Yii::t("content", "Show"); ?>:
 	<?php if (Structure::isContentShowPage()) { ?>

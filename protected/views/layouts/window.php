@@ -1,3 +1,7 @@
+<?php
+use itnew\components\Html;
+?>
+
 <?php $id = uniqid(); ?>
 	<div
 		class="window window-<?php echo $this->windowType; ?> window-<?php echo $id; ?> window-level-<?php echo $this->windowLevel; ?>">

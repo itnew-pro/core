@@ -1,4 +1,10 @@
 <?php
+/**
+ * @var mixed $model
+ */
+?>
+
+<?php
 if (empty($success)) {
 	$success = '
 			hideWindow("' . Yii::app()->controller->id . '");
