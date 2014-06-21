@@ -1,3 +1,11 @@
+<?php
+use itnew\models\StaffGroup;
+
+/**
+ * @var StaffGroup $model
+ */
+?>
+
 <?php echo CHtml::form(); ?>
 
 	<div class="form-internal">

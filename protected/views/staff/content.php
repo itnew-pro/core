@@ -1,3 +1,11 @@
+<?php
+use itnew\models\Staff;
+
+/**
+ * @var Staff $model
+ */
+?>
+
 <?php if ($model->staffGroup) { ?>
 	<div class="content-staff content-staff-<?php echo $model->id; ?>">
 

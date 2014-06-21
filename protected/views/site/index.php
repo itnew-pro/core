@@ -1,4 +1,6 @@
 <?php
+use itnew\models\Structure;
+
 /**
  * @var Structure $model
  */

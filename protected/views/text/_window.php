@@ -1,4 +1,12 @@
 <?php
+use itnew\models\Text;
+
+/**
+ * @var Text $model
+ */
+?>
+
+<?php
 if ($model->getEditorClass()) {
 	Yii::app()->clientScript->registerScript(
 		"textWindow",

@@ -1,3 +1,12 @@
+<?php
+use itnew\models\Section;
+use itnew\components\Html;
+
+/**
+ * @var Section $model
+ */
+?>
+
 <?php echo CHtml::form(); ?>
 
 <?php $this->renderPartial("../partials/_delete_duplicate", compact("model")); ?>

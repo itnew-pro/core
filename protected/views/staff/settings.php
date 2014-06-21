@@ -1,3 +1,11 @@
+<?php
+use itnew\models\Staff;
+
+/**
+ * @var Staff $model
+ */
+?>
+
 <?php echo CHtml::form(); ?>
 
 <?php $this->renderPartial("../partials/_delete_duplicate", compact("model")); ?>

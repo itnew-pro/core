@@ -1,3 +1,11 @@
+<?php
+use itnew\models\Text;
+
+/**
+ * @var Text $model
+ */
+?>
+
 <?php echo CHtml::form(); ?>
 
 <?php $this->renderPartial("../partials/_delete_duplicate", compact("model")); ?>

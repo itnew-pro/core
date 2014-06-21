@@ -1,3 +1,11 @@
+<?php
+use itnew\controllers\TextController;
+
+/**
+ * @var TextController $this
+ */
+?>
+
 <?php echo CHtml::form(); ?>
 
 <?php $this->renderPartial("../text/_window", compact("model")); ?>

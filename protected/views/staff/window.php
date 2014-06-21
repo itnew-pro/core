@@ -1,3 +1,11 @@
+<?php
+use itnew\models\Staff;
+
+/**
+ * @var Staff $model
+ */
+?>
+
 <?php echo CHtml::form(); ?>
 
 	<div class="sortable">
