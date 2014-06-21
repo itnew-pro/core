@@ -35,6 +35,8 @@ class RecordsContent extends CActiveRecord
 
 	const SORT_STEP = 10;
 
+	const COVER_MARGIN = 15;
+
 	public $maxSort = 0;
 
 	/**

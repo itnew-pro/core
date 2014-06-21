@@ -27,7 +27,7 @@ use CDbCriteria;
  * @property int             $thumb_height  высота миниатюрки
  *
  * @property ImagesContent[] $imagesContent модели изображений группы
- * @property Block           $block         блок
+ * @property Block           $block         модель блока
  */
 class Images extends CActiveRecord
 {

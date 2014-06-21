@@ -264,7 +264,7 @@ class ContentController extends CController
 	/**
 	 * Сохраняет настройки
 	 *
-	 * @return void|bool
+	 * @return bool|void
 	 */
 	public function actionSaveSettings()
 	{
@@ -274,9 +274,9 @@ class ContentController extends CController
 		$modelPost = Yii::app()->request->getPost(CHtml::modelName($model));
 
 		if ($id) {
-			$model = $model->updateSettings($id, $blockPost, $modelPost);
+			$model = $model->updateSettings($id, $blockPost, $modelPost, $this->getSettingsParams());
 		} else {
-			$model = $model->addSettings($blockPost, $modelPost);
+			$model = $model->addSettings($blockPost, $modelPost, $this->getSettingsParams());
 		}
 
 		if (!$model) {
@@ -289,6 +289,16 @@ class ContentController extends CController
 		);
 
 		echo json_encode($json);
+	}
+
+	/**
+	 * Получает параметры для настроек
+	 *
+	 * @return string[]
+	 */
+	protected function getSettingsParams()
+	{
+		return array();
 	}
 
 	/**

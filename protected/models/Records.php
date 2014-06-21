@@ -3,49 +3,118 @@
 namespace itnew\models;
 
 use itnew\models\Structure;
+use itnew\models\Images;
+use itnew\models\RecordsContent;
 use CActiveRecord;
 use Yii;
-use CActiveDataProvider;
 use CDbCriteria;
 
 /**
- * This is the model class for table "records".
+ * Файл класса Records.
  *
- * The followings are the available columns in table 'records':
- * @property integer $id
- * @property integer $date
- * @property integer $is_detail
- * @property integer $cover
- * @property integer $images
- * @property integer $structure_id
+ * Модель для таблицы "records"
  *
- * The followings are the available model relations:
- * @property Structure $structure
- * @property Images $cover
- * @property Images $images
- * @property RecordsContent[] $recordsContent
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
+ *
+ * @property int              $id             идентификатор
+ * @property int              $date           дата
+ * @property int              $is_detail      подробно
+ * @property int              $cover          обложка
+ * @property int              $images         изображения
+ * @property int              $structure_id   идентификатор структуры
+ *
+ * @property Structure        $structure      модель структуры
+ * @property Images           $coverRelation  модель изображения
+ * @property Images           $imagesRelation модель изображения
+ * @property RecordsContent[] $recordsContent модели изображений
+ * @property Block            $block          модель блока
  */
 class Records extends CActiveRecord
 {
 
+	/**
+	 * Идентификаторы записей
+	 *
+	 * @var string
+	 */
 	public $contentIds = "";
 
+	/**
+	 * Ширина обложки
+	 *
+	 * @var int
+	 */
 	const COVER_WIDTH = 120;
+
+	/**
+	 * Высота обложки
+	 *
+	 * @var int
+	 */
 	const COVER_HEIGHT = 120;
 
+	/**
+	 * Ширина изображений
+	 *
+	 * @var int
+	 */
 	const IMAGES_WIDTH = 1000;
+
+	/**
+	 * Высота изображений
+	 *
+	 * @var int
+	 */
 	const IMAGES_HEIGHT = 1000;
+
+	/**
+	 * Ширина миниатюрок
+	 *
+	 * @var int
+	 */
 	const IMAGES_THUMB_WIDTH = 120;
+
+	/**
+	 * Высота миниатюрок
+	 *
+	 * @var int
+	 */
 	const IMAGES_THUMB_HEIGHT = 120;
 
+	/**
+	 * Тип. Отсутствие даты
+	 *
+	 * @var int
+	 */
 	const DATE_UNDATE = 0;
+
+	/**
+	 * Тип. dd.mm.yyyy
+	 *
+	 * @var int
+	 */
 	const DATE_DDMMYYYY = 1;
 
+	/**
+	 * Наличие обложки
+	 *
+	 * @var bool
+	 */
 	public $isCover = true;
+
+	/**
+	 * Наличие изображений
+	 *
+	 * @var bool
+	 */
 	public $isImages = true;
 
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -53,38 +122,52 @@ class Records extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
-			array('date, is_detail, cover, images, structure_id', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, date, is_detail, cover, images, structure_id', 'safe', 'on'=>'search'),
+			array('date, is_detail, cover, images, structure_id', 'numerical', 'integerOnly' => true),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
-			'structure' => array(self::BELONGS_TO, 'Structure', 'structure_id'),
-			'coverRelation' => array(self::BELONGS_TO, 'Images', 'cover'),
-			'imagesRelation' => array(self::BELONGS_TO, 'Images', 'images'),
-			'recordsContent' => array(self::HAS_MANY, 'RecordsContent', 'records_id', "order" => "sort DESC"),
-			"block" => array(
+			'structure'      => array(
+				self::BELONGS_TO,
+				'itnew\models\Structure',
+				'structure_id'
+			),
+			'coverRelation'  => array(
+				self::BELONGS_TO,
+				'itnew\models\Images',
+				'cover'
+			),
+			'imagesRelation' => array(
+				self::BELONGS_TO,
+				'itnew\models\Images',
+				'images'
+			),
+			'recordsContent' => array(
+				self::HAS_MANY,
+				'itnew\models\RecordsContent',
+				'records_id',
+				"order" => "sort DESC"
+			),
+			"block"          => array(
 				self::HAS_ONE,
-				'Block',
+				'itnew\models\Block',
 				'content_id',
 				"condition" => "block.type = :type",
-				"params" => array(
+				"params"    => array(
 					":type" => Block::TYPE_RECORDS,
 				),
 			),
@@ -92,98 +175,75 @@ class Records extends CActiveRecord
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает список поведений модели
+	 *
+	 * @return string[]
 	 */
-	public function attributeLabels()
+	public function behaviors()
 	{
 		return array(
-			'id' => 'ID',
-			'date' => Yii::t("records", "Date"),
-			'is_detail' => Yii::t("records", "Detailed description"),
-			'isCover' => Yii::t("records", "Cover"),
-			'isImages' => Yii::t("records", "Images"),
-			'structure_id' => 'Structure',
+			"ContentBehavior" => array(
+				"class"     => "itnew\behaviors\ContentBehavior",
+				"blockType" => Block::TYPE_RECORDS,
+			)
 		);
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает подписей полей
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
-	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
+	 * @return string[]
 	 */
-	public function search()
+	public function attributeLabels()
 	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('date',$this->date);
-		$criteria->compare('is_detail',$this->is_detail);
-		$criteria->compare('cover',$this->cover);
-		$criteria->compare('images',$this->images);
-		$criteria->compare('structure_id',$this->structure_id);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		return array(
+			'date'      => Yii::t("records", "Date"),
+			'is_detail' => Yii::t("records", "Detailed description"),
+			'isCover'   => Yii::t("records", "Cover"),
+			'isImages'  => Yii::t("records", "Images"),
+		);
 	}
 
 	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return Records the static model class
+	 * Возвращает статическую модель указанного класса.
+	 *
+	 * @param string $className название класса
+	 *
+	 * @return Records
 	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
 
+	/**
+	 * Получает название
+	 *
+	 * @return string
+	 */
 	public function getTitle()
 	{
 		return Yii::t("records", "Records");
 	}
 
-	public function getAllContentBlocks($notIn = null)
-	{
-		$criteria = new CDbCriteria;
-		$criteria->condition = "language_id = :language_id AND type = :type";
-		$criteria->params = array(
-			":language_id" => Language::getActiveId(),
-			":type" => Block::TYPE_RECORDS
-		);
-
-		if ($notIn) {
-			$criteria->condition .= " AND id IN ({$notIn})";
-		}
-
-		return Block::model()->findAll($criteria);
-	}
-
-	public function getBlock()
-	{
-		if ($this->block) {
-			return $this->block;
-		}
-		return new Block;
-	}
-
+	/**
+	 * Список типов дат
+	 *
+	 * @return string[]
+	 */
 	public function getDateTypes()
 	{
 		return array(
-			self::DATE_UNDATE => Yii::t("records", "undated"),
+			self::DATE_UNDATE   => Yii::t("records", "undated"),
 			self::DATE_DDMMYYYY => Yii::t("records", "dd.mm.yyyy"),
 		);
 	}
 
+	/**
+	 * Получает модель обложки
+	 *
+	 * @return Images
+	 */
 	public function getCover()
 	{
 		if ($this->coverRelation) {
@@ -197,6 +257,11 @@ class Records extends CActiveRecord
 		return $model;
 	}
 
+	/**
+	 * Получает клона модели обложки
+	 *
+	 * @return Images
+	 */
 	public function getCoverClone()
 	{
 		$model = clone $this->getCover();
@@ -206,6 +271,11 @@ class Records extends CActiveRecord
 		return $model;
 	}
 
+	/**
+	 * Получает модель изображений
+	 *
+	 * @return Images
+	 */
 	public function getImages()
 	{
 		if ($this->imagesRelation) {
@@ -222,114 +292,25 @@ class Records extends CActiveRecord
 		return $model;
 	}
 
+	/**
+	 * Получает клона модели изображений
+	 *
+	 * @return Images
+	 */
 	public function getImagesClone()
 	{
 		$model = clone $this->getImages();
 		$model->id = null;
 		$model->isNewRecord = true;
-		
+
 		return $model;
 	}
 
-	public function saveSettings()
-	{
-		$recordsPost = Yii::app()->request->getPost("Records");
-
-		if (Yii::app()->request->getQuery("id")) {
-			if ($model = $this->findByPk(Yii::app()->request->getQuery("id"))) {
-				if ($block = $model->getBlock()) {
-					$model->attributes = $recordsPost;
-					$block->attributes = Yii::app()->request->getPost("Block");
-
-					if ($model->coverRelation) {
-						$cover = $model->coverRelation;
-					} else {
-						$cover = new Images;
-					}
-					$cover->attributes = Yii::app()->request->getPost("Cover");
-
-					if ($model->imagesRelation) {
-						$images = $model->imagesRelation;
-					} else {
-						$images = new Images;
-					}
-					$images->attributes = Yii::app()->request->getPost("Images");
-
-					$transaction = Yii::app()->db->beginTransaction();
-
-					if ($cover->save() && $images->save()) {
-						if ($block->save()) {
-							if ($recordsPost["isCover"]) {
-								$model->cover = $cover->id;
-							} else {
-								$model->cover = null;
-							}
-
-							if ($recordsPost["isImages"]) {
-								$model->images = $images->id;
-							} else {
-								$model->images = null;
-							}
-
-							if ($model->save()) {
-								if (!$recordsPost["isCover"]) {
-									$cover->delete();
-								}
-								if (!$recordsPost["isImages"]) {
-									$images->delete();
-								}
-								$transaction->commit();
-								return $model;
-							}
-						}
-					}
-
-					$transaction->rollback();
-				}
-			}
-		} 
-
-		else {
-			$model = new self;
-			$block = new Block;
-			$cover = new Images;
-			$images = new Images;
-
-			$model->attributes = $recordsPost;
-			$block->attributes = Yii::app()->request->getPost("Block");
-			$cover->attributes = Yii::app()->request->getPost("Cover");
-			$images->attributes = Yii::app()->request->getPost("Images");
-
-			$transaction = Yii::app()->db->beginTransaction();
-			if ($cover->save() && $images->save()) {
-				if ($recordsPost["isCover"]) {
-					$model->cover = $cover->id;
-				} else {
-					$cover->delete();
-				}
-
-				if ($recordsPost["isImages"]) {
-					$model->images = $images->id;
-				} else {
-					$images->delete();
-				}
-
-				if ($model->save()) {
-					$block->content_id = $model->id;
-					$block->type = Block::TYPE_RECORDS;
-					$block->language_id = Language::getActiveId();
-					if ($block->save()) {
-						$transaction->commit();
-						return $model;
-					}
-				}
-			}
-			$transaction->rollback();
-		}
-
-		return null;
-	}
-
+	/**
+	 * Инициализация модели
+	 *
+	 * @return void
+	 */
 	public function init()
 	{
 		if ($this->isNewRecord) {
@@ -338,57 +319,75 @@ class Records extends CActiveRecord
 		}
 	}
 
+	/**
+	 * Проверяет наличие обложки
+	 *
+	 * @return bool
+	 */
 	public function hasCover()
 	{
-		if (!$this->isNewRecord) {
-			if (!$this->cover) {
-				return false;
-			}
-		}
-
-		return true;
+		return $this->isNewRecord && $this->cover;
 	}
 
+	/**
+	 * Проверяет наличие изображений
+	 *
+	 * @return bool
+	 */
 	public function hasImages()
 	{
-		if (!$this->isNewRecord) {
-			if (!$this->images) {
-				return false;
-			}
-		}
-
-		return true;
+		return $this->isNewRecord && $this->images;
 	}
 
-	public function saveContent()
+	/**
+	 * Сохраняет контент
+	 *
+	 * @param string $post поля модели переданные через POST
+	 *
+	 * @return bool
+	 */
+	public function saveContent($post = array())
 	{
-		$records = Yii::app()->request->getPost("Records");
-		if ($records) {
-			if (!empty($records["contentIds"])) {
-				$contentIds = explode(",", $records["contentIds"]);
-				$sort = count($contentIds) * RecordsContent::SORT_STEP;
-				foreach ($contentIds as $pk) {
-					if ($pk) {
-						if ($model = RecordsContent::model()->findByPk($pk)) {
-							$model->sort = $sort;
-							$model->save();
-							$sort -= RecordsContent::SORT_STEP;
-						}
-					}
+		if (empty($post["contentIds"])) {
+			return false;
+		}
+
+		$contentIds = explode(",", $post["contentIds"]);
+		$sort = count($contentIds) * RecordsContent::SORT_STEP;
+
+		foreach ($contentIds as $pk) {
+			if ($pk) {
+				$model = RecordsContent::model()->findByPk($pk);
+				if ($model) {
+					$model->sort = $sort;
+					$model->save();
+					$sort -= RecordsContent::SORT_STEP;
 				}
 			}
 		}
+
+		return true;
 	}
 
+	/**
+	 * Получает ширину обложки
+	 *
+	 * @return int
+	 */
 	public function getCoverWidth()
 	{
 		if ($this->coverRelation && $this->coverRelation->width) {
-			return $this->coverRelation->width + 15;
+			return $this->coverRelation->width + RecordsContent::COVER_MARGIN;
 		}
 
-		return COVER_WIDTH + 15;
+		return self::COVER_WIDTH + RecordsContent::COVER_MARGIN;
 	}
 
+	/**
+	 * Получает URL на записи
+	 *
+	 * @return string
+	 */
 	public function getUrl()
 	{
 		$criteria = new CDbCriteria;
@@ -396,11 +395,36 @@ class Records extends CActiveRecord
 		$criteria->params = array(":block_id" => $this->block->id);
 		$grid = Grid::model()->find($criteria);
 
+		if (!$grid) {
+			return null;
+		}
+
 		$criteria = new CDbCriteria;
 		$criteria->condition = "t.structure_id = :structure_id";
 		$criteria->params = array(":structure_id" => $grid->structure_id);
 		$section = Section::model()->find($criteria);
 
+		if (!$section) {
+			return null;
+		}
+
 		return $section->getUrl();
+	}
+
+	/**
+	 * Выполняется после сохранения модели
+	 *
+	 * @return void
+	 */
+	protected function afterSave()
+	{
+		parent::afterSave();
+
+		if (!$this->isCover && $this->coverRelation) {
+			$this->coverRelation->delete();
+		}
+		if (!$this->isImages && $this->imagesRelation) {
+			$this->imagesRelation->delete();
+		}
 	}
 }

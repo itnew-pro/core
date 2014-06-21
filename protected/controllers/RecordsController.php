@@ -137,4 +137,29 @@ class RecordsController extends ContentController
 			echo $this->actionWindow($id);
 		}
 	}
+
+	/**
+	 * Получает параметры для настроек
+	 *
+	 * @return string[]
+	 */
+	protected function getSettingsParams()
+	{
+		$list = array();
+
+		$list[] = array(
+			"relation"  => "coverRelation",
+			"attribute" => "cover",
+			"class"     => 'itnew\models\Images',
+			"post"      => "Cover",
+		);
+		$list[] = array(
+			"relation"  => "imagesRelation",
+			"attribute" => "images",
+			"class"     => 'itnew\models\Images',
+			"post"      => "itnew_models_Images",
+		);
+
+		return $list;
+	}
 }

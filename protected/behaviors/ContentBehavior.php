@@ -32,10 +32,11 @@ class ContentBehavior extends CActiveRecordBehavior
 	 *
 	 * @param string[] $blockPost данные POST для блока
 	 * @param string[] $modelPost данные POST для модели
+	 * @param string[] $params    дополнительные параметры
 	 *
 	 * @return self::owner|null
 	 */
-	public function addSettings($blockPost, $modelPost)
+	public function addSettings($blockPost, $modelPost, $params = array())
 	{
 		$model = new $this->owner;
 		$block = new Block;
@@ -43,6 +44,15 @@ class ContentBehavior extends CActiveRecordBehavior
 		$block->attributes = $blockPost;
 
 		$transaction = Yii::app()->db->beginTransaction();
+
+		foreach ($params as $param) {
+			$paramModel = new $param["class"];
+			$paramModel->attributes = $param["post"];
+			if ($paramModel->save()) {
+				$model->$param["attribute"] = $paramModel->id;
+			}
+		}
+
 		if ($model->save()) {
 			$block->content_id = $model->id;
 			$block->type = $this->blockType;
@@ -53,6 +63,7 @@ class ContentBehavior extends CActiveRecordBehavior
 				return $model;
 			}
 		}
+
 		$transaction->rollback();
 
 		return null;
@@ -62,10 +73,13 @@ class ContentBehavior extends CActiveRecordBehavior
 	 * Обновляет настройки модели
 	 *
 	 * @param int $id идентификатор
+	 * @param string[] $blockPost данные POST для блока
+	 * @param string[] $modelPost данные POST для модели
+	 * @param string[] $params    дополнительные параметры
 	 *
 	 * @return self::owner|null
 	 */
-	public function updateSettings($id, $blockPost, $modelPost)
+	public function updateSettings($id, $blockPost, $modelPost, $params = array())
 	{
 		$model = $this->owner->findByPk($id);
 		if (!$model) {
@@ -81,6 +95,19 @@ class ContentBehavior extends CActiveRecordBehavior
 		$block->attributes = $blockPost;
 
 		$transaction = Yii::app()->db->beginTransaction();
+
+		foreach ($params as $param) {
+			if ($model->$param["relation"]) {
+				$paramModel = $model->$param["relation"];
+			} else {
+				$paramModel = new $param["class"];
+			}
+			$paramModel->attributes = $param["post"];
+			if ($paramModel->save()) {
+				$model->$param["attribute"] = $paramModel->id;
+			}
+		}
+
 		if ($block->save()) {
 			if ($model->save()) {
 				$transaction->commit();
@@ -88,6 +115,7 @@ class ContentBehavior extends CActiveRecordBehavior
 				return $model;
 			}
 		}
+
 		$transaction->rollback();
 
 		return null;

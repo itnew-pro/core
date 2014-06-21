@@ -19,11 +19,13 @@ use CDbCriteria;
  * @link    http://www.itnew.pro/
  * @package models
  *
- * @property int    $id     идентификатор
- * @property int    $rows   количество строк
- * @property int    $editor редактор
- * @property int    $tag    идентификатор тега
- * @property string $text   текст
+ * @property int    $id            идентификатор
+ * @property int    $rows          количество строк
+ * @property int    $editor        редактор
+ * @property int    $tag           идентификатор тега
+ * @property string $text          текст
+ *
+ * @property Block  $block         модель блока
  */
 class Text extends CActiveRecord
 {
