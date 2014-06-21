@@ -1,3 +1,12 @@
+<?php
+use itnew\models\Records;
+use itnew\models\Images;
+
+/**
+ * @var Records $model
+ */
+?>
+
 <?php echo CHtml::form(); ?>
 
 <?php $this->renderPartial("../partials/_delete_duplicate", compact("model")); ?>

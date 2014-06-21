@@ -1,3 +1,13 @@
+<?php
+use itnew\models\Images;
+use itnew\controllers\ImagesController;
+
+/**
+ * @var Images $model
+ * @var ImagesController $this
+ */
+?>
+
 <?php echo CHtml::form(); ?>
 
 <?php $this->renderPartial("../partials/_delete_duplicate", compact("model")); ?>

@@ -1,3 +1,11 @@
+<?php
+use itnew\models\ImagesContent;
+
+/**
+ * @var ImagesContent[] $images
+ */
+?>
+
 <?php foreach ($images as $model) { ?>
 	<a
 		class="none-decoration fancybox"

@@ -1,3 +1,11 @@
+<?php
+use itnew\models\RecordsContent;
+
+/**
+ * @var RecordsContent $model
+ */
+?>
+
 <?php echo CHtml::form(); ?>
 
 <?php $this->renderPartial("../partials/_seo", array("model" => $model->getSeo())); ?>

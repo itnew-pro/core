@@ -1,5 +1,9 @@
 <?php
 use itnew\components\Html;
+
+/**
+ * @var string $content
+ */
 ?>
 
 <?php $id = uniqid(); ?>

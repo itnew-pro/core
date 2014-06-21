@@ -1,3 +1,11 @@
+<?php
+use itnew\controllers\ImagesController;
+
+/**
+ * @var ImagesController $this
+ */
+?>
+
 <?php echo CHtml::form(); ?>
 
 <?php $this->renderPartial("_window_list", compact("model")); ?>

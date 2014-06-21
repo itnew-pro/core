@@ -1,3 +1,12 @@
+<?php
+use itnew\models\ImagesContent;
+
+/**
+ * @var ImagesContent[] $images
+ * @var bool $isFirst
+ */
+?>
+
 <div class="chopslider">
 	<a class="slide-next" href="#"></a>
 	<a class="slide-prev" href="#"></a>

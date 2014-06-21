@@ -1,3 +1,11 @@
+<?php
+use itnew\models\RecordsContent;
+
+/**
+ * @var RecordsContent $model
+ */
+?>
+
 <?php echo CHtml::form(); ?>
 
 <?php if ($model->records->cover) { ?>

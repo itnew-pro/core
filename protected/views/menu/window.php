@@ -1,9 +1,20 @@
+<?php
+use itnew\models\Menu;
+use itnew\controllers\MenuController;
+
+/**
+ * @var MenuController $this
+ * @var Menu           $model
+ */
+?>
+
 <?php echo CHtml::form(); ?>
 
 <?php $sectionsId = uniqid(); ?>
 	<div class="sections" id="<?php echo $sectionsId; ?>">
 		<?php if ($model->getUnusedSections()) {
-			foreach ($model->getUnusedSections() as $id => $name) { ?>
+			foreach ($model->getUnusedSections() as $id => $name) {
+				?>
 				<div
 					data-id="<?php echo $id; ?>"
 					data-type="section"
@@ -14,7 +25,8 @@
 					<i class="level-down"></i>
 					<?php echo $name; ?>
 				</div>
-			<?php }
+			<?php
+			}
 		} ?>
 	</div>
 

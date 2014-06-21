@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var CActiveRecord $model
+ */
+?>
+
 <?php if (!$model->isNewRecord) { ?>
 	<div class="subpanel-links form-block">
 		<?php echo CHtml::ajaxLink(

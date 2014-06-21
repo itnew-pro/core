@@ -1,8 +1,17 @@
+<?php
+use itnew\models\Records;
+
+/**
+ * @var Records $model
+ */
+?>
+
 <?php echo CHtml::form(); ?>
 
 	<div class="sortable">
 		<?php if ($model->recordsContent) {
-			foreach ($model->recordsContent as $record) { ?>
+			foreach ($model->recordsContent as $record) {
+				?>
 				<div class="move-item" data-id="<?php echo $record->id; ?>" id="record-<?php echo $record->id; ?>">
 
 					<?php
@@ -63,7 +72,8 @@
 					);
 					?>
 				</div>
-			<?php }
+			<?php
+			}
 		} ?>
 	</div>
 

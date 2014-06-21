@@ -1,3 +1,11 @@
+<?php
+use itnew\models\ImagesContent;
+
+/**
+ * @var ImagesContent $model
+ */
+?>
+
 <div class="image-float image-window-item image-window-item-<?php echo $model->id; ?>"
 	 data-id="<?php echo $model->id; ?>">
 	<img src="<?php echo $model->getUrl("window"); ?>"/>

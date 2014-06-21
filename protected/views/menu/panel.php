@@ -1,4 +1,13 @@
 <?php
+use itnew\models\Structure;
+use itnew\controllers\MenuController;
+
+/**
+ * @var MenuController $this
+ */
+?>
+
+<?php
 $this->renderPartial("../content/_show_type");
 $this->renderPartial("../content/_blocks", compact("blocks"));
 

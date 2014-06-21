@@ -1,3 +1,13 @@
+<?php
+use itnew\models\RecordsContent;
+use itnew\models\Records;
+
+/**
+ * @var RecordsContent $model
+ * @var Records        $records
+ */
+?>
+
 <div class="card default-card">
 	<div class="cover">
 		<a href="<?php echo $model->getUrl(); ?>">

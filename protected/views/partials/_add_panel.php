@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var CController $this
+ */
+?>
+
 <div class="add-panel">
 	<i class="plus"></i>
 	<?php

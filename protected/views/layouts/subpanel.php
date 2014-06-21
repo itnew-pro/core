@@ -1,3 +1,11 @@
+<?php
+use itnew\components\Html;
+
+/**
+ * @var string $content
+ */
+?>
+
 <div id="subpanel">
 	<i class="close"></i>
 

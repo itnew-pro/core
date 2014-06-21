@@ -1,29 +1,40 @@
-<div <?php if (empty($notMultiple)) { ?>class="sortable"<?php } ?>>
+<?php
+use itnew\models\Images;
+use itnew\components\Html;
+use itnew\controllers\ImagesController;
 
-	<?php if ($model->imagesContent) {
-		foreach ($model->imagesContent as $imagesContent) {
-			$this->renderPartial("../images/_window_item", array("model" => $imagesContent));
-		}
-	} ?>
-	<div class="add-images image-float">
-		<?php $id = uniqid();
-		echo CHtml::fileField(
-			"imageFiles",
-			null,
-			array(
-				"multiple" => empty($notMultiple) ? true : false,
-				"id"       => $id,
-				"class"    => "image-file-field",
-			)
-		);
-		?>
-		<i class="c c-image"></i>
-		<?php echo Html::loader("add-images"); ?>
+/**
+ * @var Images $model
+ * @var ImagesController $this
+ */
+?>
+
+	<div <?php if (empty($notMultiple)) { ?>class="sortable"<?php } ?>>
+
+		<?php if ($model->imagesContent) {
+			foreach ($model->imagesContent as $imagesContent) {
+				$this->renderPartial("../images/_window_item", array("model" => $imagesContent));
+			}
+		} ?>
+		<div class="add-images image-float">
+			<?php $id = uniqid();
+			echo CHtml::fileField(
+				"imageFiles",
+				null,
+				array(
+					"multiple" => empty($notMultiple) ? true : false,
+					"id"       => $id,
+					"class"    => "image-file-field",
+				)
+			);
+			?>
+			<i class="c c-image"></i>
+			<?php echo Html::loader("add-images"); ?>
+		</div>
+
 	</div>
 
-</div>
-
-<div class="clear"></div>
+	<div class="clear"></div>
 
 <?php echo CHtml::activeHiddenField(
 	$model,

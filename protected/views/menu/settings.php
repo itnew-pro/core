@@ -1,3 +1,13 @@
+<?php
+use itnew\models\Menu;
+use itnew\controllers\MenuController;
+
+/**
+ * @var MenuController $this
+ * @var Menu           $model
+ */
+?>
+
 <?php echo CHtml::form(); ?>
 
 <?php $this->renderPartial("../partials/_delete_duplicate", compact("model")); ?>

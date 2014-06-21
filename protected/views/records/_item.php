@@ -1,3 +1,11 @@
+<?php
+use itnew\models\RecordsContent;
+
+/**
+ * @var RecordsContent $model
+ */
+?>
+
 <div class="content-records-content content-records-content-<?php echo $model->id; ?>">
 	<h1><?php echo $model->seo->name; ?></h1>
 
