@@ -2,31 +2,35 @@
 
 namespace itnew\models;
 
+use itnew\models\Section;
 use CActiveRecord;
 use Yii;
-use CActiveDataProvider;
-use CDbCriteria;
 
 /**
- * This is the model class for table "seo".
+ * Файл класса Seo.
  *
- * The followings are the available columns in table "seo":
+ * Модель для таблицы "seo"
  *
- * @property integer   $id
- * @property string    $name
- * @property string    $url
- * @property string    $title
- * @property string    $keywords
- * @property string    $description
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
  *
- * The followings are the available model relations:
- * @property Section[] $sections
+ * @property int       $id          идентификатор
+ * @property string    $name        название
+ * @property string    $url         URL адрес
+ * @property string    $title       заголовок
+ * @property string    $keywords    ключевые слова
+ * @property string    $description описание
+ *
+ * @property Section[] $sections    модели разделов
  */
 class Seo extends CActiveRecord
 {
-	
+
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -34,30 +38,38 @@ class Seo extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
 		return array(
 			array("name, url", "required"),
 			array("name, url, title, keywords, description", "length", "max" => 512),
-
-			array("id, name, url, title, keywords, description", "safe", "on" => "search"),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
 		return array(
-			"sections" => array(self::HAS_MANY, "Section", "seo_id"),
+			"sections" => array(
+				self::HAS_MANY,
+				'itnew\models\Section',
+				"seo_id"
+			),
 		);
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает подписей полей
+	 *
+	 * @return string[]
 	 */
 	public function attributeLabels()
 	{
@@ -71,40 +83,11 @@ class Seo extends CActiveRecord
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает статическую модель указанного класса.
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 * @param string $className название класса
 	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		$criteria = new CDbCriteria;
-
-		$criteria->compare("id", $this->id);
-		$criteria->compare("name", $this->name, true);
-		$criteria->compare("url", $this->url, true);
-		$criteria->compare("title", $this->title, true);
-		$criteria->compare("keywords", $this->keywords, true);
-		$criteria->compare("description", $this->description, true);
-
-		return new CActiveDataProvider($this, array(
-			"criteria" => $criteria,
-		));
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 *
-	 * @param string $className active record class name.
-	 *
-	 * @return Seo the static model class
+	 * @return Seo
 	 */
 	public static function model($className = __CLASS__)
 	{
@@ -112,18 +95,22 @@ class Seo extends CActiveRecord
 	}
 
 	/**
-	 * Gets error empty class
+	 * Получает CSS-класс ошибки на пустоту
+	 *
+	 * @param string[] $post параметры модели переданные через POST
 	 *
 	 * @return string
 	 */
-	public static function getEmptyClass()
+	public static function getEmptyClass($post)
 	{
-		$seo = Yii::app()->request->getPost("Seo");
-		if (!$seo["name"]) {
+		if (!$post["name"]) {
 			return "name-empty";
-		} else if (!$seo["url"]) {
+		}
+
+		if (!$post["url"]) {
 			return "url-empty";
 		}
-		return;
+
+		return null;
 	}
 }

@@ -5,30 +5,38 @@ namespace itnew\models;
 use itnew\models\Seo;
 use itnew\models\Language;
 use itnew\models\Structure;
+use itnew\models\MenuContent;
 use CActiveRecord;
 use Yii;
-use CActiveDataProvider;
 use CDbCriteria;
 
 /**
- * This is the model class for table "section".
+ * Файл класса Section.
  *
- * The followings are the available columns in table 'section':
- * @property integer $id
- * @property integer $seo_id
- * @property integer $language_id
- * @property integer $structure_id
- * @property integer $main
+ * Модель для таблицы "section"
  *
- * The followings are the available model relations:
- * @property Seo $seo
- * @property Language $language
- * @property Structure $structure
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
+ *
+ * @property int         $id           идентификатор
+ * @property int         $seo_id       идентификатор СЕО
+ * @property int         $language_id  идентификатор языка
+ * @property int         $structure_id идентификатор структуры
+ * @property int         $main         главный раздел
+ *
+ * @property Seo         $seo          модель СЕО
+ * @property Language    $language     модель языка
+ * @property Structure   $structure    модель структуры
+ * @property MenuContent $menuContent  модель элемента меню
  */
 class Section extends CActiveRecord
 {
+
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -36,37 +44,53 @@ class Section extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
 			array('seo_id, language_id, structure_id, main', 'required'),
-			array('seo_id, language_id, structure_id, main', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, seo_id, language_id, structure_id, main', 'safe', 'on'=>'search'),
+			array('seo_id, language_id, structure_id, main', 'numerical', 'integerOnly' => true),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
-			'seo' => array(self::BELONGS_TO, 'itnew\models\Seo', 'seo_id'),
-			'language' => array(self::BELONGS_TO, 'itnew\models\Language', 'language_id'),
-			'structure' => array(self::BELONGS_TO, 'itnew\models\Structure', 'structure_id'),
+			'seo'         => array(
+				self::BELONGS_TO,
+				'itnew\models\Seo',
+				'seo_id'
+			),
+			'language'    => array(
+				self::BELONGS_TO,
+				'itnew\models\Language',
+				'language_id'
+			),
+			'structure'   => array(
+				self::BELONGS_TO,
+				'itnew\models\Structure',
+				'structure_id'
+			),
+			'menuContent' => array(
+				self::HAS_ONE,
+				'itnew\models\MenuContent',
+				'section_id'
+			),
 		);
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает подписей полей
+	 *
+	 * @return string[]
 	 */
 	public function attributeLabels()
 	{
@@ -76,97 +100,74 @@ class Section extends CActiveRecord
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает статическую модель указанного класса.
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 * @param string $className название класса
 	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
+	 * @return Section
 	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('seo_id',$this->seo_id);
-		$criteria->compare('language_id',$this->language_id);
-		$criteria->compare('structure_id',$this->structure_id);
-		$criteria->compare('main',$this->main);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return Section the static model class
-	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
 
 	/**
-	 * Gets active section
+	 * Получает активный раздел
 	 *
-	 * @return self
+	 * @param string $sectionUrl URL раздела
+	 *
+	 * @return Section
 	 */
-	public function getActive($section)
+	public function getActive($sectionUrl)
 	{
-		if ($section) {
-			return $this->with("seo")->find(
-				"seo.url = :url AND t.language_id = :language_id",
-				array(
-					":url" => $section,
-					":language_id" => Language::getActiveId()
-				)
-			);
+		$criteria = new CDbCriteria;
+		$criteria->params["language_id"] = Language::getActiveId();
+
+		if ($sectionUrl) {
+			$criteria->with = array("seo");
+			$criteria->condition = "seo.url = :url AND t.language_id = :language_id";
+			$criteria->params["url"] = $sectionUrl;
+
+			return $this->find($criteria);
 		}
-		return $this->find(
-			"main = :main AND language_id = :language_id",
-			array(":main" => 1, ":language_id" => Language::getActiveId())
-		);
+
+		$criteria->condition = "main = :main AND language_id = :language_id";
+		$criteria->params["main"] = 1;
+
+		return $this->find($criteria);
 	}
 
 	/**
-	 * Saves form from subpanel
+	 * Сохраняет раздел
+	 * Получает CSS-класс ошибки
 	 *
-	 * @return string error class
+	 * @param string[] $post поля модели переданные через POST
+	 * @param string[] $seo  поля модели Seo переданные через POST
+	 *
+	 * @return string
 	 */
-	public function saveForm($seo)
+	public function saveForm($post, $seo)
 	{
-		$section = Yii::app()->request->getPost("Section");
-
-		if ($section["id"]) {
-			$model = $this->findByPk($section["id"]);
+		if ($post["id"]) {
+			$model = $this->findByPk($post["id"]);
 		} else {
 			$model = new self;
 			$model->seo = new Seo;
 			$model->main = 0;
 		}
 
+		$criteria = new CDbCriteria;
+		$criteria->with = array("seo");
+		$criteria->params["url"] = $seo["url"];
 		if ($model->isNewRecord) {
-			if ($this->with("seo")->find(
-				"seo.url = :url",
-				array(":url" => $seo["url"])
-			)) {
-				return $errorClass = "url-exist";
-			}
-		} else if ($this->with("seo")->find(
-			"seo.url = :url AND t.id != :id",
-			array(":url" => $seo["url"], ":id" => $model->id)
-		)) {
+			$criteria->condition = "seo.url = :url";
+		} else {
+			$criteria->condition = "seo.url = :url AND t.id != :id";
+			$criteria->params["id"] = $model->id;
+		}
+		if ($this->find($criteria)) {
 			return $errorClass = "url-exist";
-		} 
+		}
 
 		$model->seo->attributes = $seo;
 		$model->seo->save();
@@ -182,7 +183,7 @@ class Section extends CActiveRecord
 			$model->language_id = Language::getActiveId();
 		}
 
-		if ($section["main"]) {
+		if ($post["main"]) {
 			$sectionModels = $this->findAll();
 			if ($sectionModels) {
 				foreach ($sectionModels as $sectionModel) {
@@ -194,66 +195,91 @@ class Section extends CActiveRecord
 		}
 		$model->save();
 
-		return;
+		return null;
 	}
 
+	/**
+	 * Выполняется после удаления модели
+	 *
+	 * @return void
+	 */
 	protected function afterDelete()
 	{
+		parent::afterDelete();
+
 		if ($this->seo) {
 			$this->seo->delete();
 		}
 		if ($this->structure) {
 			$this->structure->delete();
 		}
-		return parent::afterDelete();
 	}
 
+	/**
+	 * Дублирует раздел
+	 *
+	 * @return bool
+	 */
 	public function duplicate()
 	{
+		if (!$this->seo || !$this->structure) {
+			return false;
+		}
+
 		$transaction = Yii::app()->db->beginTransaction();
 
-		if ($this->seo && $this->structure) {
-			$seoCopy = new Seo;
-			$seoCopy->name = $this->seo->name . " - " . Yii::t("common", "copy");
-			$seoCopy->url = $this->seo->url . "-copy";
-			$seoCopy->title = $this->seo->title;
-			$seoCopy->keywords = $this->seo->keywords;
-			$seoCopy->description = $this->seo->description;
+		$seoCopy = new Seo;
+		$seoCopy->name = $this->seo->name . " - " . Yii::t("common", "copy");
+		$seoCopy->url = $this->seo->url . "-copy";
+		$seoCopy->title = $this->seo->title;
+		$seoCopy->keywords = $this->seo->keywords;
+		$seoCopy->description = $this->seo->description;
 
-			if ($seoCopy->save()) {
-				$structureCopy = new Structure;
-				$structureCopy->width = $this->structure->width;
-				$structureCopy->size = $this->structure->size;
+		if (!$seoCopy->save()) {
+			$transaction->rollback();
+			return false;
+		}
 
-				if ($structureCopy->save()) {
-					if ($this->structure->grid) {
-						foreach ($this->structure->grid as $grid) {
-							$gridCopy = new Grid;
-							$gridCopy->attributes = $grid->attributes;
-							$gridCopy->structure_id = $structureCopy->id;
-							$gridCopy->id = null;
-							$gridCopy->save();
-						}
-					}
+		$structureCopy = new Structure;
+		$structureCopy->width = $this->structure->width;
+		$structureCopy->size = $this->structure->size;
 
-					$sectionCopy = new Section;
-					$sectionCopy->seo_id = $seoCopy->id;
-					$sectionCopy->structure_id = $structureCopy->id;
-					$sectionCopy->language_id = $this->language_id;
-					$sectionCopy->main = 0;
+		if (!$structureCopy->save()) {
+			$transaction->rollback();
+			return false;
+		}
 
-					if ($sectionCopy->save()) {
-						$transaction->commit();
-						return true;
-					}
-				}
+		if ($this->structure->grid) {
+			foreach ($this->structure->grid as $grid) {
+				$gridCopy = new Grid;
+				$gridCopy->attributes = $grid->attributes;
+				$gridCopy->structure_id = $structureCopy->id;
+				$gridCopy->id = null;
+				$gridCopy->save();
 			}
 		}
 
+		$sectionCopy = new Section;
+		$sectionCopy->seo_id = $seoCopy->id;
+		$sectionCopy->structure_id = $structureCopy->id;
+		$sectionCopy->language_id = $this->language_id;
+		$sectionCopy->main = 0;
+
+		if ($sectionCopy->save()) {
+			$transaction->commit();
+			return true;
+		}
+
 		$transaction->rollback();
+
 		return false;
 	}
 
+	/**
+	 * Получает модель Seo
+	 *
+	 * @return Seo
+	 */
 	public function getSeo()
 	{
 		if ($this->seo) {
@@ -262,37 +288,56 @@ class Section extends CActiveRecord
 		return new Seo;
 	}
 
+	/**
+	 * Получает ссылку на раздел
+	 *
+	 * @return string
+	 */
 	public function getLink()
 	{
-		if ($this->seo) {
-			$url = $this->getUrl();
-
-			$active = null;
-			if (Yii::app()->request->url === $url) {
-				$active = "class=\"active\"";
-			}
-
-			return "<a href=\"{$url}\" {$active}>{$this->seo->name}</a>";
+		if (!$this->seo) {
+			return false;
 		}
 
-		return;
+		$url = $this->getUrl();
+
+		$active = null;
+		if (Yii::app()->request->url === $url) {
+			$active = "class=\"active\"";
+		}
+
+		return "<a href=\"{$url}\" {$active}>{$this->seo->name}</a>";
 	}
 
+	/**
+	 * Выполняется перед удалением модели
+	 *
+	 * @return bool
+	 */
 	public function beforeDelete()
 	{
 		if ($this->menuContent) {
-			foreach ($this->menuContent as $menuContent) {
-				$menuContent->delete();
+			foreach ($this->menuContent as $model) {
+				$model->delete();
 			}
 		}
+
 		return parent::beforeDelete();
 	}
 
+	/**
+	 * Получает ссылку на раздел
+	 *
+	 * @return string
+	 */
 	public function getUrl()
 	{
-		return Yii::app()->createUrl("site/index", array(
-			"language" => Yii::app()->language,
-			"section" => $this->seo->url,
-		));
+		return Yii::app()->createUrl(
+			"site/index",
+			array(
+				"language" => Yii::app()->language,
+				"section"  => $this->seo->url,
+			)
+		);
 	}
 }

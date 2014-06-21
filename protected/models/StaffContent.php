@@ -2,34 +2,43 @@
 
 namespace itnew\models;
 
+use itnew\models\StaffGroup;
+use itnew\models\Text;
+use itnew\models\Images;
+use itnew\models\Seo;
 use CActiveRecord;
 use Yii;
-use CActiveDataProvider;
-use CDbCriteria;
 
 /**
- * This is the model class for table "staff_content".
+ * Файл класса StaffContent.
  *
- * The followings are the available columns in table 'staff_content':
- * @property integer $id
- * @property integer $seo_id
- * @property integer $photo
- * @property integer $description
- * @property integer $text
- * @property integer $group_id
- * @property integer $sort
+ * Модель для таблицы "staff_content"
  *
- * The followings are the available model relations:
- * @property StaffGroup $group
- * @property Text $description
- * @property Images $photo
- * @property Seo $seo
- * @property Text $text
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
+ *
+ * @property int        $id           идентификатор
+ * @property int        $seo_id       идентификатор СЕО
+ * @property int        $photo        фото
+ * @property int        $description  описание
+ * @property int        $text         текст
+ * @property int        $group_id     идентификатор группы
+ * @property int        $sort         сортировка
+ *
+ * @property StaffGroup $group        модель группы
+ * @property Text       $descriptionT модель описания
+ * @property Images     $images       модель изображения
+ * @property Seo        $seo          модель СЕО
+ * @property Text       $textT        модель текста
  */
 class StaffContent extends CActiveRecord
 {
+
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -37,95 +46,81 @@ class StaffContent extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
 			array('seo_id, photo, description, text, group_id, sort', 'required'),
-			array('seo_id, photo, description, text, group_id, sort', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, seo_id, photo, description, text, group_id, sort', 'safe', 'on'=>'search'),
+			array('seo_id, photo, description, text, group_id, sort', 'numerical', 'integerOnly' => true),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
-			'group' => array(self::BELONGS_TO, 'StaffGroup', 'group_id'),
-			'descriptionT' => array(self::BELONGS_TO, 'Text', 'description'),
-			'images' => array(self::BELONGS_TO, 'Images', 'photo'),
-			'seo' => array(self::BELONGS_TO, 'Seo', 'seo_id'),
-			'textT' => array(self::BELONGS_TO, 'Text', 'text'),
+			'group'        => array(
+				self::BELONGS_TO,
+				'itnew\models\StaffGroup',
+				'group_id'
+			),
+			'descriptionT' => array(
+				self::BELONGS_TO,
+				'itnew\models\Text',
+				'description'
+			),
+			'images'       => array(
+				self::BELONGS_TO,
+				'itnew\models\Images',
+				'photo'
+			),
+			'seo'          => array(
+				self::BELONGS_TO,
+				'itnew\models\Seo',
+				'seo_id'
+			),
+			'textT'        => array(
+				self::BELONGS_TO,
+				'itnew\models\Text',
+				'text'
+			),
 		);
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает подписей полей
+	 *
+	 * @return string[]
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
-			'seo_id' => 'Seo',
-			'photo' => 'Photo',
-			'description' => 'Description',
-			'text' => 'Text',
-			'group_id' => 'Group',
-			'sort' => 'Sort',
-		);
+		return array();
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает статическую модель указанного класса.
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 * @param string $className название класса
 	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
+	 * @return StaffContent
 	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('seo_id',$this->seo_id);
-		$criteria->compare('photo',$this->photo);
-		$criteria->compare('description',$this->description);
-		$criteria->compare('text',$this->text);
-		$criteria->compare('group_id',$this->group_id);
-		$criteria->compare('sort',$this->sort);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return StaffContent the static model class
-	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
 
+	/**
+	 * Получает описание
+	 *
+	 * @return string
+	 */
 	public function getDescription()
 	{
 		if ($this->descriptionT) {

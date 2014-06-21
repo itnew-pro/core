@@ -4,25 +4,31 @@ namespace itnew\models;
 
 use CActiveRecord;
 use Yii;
-use CActiveDataProvider;
-use CDbCriteria;
 
 /**
- * This is the model class for table "site".
+ * Файл класса Site.
  *
- * The followings are the available columns in table 'site':
- * @property integer $id
- * @property string $name
- * @property string $email
- * @property string $title
- * @property string $keywords
- * @property string $description
- * @property string $migrate_time
+ * Модель для таблицы "site"
+ *
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
+ *
+ * @property int    $id           идентификатор
+ * @property string $name         название
+ * @property string $email        электронная почта
+ * @property string $title        заголовок
+ * @property string $keywords     ключевые слова
+ * @property string $description  описание
+ * @property string $migrate_time время миграции
  */
 class Site extends CActiveRecord
 {
+
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -30,85 +36,45 @@ class Site extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
-			array('name, email, title, keywords', 'length', 'max'=>255),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, name, email, title, keywords, description', 'safe', 'on'=>'search'),
+			array('name, email, title, keywords', 'length', 'max' => 255),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-		);
+		return array();
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает подписей полей
+	 *
+	 * @return string[]
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
-			'name' => 'Name',
-			'email' => 'Email',
-			'title' => 'Title',
-			'keywords' => 'Keywords',
-			'description' => 'Description',
-			'migrate_time' => 'Migrate time',
-		);
+		return array();
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает статическую модель указанного класса.
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 * @param string $className название класса
 	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
+	 * @return Site
 	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('email',$this->email,true);
-		$criteria->compare('title',$this->title,true);
-		$criteria->compare('keywords',$this->keywords,true);
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('migrate_time',$this->migrate_time);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return Site the static model class
-	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}

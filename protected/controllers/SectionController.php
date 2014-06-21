@@ -2,8 +2,13 @@
 
 namespace itnew\controllers;
 
+use itnew\models\Seo;
+use itnew\models\Section;
+use itnew\models\Language;
 use CController;
 use Yii;
+use CHtml;
+use CDbCriteria;
 
 /**
  * Файл класса SectionController.
@@ -123,15 +128,20 @@ class SectionController extends CController
 	 * Сохраняет настройки
 	 * Получает css-класс ошибки
 	 *
-	 * @return string
+	 * @return bool|void
 	 */
 	public function actionSaveSettings()
 	{
-		$errorClass = Seo::getEmptyClass();
-		$seo = Yii::app()->request->getPost("Seo");
+		$post = Yii::app()->request->getPost(CHtml::modelName(new Section));
+		$seo = Yii::app()->request->getPost(CHtml::modelName(new Seo));
 
+		if (!$post || !$seo) {
+			return false;
+		}
+
+		$errorClass = Seo::getEmptyClass($post);
 		if (!$errorClass) {
-			$errorClass = Section::model()->saveForm($seo);
+			$errorClass = Section::model()->saveForm($post, $seo);
 		}
 
 		$json = array(

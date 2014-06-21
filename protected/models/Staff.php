@@ -2,30 +2,46 @@
 
 namespace itnew\models;
 
+use itnew\models\StaffGroup;
 use CActiveRecord;
 use Yii;
-use CActiveDataProvider;
-use CDbCriteria;
 
 /**
- * This is the model class for table "staff".
+ * Файл класса Staff.
  *
- * The followings are the available columns in table 'staff':
- * @property integer $id
- * @property integer $is_group
- * @property integer $is_detail
+ * Модель для таблицы "staff"
  *
- * The followings are the available model relations:
- * @property StaffGroup[] $staffGroup
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
+ *
+ * @property int          $id         идентификатор
+ * @property int          $is_group   наличие групп
+ * @property int          $is_detail  наличие подробного описания
+ *
+ * @property StaffGroup[] $staffGroup модели групп
  */
 class Staff extends CActiveRecord
 {
-	public $groupIds;
 
+	/**
+	 * Идентификаторы групп
+	 *
+	 * @var string
+	 */
+	public $groupIds = "";
+
+	/**
+	 * Шаг сортировки
+	 *
+	 * @var int
+	 */
 	const SORT_STEP = 10;
 
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -33,35 +49,41 @@ class Staff extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('is_group, is_detail', 'numerical', 'integerOnly' => true),
-			array('id, is_group, is_detail', 'safe', 'on'=>'search'),
+			array(
+				'is_group, is_detail',
+				'numerical',
+				'integerOnly' => true
+			),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
-			'staffGroup' => array(self::HAS_MANY, 'StaffGroup', 'staff_id', "order" => "staffGroup.sort"),
-			"block" => array(
+			'staffGroup' => array(
+				self::HAS_MANY,
+				'itnew\models\StaffGroup',
+				'staff_id',
+				"order" => "staffGroup.sort"
+			),
+			"block"      => array(
 				self::HAS_ONE,
-				'Block',
+				'itnew\models\Block',
 				'content_id',
 				"condition" => "block.type = :type",
-				"params" => array(
+				"params"    => array(
 					":type" => Block::TYPE_STAFF,
 				),
 			),
@@ -69,142 +91,77 @@ class Staff extends CActiveRecord
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает список поведений модели
+	 *
+	 * @return string[]
 	 */
-	public function attributeLabels()
+	public function behaviors()
 	{
 		return array(
-			'id' => 'ID',
-			'is_group' => 'Is Group',
-			'is_detail' => 'Is Detail',
+			"ContentBehavior" => array(
+				"class"     => 'itnew\behaviors\ContentBehavior',
+				"blockType" => Block::TYPE_STAFF,
+			)
 		);
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает подписей полей
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
-	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
+	 * @return string[]
 	 */
-	public function search()
+	public function attributeLabels()
 	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('is_group',$this->is_group);
-		$criteria->compare('is_detail',$this->is_group);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		return array();
 	}
 
 	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return Staff the static model class
+	 * Возвращает статическую модель указанного класса.
+	 *
+	 * @param string $className название класса
+	 *
+	 * @return Staff
 	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
 
+	/**
+	 * Получает название
+	 *
+	 * @return string
+	 */
 	public function getTitle()
 	{
 		return Yii::t("staff", "Staff");
 	}
 
-	public function getAllContentBlocks($notIn = null)
+	/**
+	 * Сохраняет контент
+	 *
+	 * @param string $post поля модели переданные через POST
+	 *
+	 * @return bool
+	 */
+	public function saveContent($post = array())
 	{
-		$criteria = new CDbCriteria;
-		$criteria->condition = "language_id = :language_id AND type = :type";
-		$criteria->params = array(
-			":language_id" => Language::getActiveId(),
-			":type" => Block::TYPE_STAFF
-		);
-
-		if ($notIn) {
-			$criteria->condition .= " AND id IN ({$notIn})";
+		if (empty($post["groupIds"])) {
+			return false;
 		}
 
-		return Block::model()->findAll($criteria);
-	}
-
-	public function getBlock()
-	{
-		if ($this->block) {
-			return $this->block;
-		}
-		return new Block;
-	}
-
-	public function saveSettings()
-	{
-		if (Yii::app()->request->getQuery("id")) {
-			if ($model = $this->findByPk(Yii::app()->request->getQuery("id"))) {
-				if ($block = $model->getBlock()) {
-					$model->attributes = Yii::app()->request->getPost("Staff");
-					$block->attributes = Yii::app()->request->getPost("Block");
-
-					$transaction = Yii::app()->db->beginTransaction();
-					if ($block->save()) {
-						if ($model->save()) {
-							$transaction->commit();
-							return $model;
-						}
-					}
-					$transaction->rollback();
-				}
-			}
-		} 
-
-		else {
-			$model = new self;
-			$block = new Block;
-			$model->attributes = Yii::app()->request->getPost("Staff");
-			$block->attributes = Yii::app()->request->getPost("Block");
-
-			$transaction = Yii::app()->db->beginTransaction();
-			if ($model->save()) {
-				$block->content_id = $model->id;
-				$block->type = Block::TYPE_STAFF;
-				$block->language_id = Language::getActiveId();
-				if ($block->save()) {
-					$transaction->commit();
-					return $model;
-				}
-			}
-			$transaction->rollback();
-		}
-
-		return null;
-	}
-
-	public function saveContent()
-	{
-		$attributes = Yii::app()->request->getPost("Staff");
-		if ($attributes) {
-			if (!empty($attributes["groupIds"])) {
-				$sort = self::SORT_STEP;
-				foreach (explode(",", $attributes["groupIds"]) as $pk) {
-					if ($pk) {
-						if ($model = StaffGroup::model()->findByPk($pk)) {
-							$model->sort = $sort;
-							$model->save();
-							$sort += self::SORT_STEP;
-						}
-					}
+		$sort = self::SORT_STEP;
+		foreach (explode(",", $post["groupIds"]) as $pk) {
+			if ($pk) {
+				$model = StaffGroup::model()->findByPk($pk);
+				if ($model) {
+					$model->sort = $sort;
+					$model->save();
+					$sort += self::SORT_STEP;
 				}
 			}
 		}
+
+		return true;
 	}
 }

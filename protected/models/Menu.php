@@ -108,7 +108,7 @@ class Menu extends CActiveRecord
 	{
 		return array(
 			"ContentBehavior" => array(
-				"class"     => "itnew\behaviors\ContentBehavior",
+				"class"     => 'itnew\behaviors\ContentBehavior',
 				"blockType" => Block::TYPE_MENU,
 			)
 		);
@@ -205,50 +205,73 @@ class Menu extends CActiveRecord
 		}
 	}
 
+	/**
+	 * Получает неиспользуемые разделы
+	 *
+	 * @return string[]
+	 */
 	public function getUnusedSections()
 	{
 		$list = array();
+
 		$sections = Section::model()->findAll();
-		if ($sections) {
-			foreach ($sections as $model) {
-				$list[$model->id] = $model->seo->name;
-			}
+		if (!$sections) {
+			return $list;
+		}
+
+		foreach ($sections as $model) {
+			$list[$model->id] = $model->seo->name;
 		}
 
 		return $list;
 	}
 
+	/**
+	 * Получает html код меню
+	 *
+	 * @return string
+	 */
 	public function getHtml()
 	{
 		$list = array();
 
-		if ($this->menuContent) {
-			foreach ($this->menuContent as $menu) {
-				$link = null;
+		if (!$this->menuContent) {
+			return null;
+		}
 
-				if ($menu->section_id) {
-					$section = Section::model()->findByPk($menu->section_id);
-					if ($section) {
-						$link = $section->getLink();
-					}
-				}
+		foreach ($this->menuContent as $menu) {
+			$link = null;
 
-				if ($link) {
-					$list[$menu->parent_id][] = array(
-						"id"   => $menu->id,
-						"link" => $link,
-					);
+			if ($menu->section_id) {
+				$section = Section::model()->findByPk($menu->section_id);
+				if ($section) {
+					$link = $section->getLink();
 				}
+			}
+
+			if ($link) {
+				$list[$menu->parent_id][] = array(
+					"id"   => $menu->id,
+					"link" => $link,
+				);
 			}
 		}
 
-		if ($list) {
-			return $this->_createMenuTree($list);
+		if (!$list) {
+			return null;
 		}
 
-		return;
+		return $this->_createMenuTree($list);
 	}
 
+	/**
+	 * Получает html код меню
+	 *
+	 * @param string[] $list     список меню
+	 * @param int      $parentId идентификатор родителя
+	 *
+	 * @return string
+	 */
 	private function _createMenuTree($list, $parentId = 0)
 	{
 		$html = "";

@@ -246,6 +246,8 @@ class RecordsContent extends CActiveRecord
 
 	protected function afterDelete()
 	{
+		parent::afterDelete();
+
 		if ($this->coverRelation) {
 			$this->coverRelation->delete();
 		}
@@ -261,8 +263,6 @@ class RecordsContent extends CActiveRecord
 		if ($this->descriptionRelation) {
 			$this->descriptionRelation->delete();
 		}
-
-		return parent::afterDelete();
 	}
 
 	public function getCover()

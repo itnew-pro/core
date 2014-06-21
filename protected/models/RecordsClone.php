@@ -2,30 +2,36 @@
 
 namespace itnew\models;
 
+use itnew\models\Records;
 use CActiveRecord;
 use Yii;
-use CActiveDataProvider;
-use CDbCriteria;
 
 /**
- * This is the model class for table "records_clone".
+ * Файл класса RecordsClone.
  *
- * The followings are the available columns in table 'records_clone':
- * @property integer $id
- * @property integer $records_id
- * @property integer $is_date
- * @property integer $is_detail
- * @property integer $is_cover
- * @property integer $is_description
- * @property integer $count
+ * Модель для таблицы "records_clone"
  *
- * The followings are the available model relations:
- * @property Records $records
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
+ *
+ * @property int     $id             идентификатор
+ * @property int     $records_id     идентификатор записей
+ * @property int     $is_date        наличие даты
+ * @property int     $is_detail      наличие подробного описания
+ * @property int     $is_cover       наличие обложки
+ * @property int     $is_description наличие описания
+ * @property int     $count          количество записей на странице
+ *
+ * @property Records $records        модели записей
  */
 class RecordsClone extends CActiveRecord
 {
+
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -33,87 +39,59 @@ class RecordsClone extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
-			array('records_id, is_date, is_detail, is_cover, is_description, count', 'required'),
-			array('records_id, is_date, is_detail, is_cover, is_description, count', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, records_id, is_date, is_detail, is_cover, is_description, count', 'safe', 'on'=>'search'),
+			array(
+				'records_id, is_date, is_detail, is_cover, is_description, count',
+				'required'
+			),
+			array(
+				'records_id, is_date, is_detail, is_cover, is_description, count',
+				'numerical',
+				'integerOnly' => true
+			),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
-			'records' => array(self::BELONGS_TO, 'Records', 'records_id'),
+			'records' => array(
+				self::BELONGS_TO,
+				'itnew\models\Records',
+				'records_id'
+			),
 		);
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает подписей полей
+	 *
+	 * @return string[]
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
-			'records_id' => 'Records',
-			'is_date' => 'Is Date',
-			'is_detail' => 'Is Detail',
-			'is_cover' => 'Is Cover',
-			'is_description' => 'Is Description',
-			'count' => 'Count',
-		);
+		return array();
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает статическую модель указанного класса.
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 * @param string $className название класса
 	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
+	 * @return RecordsClone
 	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('records_id',$this->records_id);
-		$criteria->compare('is_date',$this->is_date);
-		$criteria->compare('is_detail',$this->is_detail);
-		$criteria->compare('is_cover',$this->is_cover);
-		$criteria->compare('is_description',$this->is_description);
-		$criteria->compare('count',$this->count);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return RecordsClone the static model class
-	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}

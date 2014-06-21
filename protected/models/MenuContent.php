@@ -2,29 +2,39 @@
 
 namespace itnew\models;
 
+use itnew\models\Block;
+use itnew\models\Menu;
+use itnew\models\Section;
 use CActiveRecord;
 use Yii;
-use CActiveDataProvider;
-use CDbCriteria;
 
 /**
- * This is the model class for table "menu_content".
+ * Файл класса MenuContent.
  *
- * The followings are the available columns in table 'menu_content':
- * @property integer $id
- * @property integer $menu_id
- * @property integer $section_id
- * @property integer $block_id
+ * Модель для таблицы "menu_content"
  *
- * The followings are the available model relations:
- * @property Block $block
- * @property Menu $menu
- * @property Section $section
+ * @author  Mikhail Vasilyev <mail@itnew.pro>
+ * @link    http://www.itnew.pro/
+ * @package models
+ *
+ * @property int     $id         идентификатор
+ * @property int     $menu_id    идентификатор меню
+ * @property int     $section_id идентификатор раздела
+ * @property int     $block_id   идентификатор блока
+ * @property int     $sort       сортировка
+ * @property int     $parent_id  идентификатор родителя
+ *
+ * @property Block   $block      модель блока
+ * @property Menu    $menu       модель меню
+ * @property Section $section    модель раздела
  */
 class MenuContent extends CActiveRecord
 {
+
 	/**
-	 * @return string the associated database table name
+	 * Возвращает имя связанной таблицы базы данных
+	 *
+	 * @return string
 	 */
 	public function tableName()
 	{
@@ -32,83 +42,62 @@ class MenuContent extends CActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * Возвращает правила проверки для атрибутов модели
+	 *
+	 * @return string[]
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
 			array('menu_id', 'required'),
-			array('menu_id, section_id, block_id', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, menu_id, section_id, block_id', 'safe', 'on'=>'search'),
+			array('menu_id, section_id, block_id', 'numerical', 'integerOnly' => true),
 		);
 	}
 
 	/**
-	 * @return array relational rules.
+	 * Возвращает связи между объектами
+	 *
+	 * @return string[]
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
-			'block' => array(self::BELONGS_TO, 'Block', 'block_id'),
-			'menu' => array(self::BELONGS_TO, 'Menu', 'menu_id'),
-			'section' => array(self::BELONGS_TO, 'Section', 'section_id'),
+			'block'   => array(
+				self::BELONGS_TO,
+				'itnew\models\Block',
+				'block_id'
+			),
+			'menu'    => array(
+				self::BELONGS_TO,
+				'itnew\models\Menu',
+				'menu_id'
+			),
+			'section' => array(
+				self::BELONGS_TO,
+				'itnew\models\Section',
+				'section_id'
+			),
 		);
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * Возвращает подписей полей
+	 *
+	 * @return string[]
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
-			'menu_id' => 'Menu',
-			'section_id' => 'Section',
-			'block_id' => 'Block',
-		);
+		return array();
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
+	 * Возвращает статическую модель указанного класса.
 	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 * @param string $className название класса
 	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
+	 * @return MenuContent
 	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('menu_id',$this->menu_id);
-		$criteria->compare('section_id',$this->section_id);
-		$criteria->compare('block_id',$this->block_id);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return MenuContent the static model class
-	 */
-	public static function model($className=__CLASS__)
+	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
 	}
