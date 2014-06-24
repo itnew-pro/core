@@ -40,15 +40,16 @@ class SiteController extends CController
 			Yii::app()->request->getQuery("section")
 		);
 
-		if (!$model) {
-			throw new Exception("There is no structure for this section");
-		}
-
-		if (!Yii::app()->user->isGuest) {
-			Yii::app()->session["structureId"] = $model->id;
-		}
-
 		$this->layout = "page";
-		$this->render("index", compact("model"));
+
+		if ($model) {
+			if (!Yii::app()->user->isGuest) {
+				Yii::app()->session["structureId"] = $model->id;
+			}
+
+			$this->render("index", compact("model"));
+		}
+
+		$this->render("empty");
 	}
 }

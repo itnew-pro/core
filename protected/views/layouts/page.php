@@ -168,13 +168,14 @@ echo Html::loader("logout-button");
 							$("#subpanel").remove();
 							$(".panel-tab").removeClass("active");
 							$("body").append(html);
-							$("#panel-tabs").addClass("active");
-							$("#panel-tab-' . $tab . '").addClass("active");
+							$(".panel-tab-' . $tab . '").addClass("active");
+							$(".panel-tab-' . $tab . '").parent().addClass("active");
 						}'
 				),
 				array(
-					"id"    => "panel-tab-{$tab}",
-					"class" => "panel-tab"
+					"id"    => uniqid(),
+					"class" => "panel-tab panel-tab-{$tab}",
+					"live" => false,
 				)
 			);
 

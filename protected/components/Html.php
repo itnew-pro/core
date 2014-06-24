@@ -3,6 +3,7 @@
 namespace itnew\components;
 
 use CHtml;
+use Yii;
 
 /**
  * Файл класса Html.

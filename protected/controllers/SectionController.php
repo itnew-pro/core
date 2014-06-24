@@ -139,7 +139,7 @@ class SectionController extends CController
 			return false;
 		}
 
-		$errorClass = Seo::getEmptyClass($post);
+		$errorClass = Seo::getEmptyClass($seo);
 		if (!$errorClass) {
 			$errorClass = Section::model()->saveForm($post, $seo);
 		}
