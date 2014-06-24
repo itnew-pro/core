@@ -1,6 +1,5 @@
 <?php
 use itnew\models\Structure;
-use itnew\components\Html;
 
 /**
  * @var string $content
