@@ -42,7 +42,6 @@ $this->renderPartial("_show_type");
 			)
 		);
 
-		echo Html::loader("content-{$value}");
 		?>
 	</div>
 <?php } ?>

@@ -48,8 +48,8 @@ class SiteController extends CController
 			}
 
 			$this->render("index", compact("model"));
+		} else {
+			$this->render("empty");
 		}
-
-		$this->render("empty");
 	}
 }

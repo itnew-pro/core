@@ -38,7 +38,7 @@ return array(
 			'showScriptName' => false,
 			"rules"          => array(
 
-				"<language:\w+>/ajax/<controller:\w+>/<action:\w+>/" => "site/index",
+				"<language:\w+>/ajax/<controller:\w+>/<action:\w+>/" => "ajax/index",
 				"<language:\w+>/<section:[\w_-]+>/<level1:[\w_-]+>/" => "site/index",
 				"<language:\w+>/<section:[\w_-]+>/"                  => "site/index",
 				"<language:\w+>/"                                    => "site/index",

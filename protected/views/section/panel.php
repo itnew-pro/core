@@ -50,7 +50,6 @@ use itnew\components\Html;
 						)
 					);
 
-					echo Html::loader("section-settings");
 
 					if ($section->main) {
 						?>

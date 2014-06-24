@@ -36,156 +36,46 @@ use itnew\components\Html;
 
 	<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/css/css.css"/>
 
+	<script>
+		var LANG = "<?php echo Yii::app()->language; ?>";
+	</script>
+
 	<?php if (!Yii::app()->user->isGuest) { ?>
 		<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/css/admin.css"/>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css"/>
 		<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/tinymce/tinymce.min.js"></script>
+		<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/admin.js"></script>
 	<?php } ?>
 
 	<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/js/js.js"></script>
 
 	<?php if (Structure::model()->isCss()) { ?>
 		<link rel="stylesheet" href="<?php echo Yii::app()->params["baseUrl"]; ?>/static/<?php
-			echo Yii::app()->params["siteId"]; ?>/css.css"/>
+		echo Yii::app()->params["siteId"]; ?>/css.css"/>
 	<?php } ?>
 	<?php if (Structure::model()->isJs()) { ?>
 		<script src="<?php echo Yii::app()->params["baseUrl"]; ?>/static/<?php
-			echo Yii::app()->params["siteId"]; ?>/js.js"></script>
+		echo Yii::app()->params["siteId"]; ?>/js.js"></script>
 	<?php } ?>
 </head>
 <body>
-<?php
-echo $content;
+<?php echo $content; ?>
 
-$hide = null;
-if (!Yii::app()->user->isGuest) {
-	$hide = "hide";
-}
+<div id="loader"></div>
 
-echo CHtml::ajaxButton(
-	null,
-	$this->createUrl(
-		"ajax/index",
-		array(
-			"controller" => "login",
-			"action"     => "form",
-			"language"   => Yii::app()->language,
-		)
-	),
-	array(
-		"beforeSend" => 'function() {
-				$(".loader-login-button").show();
-			}',
-		"success"    => 'function(html) {
-				$(".loader-login-button").hide();
-				$("body").append(html);
-				showWindow("login");
-			}',
-		"error" => 'function (xhr) {
-			getExceptionError(xhr);
-		}'
-	),
-	array(
-		"id"    => "login-button",
-		"class" => $hide,
-		"live"  => false,
-	)
-);
-
-echo Html::loader("login-button");
-
-$hide = null;
-if (Yii::app()->user->isGuest) {
-	$hide = "hide";
-}
-
-echo CHtml::ajaxButton(
-	null,
-	$this->createUrl(
-		"ajax/index",
-		array(
-			"controller" => "login",
-			"action"     => "logout",
-			"language"   => Yii::app()->language,
-		)
-	),
-	array(
-		"beforeSend" => 'function() {
-				$(".loader-logout-button").show();
-			}',
-		"success"    => 'function(html) {
-				$(".loader-logout-button").hide();
-				$("#login-button").removeClass("hide");
-				$("#logout-button").addClass("hide");
-				window.location.replace("");
-			}'
-	),
-	array(
-		"id"    => "logout-button",
-		"class" => $hide,
-		"live"  => false,
-	)
-);
-
-echo Html::loader("logout-button");
-?>
-
-<?php if (!Yii::app()->user->isGuest) { ?>
-
+<?php if (Yii::app()->user->isGuest) { ?>
+	<a href="#" id="login-button"></a>
+<?php } else { ?>
+	<a href="#" id="logout-button"></a>
 	<div id="panel-tabs">
-
-		<?php
-		foreach (array("section", "content") as $tab) {
-			switch ($tab) {
-				case 'section':
-					$title = "Sections";
-					break;
-				case 'content':
-					$title = "Content";
-					break;
-				case 'settings':
-					$title = "Settings";
-					break;
-			}
-			echo CHtml::ajaxButton(
-				Yii::t($tab, $title),
-				$this->createUrl(
-					"ajax/index",
-					array(
-						"controller" => $tab,
-						"action"     => "panel",
-						"language"   => Yii::app()->language,
-					)
-				),
-				array(
-					"beforeSend" => 'function() {
-							$(".loader-panel-tab-' . $tab . '").show();
-						}',
-					"success"    => 'function(html) {
-							$(".loader-panel-tab-' . $tab . '").hide();
-							$("#panel").remove();
-							$("#subpanel").remove();
-							$(".panel-tab").removeClass("active");
-							$("body").append(html);
-							$(".panel-tab-' . $tab . '").addClass("active");
-							$(".panel-tab-' . $tab . '").parent().addClass("active");
-						}'
-				),
-				array(
-					"id"    => uniqid(),
-					"class" => "panel-tab panel-tab-{$tab}",
-					"live" => false,
-				)
-			);
-
-			echo Html::loader("panel-tab-{$tab}");
-
-		}
-		?>
-
+		<a href="#" class="panel-tab panel-tab-section" data-controller="section">
+			<?php echo Yii::t("section", "Sections"); ?>
+		</a>
+		<a href="#" class="panel-tab panel-tab-content" data-controller="content">
+			<?php echo Yii::t("content", "Content"); ?>
+		</a>
 	</div>
-
 <?php } ?>
 
 </body>

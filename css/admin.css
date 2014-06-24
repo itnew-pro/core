@@ -12,6 +12,9 @@
 	border: 0;
 	font-size: 14px;
 	color: #404040;
+	display: block;
+	line-height: 75px;
+	overflow: hidden;
 }
 
 .active .panel-tab {

@@ -14,7 +14,6 @@ use itnew\components\Html;
 		<div class="scroll-container">
 			<div class="content">
 				<?php echo $content; ?>
-				<?php echo Html::loader("window-button"); ?>
 			</div>
 		</div>
 		<div class="footer">

@@ -29,7 +29,6 @@ use itnew\controllers\ImagesController;
 			);
 			?>
 			<i class="c c-image"></i>
-			<?php echo Html::loader("add-images"); ?>
 		</div>
 
 	</div>

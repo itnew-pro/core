@@ -41,8 +41,6 @@ use itnew\components\Html;
 			)
 		);
 
-		echo Html::loader("window");
-
 		echo CHtml::ajaxButton(
 			null,
 			$this->createUrl(
@@ -71,7 +69,6 @@ use itnew\components\Html;
 			)
 		);
 
-		echo Html::loader("settings");
 		?>
 	</div>
 <?php } ?>

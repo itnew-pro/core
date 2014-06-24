@@ -13,7 +13,6 @@ use itnew\components\Html;
 	<div class="scroll-container">
 		<?php echo $content; ?>
 	</div>
-	<?php echo Html::loader("subpanel-button"); ?>
 </div>
 
 <?php
