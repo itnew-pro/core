@@ -33,51 +33,6 @@
 		?>
 	</div>
 
-<?php
-echo CHtml::ajaxSubmitButton(
-	Yii::t("admin", "Ok"),
-	$this->createUrl(
-		"ajax/index",
-		array(
-			"controller" => "login",
-			"action"     => "login",
-			"language"   => Yii::app()->language,
-		)
-	),
-	array(
-		"type"       => "POST",
-		"beforeSend" => 'function() {
-					$(".loader-window-button").show();
-				}',
-		"success"    => 'function(data) {
-					$(".loader-window-button").hide();
-					if (data) {
-						$(".window-login .error-" + data).show();
-					} else {
-						hideWindow("login");
-						$("#login-button").addClass("hide");
-						$("#logout-button").removeClass("hide");
-						window.location.replace("");
-					}
-				}'
-	),
-	array(
-		"class" => "button",
-		"id"    => uniqid(),
-		"live"  => false,
-	)
-);
-?>
+	<input class="button" type="submit" value="<?php echo Yii::t("admin", "Ok"); ?>" />
 
 <?php echo CHtml::endForm(); ?>
-
-<?php
-Yii::app()->clientScript->registerScript(
-	"login",
-	'
-			$(".window-login input").on("keyup", function() {
-				$(".window-login .error").hide();
-			});
-		'
-);
-?>

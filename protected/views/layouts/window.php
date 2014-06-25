@@ -5,7 +5,7 @@
 ?>
 
 <div
-	class="window window-level-<?php echo $this->windowLevel; ?>"
+	class="window window-<?php echo $this->windowType; ?> window-level-<?php echo $this->windowLevel; ?>"
 	data-type="<?php echo $this->windowType; ?>"
 	>
 	<div class="close-window"></div>
@@ -26,6 +26,6 @@
 </div>
 
 <div
-	class="overlay overlay-level-<?php echo $this->windowLevel; ?>"
+	class="overlay overlay-<?php echo $this->windowType; ?> overlay-level-<?php echo $this->windowLevel; ?>"
 	data-type="<?php echo $this->windowType; ?>"
 	></div>

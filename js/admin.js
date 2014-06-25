@@ -38,7 +38,7 @@ $(document).ready(function () {
 	$(".panel-tab").on("click", function () {
 		var controller = $(this).data("controller");
 		$.ajax({
-			url: "/" + LANG + "/ajax/" + controller + "/panel/",
+			url: controller + "/panel",
 			success: function (data) {
 				$("#panel").remove();
 				$("#subpanel").remove();
@@ -62,16 +62,6 @@ $(document).ready(function () {
 	// Кнопка "закрыть" на субпанели
 	$("body").on("click", "#subpanel .close", function () {
 		$("#subpanel").remove();
-	});
-
-	// Кнопка "закрыть" на окне
-	$("body").on("click", ".window .close-window", function () {
-		hideWindow($(this).parent().data("type"));
-	});
-
-	// Клик по затемнению
-	$("body").on("click", ".window .close-window", function () {
-		hideWindow($(this).data("type"));
 	});
 
 	// Изменение окна браузера

@@ -127,6 +127,7 @@ function showExceptionError(xhr) {
  */
 $.ajaxSetup({
 	beforeSend: function () {
+		this.url = "/" + LANG + "/ajax/" + this.url + "/";
 		$("#loader").show();
 	},
 	complete: function (data) {
@@ -142,10 +143,30 @@ $(document).ready(function () {
 	// Кнопка входа
 	$("#login-button").on("click", function () {
 		$.ajax({
-			url: "/" + LANG + "/ajax/login/form/",
+			url: "login/form",
 			success: function (data) {
 				$("body").append(data);
 				showWindow("login");
+
+				$(".window-login input").on("keyup", function() {
+					$(".window-login .error").hide();
+				});
+
+				$(".window-login .button").on("click", function() {
+					$.ajax({
+						url: "login/login",
+						type: "POST",
+						data: $(this).parents("form").serialize(),
+						success: function (data) {
+							if (data) {
+								$(".window-login .error-" + data).show();
+							} else {
+								window.location.replace("");
+							}
+						}
+					});
+					return false;
+				});
 			}
 		});
 		return false;
@@ -154,12 +175,22 @@ $(document).ready(function () {
 	// Кнопка выхода
 	$("#logout-button").on("click", function () {
 		$.ajax({
-			url: "/" + LANG + "/ajax/login/logout/",
+			url: "login/logout",
 			success: function (data) {
 				window.location.replace("");
 			}
 		});
 		return false;
+	});
+
+	// Кнопка "закрыть" на окне
+	$("body").on("click", ".window .close-window", function () {
+		hideWindow($(this).parent().data("type"));
+	});
+
+	// Клик по затемнению
+	$("body").on("click", ".overlay", function () {
+		hideWindow($(this).data("type"));
 	});
 
 });
