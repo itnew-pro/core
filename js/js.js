@@ -127,7 +127,6 @@ function showExceptionError(xhr) {
  */
 $.ajaxSetup({
 	beforeSend: function () {
-		this.url = "/" + LANG + "/ajax/" + this.url + "/";
 		$("#loader").show();
 	},
 	complete: function (data) {
@@ -143,7 +142,7 @@ $(document).ready(function () {
 	// Кнопка входа
 	$("#login-button").on("click", function () {
 		$.ajax({
-			url: "login/form",
+			url: "/" + LANG + "/ajax/" + "login/form",
 			success: function (data) {
 				$("body").append(data);
 				showWindow("login");
@@ -154,7 +153,7 @@ $(document).ready(function () {
 
 				$(".window-login .button").on("click", function() {
 					$.ajax({
-						url: "login/login",
+						url: "/" + LANG + "/ajax/" +  "login/login",
 						type: "POST",
 						data: $(this).parents("form").serialize(),
 						success: function (data) {
@@ -175,7 +174,7 @@ $(document).ready(function () {
 	// Кнопка выхода
 	$("#logout-button").on("click", function () {
 		$.ajax({
-			url: "login/logout",
+			url: "/" + LANG + "/ajax/" + "login/logout",
 			success: function (data) {
 				window.location.replace("");
 			}

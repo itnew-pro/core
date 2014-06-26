@@ -7,7 +7,7 @@
 <div class="add-panel">
 	<i class="plus"></i>
 	<?php
-	echo CHtml::ajaxLink(
+	/** echo CHtml::ajaxLink(
 		Yii::t("common", "Add"),
 		$this->createUrl(
 			"ajax/index",
@@ -32,7 +32,7 @@
 			"id"    => uniqid(),
 			"live"  => false,
 		)
-	);
+	); */
 	?>
 	<i class="arrow-blue"></i>
 </div>

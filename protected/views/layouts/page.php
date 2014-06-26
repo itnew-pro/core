@@ -68,12 +68,20 @@ use itnew\models\Structure;
 <?php } else { ?>
 	<a href="#" id="logout-button"></a>
 	<div id="panel-tabs">
-		<a href="#" class="panel-tab panel-tab-section" data-controller="section">
-			<?php echo Yii::t("section", "Sections"); ?>
-		</a>
-		<a href="#" class="panel-tab panel-tab-content" data-controller="content">
-			<?php echo Yii::t("content", "Content"); ?>
-		</a>
+		<a
+			href="#"
+			class="panel-tab panel-tab-section ajax"
+			data-function="panelTab"
+			data-controller="section"
+			data-action="panel"
+		><?php echo Yii::t("section", "Sections"); ?></a>
+		<a
+			href="#"
+			class="panel-tab panel-tab-content ajax"
+			data-function="panelTab"
+			data-controller="content"
+			data-action="panel"
+			><?php echo Yii::t("content", "Content"); ?></a>
 	</div>
 <?php } ?>
 
