@@ -38,10 +38,9 @@ class AjaxController extends CController
 		$controller = Yii::app()->request->getQuery("controller");
 		$action = Yii::app()->request->getQuery("action");
 		$language = Yii::app()->request->getQuery("language");
-
 		if (
-			!Yii::app()->request->isAjaxRequest
-			|| !$controller
+			//!Yii::app()->request->isAjaxRequest
+			 !$controller
 			|| !$action
 			|| !$language
 		) {

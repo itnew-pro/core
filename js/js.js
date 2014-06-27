@@ -114,6 +114,8 @@ String.prototype.translit = (function () {
  * @param {jqXHR} xhr XMLHTTPRequest
  */
 function showExceptionError(xhr) {
+	alert(xhr.responseText);
+	return;
 	var str = xhr.responseText.match(/<h2>[^<>]*<\/h2>/gi)[0];
 	str = str.replace(/<h2>/i, "");
 	str = str.replace(/<\/h2>/i, "");

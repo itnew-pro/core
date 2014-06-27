@@ -86,9 +86,10 @@ class ContentBehavior extends CActiveRecordBehavior
 			return null;
 		}
 
-		$block = $this->getBlock();
-		if (!$block) {
-			return null;
+		if ($model->block) {
+			$block = $model->block;
+		} else {
+			$block = new Block;
 		}
 
 		$model->attributes = $modelPost;

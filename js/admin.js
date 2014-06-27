@@ -2,14 +2,13 @@
 var ajaxFunctions = {
 	controller: "section",
 	action: "action",
+	modelId: 0,
 
 	// Кнопка панели управления
 	panelTab: function (data) {
-		$("#panel").remove();
 		$("#subpanel").remove();
 		$(".panel-tab").removeClass("active");
-		$("body").append(data);
-		setPanel();
+		this.updatePanel(data);
 		$(".panel-tab-" + this.controller).addClass("active").parent().addClass("active");
 
 		// Кнопка "закрыть" на панели
@@ -24,11 +23,45 @@ var ajaxFunctions = {
 		$("body").on("click", "#subpanel .close", function () {
 			$("#subpanel").remove();
 		});
+
+		// Удаляет ошибку для названия блока
+		$("#subpanel #Block_name").on("keyup", function() {
+			$("#subpanel .error").hide();
+		});
 	},
 
-	execute: function (method, data, controller, action) {
+	// Клик по блоку, открытие окна
+	showWindow: function (data) {
+		$("body").append(data);
+		showWindow(this.controller);
+	},
+
+	// Открывает субпанель настроект
+	updateSubpanel: function (data) {
+		$("#subpanel").remove();
+		$("body").append(data);
+	},
+
+	// Обновляет панель
+	updatePanel: function (data) {
+		$("#panel").remove();
+		$("body").append(data);
+		setFunctions.panel();
+	},
+
+	// Сохраняет настройки в субпанели
+	saveSettings: function (data) {
+		$("#subpanel").remove();
+		$("#panel").remove();
+		$("body").append(data["panel"]);
+		$(".content-" + this.controller + "-" + this.modelId).replaceWith(data["content"]);
+	},
+
+	// Получает действия в случае успешного выполнения ajax
+	execute: function (method, data, controller, action, modelId) {
 		this.controller = controller;
 		this.action = action;
+		this.modelId = modelId;
 		this[method](data);
 	}
 };
@@ -54,7 +87,7 @@ var setFunctions = {
 			- 130
 			- $("#subpanel .title").outerHeight();
 		});
-	}
+	},
 
 	// Окна
 	windows: function () {
@@ -68,16 +101,33 @@ var setFunctions = {
 $(document).ready(function () {
 
 	// Обрабатываются клики по элементам для ajax запросов
-	$(".ajax").on("click", function () {
+	$("body").on("click", ".ajax", function () {
 		var method = $(this).data("function");
 		var controller = $(this).data("controller");
 		var action = $(this).data("action");
-		var url = "/" + LANG + "/ajax/" + controller + "/" + action + "/";
+		var url = "/" + LANG + "/ajax/" + controller + "/" + action;
+		var dataType = "text";
+		var type = "GET";
+		var data = {};
+		var modelId = 0;
+		if ($(this).data("post")) {
+			type = "POST";
+			data = $(this).parents("form").serialize()
+		}
+		if ($(this).data("json")) {
+			dataType = "JSON";
+		}
+		if ($(this).data("modelId")) {
+			modelId = $(this).data("modelId");
+		}
 
 		$.ajax({
 			url: url,
+			type: type,
+			data: data,
+			dataType: dataType,
 			success: function (data) {
-				ajaxFunctions.execute(method, data, controller, action);
+				ajaxFunctions.execute(method, data, controller, action, modelId);
 			}
 		});
 

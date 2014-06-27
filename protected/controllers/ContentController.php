@@ -280,7 +280,7 @@ class ContentController extends CController
 		}
 
 		if (!$model) {
-			return false;
+			return null;
 		}
 
 		$json = array(
