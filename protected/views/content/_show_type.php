@@ -1,5 +1,6 @@
 <?php
 use itnew\models\Structure;
+use itnew\models\Block;
 
 /**
  * @var Block[] $blocks

@@ -54,6 +54,7 @@ var ajaxFunctions = {
 		$("#subpanel").remove();
 		$("#panel").remove();
 		$("body").append(data["panel"]);
+		setFunctions.panel();
 		$(".content-" + this.controller + "-" + this.modelId).replaceWith(data["content"]);
 	},
 
