@@ -44,6 +44,7 @@ var ajaxFunctions = {
 
 	// Обновляет панель
 	updatePanel: function (data) {
+		$("#subpanel").remove();
 		$("#panel").remove();
 		$("body").append(data);
 		setFunctions.panel();
@@ -51,10 +52,7 @@ var ajaxFunctions = {
 
 	// Сохраняет настройки в субпанели
 	saveSettings: function (data) {
-		$("#subpanel").remove();
-		$("#panel").remove();
-		$("body").append(data["panel"]);
-		setFunctions.panel();
+		this.updatePanel();
 		$(".content-" + this.controller + "-" + this.modelId).replaceWith(data["content"]);
 	},
 
