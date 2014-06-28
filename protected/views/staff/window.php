@@ -117,7 +117,14 @@ use itnew\models\Staff;
 
 <?php echo CHtml::activeHiddenField($model, "groupIds"); ?>
 
-<?php $this->renderPartial("../content/_window_button", compact("model")); ?>
+	<button
+		class="button ajax"
+		data-function="saveWindow"
+		data-controller="staff"
+		data-action="saveWindow?id=<?php echo $model->id; ?>"
+		data-post=true
+		data-modelId="<?php echo $model->id; ?>"
+		><?php echo Yii::t("common", "Update"); ?></button>
 
 <?php echo CHtml::endForm(); ?>
 

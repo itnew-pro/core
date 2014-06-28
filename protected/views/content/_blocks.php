@@ -1,6 +1,5 @@
 <?php
 use itnew\models\Block;
-use itnew\components\Html;
 
 /**
  * @var Block[] $blocks

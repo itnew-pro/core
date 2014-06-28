@@ -44,7 +44,7 @@ echo CHtml::activeTextArea(
 		"rows"  => $model->rows,
 		"class" => "textarea" . $model->getEditorClass(),
 		"id"    => "text-" . $model->id,
-		"name"  => !empty($name) ? "{$name}[text]" : get_class($model) . "[text]",
+		"name"  => !empty($name) ? "{$name}[text]" : CHtml::modelName($model) . "[text]",
 	)
 );
 ?>

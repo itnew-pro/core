@@ -16,19 +16,13 @@ use itnew\models\StaffGroup;
 <?php echo CHtml::activeHiddenField($model, "staff_id"); ?>
 <?php echo CHtml::activeHiddenField($model, "id"); ?>
 
-<?php $this->renderPartial(
-	"../content/_window_button",
-	array(
-		"model"   => $model,
-		"button"  => $model->id ? "Update" : "Add",
-		"action"  => "saveGroup",
-		"success" => '
-			hideWindow("staff-group");
-			hideWindow("staff");
-			$("body").append(data);
-			showWindow("staff");
-		',
-	)
-); ?>
+	<button
+		class="button ajax"
+		data-function="saveStaffGroupWindow"
+		data-controller="staff"
+		data-action="saveGroup?id=<?php echo $model->id; ?>"
+		data-post=true
+		data-modelId="<?php echo $model->id; ?>"
+		><?php echo Yii::t("common", $model->id ? "Update" : "Add"); ?></button>
 
 <?php echo CHtml::endForm(); ?>

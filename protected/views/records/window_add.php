@@ -12,26 +12,14 @@ use itnew\models\RecordsContent;
 
 <?php echo CHtml::activeHiddenField($model, "records_id"); ?>
 
-<?php $this->renderPartial(
-	"../content/_window_button",
-	array(
-		"model"    => $model,
-		"button"   => "Add",
-		"dataType" => "JSON",
-		"action"   => "saveAdd",
-		"success"  => '
-			if (data["errorClass"]) {
-				$(".window-records-add ." + data["errorClass"]).show();
-			} else {
-				hideWindow("records-add");
-				hideWindow("records");
-				$("body").append(data["recordsForm"]);
-				showWindow("records-form");
-				$("body").append(data["records"]);
-				showWindow("records");
-			}
-		',
-	)
-); ?>
+	<button
+		class="button ajax"
+		data-function="addRecordsWindow"
+		data-controller="records"
+		data-action="saveAdd?id=<?php echo $model->id; ?>"
+		data-post=true
+		data-json=true
+		data-modelId="<?php echo $model->id; ?>"
+		><?php echo Yii::t("common", "Add"); ?></button>
 
 <?php echo CHtml::endForm(); ?>

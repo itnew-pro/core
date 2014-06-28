@@ -138,10 +138,11 @@ i.plus {
 	-moz-border-radius: 10px;
 	border-radius: 10px;
 	box-shadow: rgb(0, 0, 0) -3px 0px 50px 0px;
-	left: 3%;
+	left: 50%;
 	position: fixed;
 	top: 50%;
-	width: 94%;
+	width: 1000px;
+	margin-left: -500px;
 	z-index: 100;
 	opacity: 0;
 }

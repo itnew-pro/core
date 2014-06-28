@@ -1,26 +1,22 @@
-/**
- * Отображает всплывающее окно
- *
- * @param {string} name название окна
- */
-function showWindow(name) {
-	$(".window-" + name).animate({opacity: 1}, 500);
-	$(".overlay-" + name).animate({opacity: 0.7}, 500);
-}
+// Методы для работы с к\окнами
+var windowFunctions = {
 
-/**
- * Скрывает всплывающее окно
- *
- * @param {string} name название окна
- */
-function hideWindow(name) {
-	$(".overlay-" + name).animate({opacity: 0}, 500, function () {
-		$(this).remove();
-	});
-	$(".window-" + name).animate({opacity: 0}, 500, function () {
-		$(this).remove();
-	});
-}
+	// Показывает окно
+	show: function (name) {
+		$(".window-" + name).animate({opacity: 1}, 500);
+		$(".overlay-" + name).animate({opacity: 0.7}, 500);
+	},
+
+	// Скрывает окно
+	hide: function (name) {
+		$(".overlay-" + name).animate({opacity: 0}, 500, function () {
+			$(this).remove();
+		});
+		$(".window-" + name).animate({opacity: 0}, 500, function () {
+			$(this).remove();
+		});
+	}
+};
 
 /**
  * Преобразует строку в транслит
@@ -147,15 +143,15 @@ $(document).ready(function () {
 			url: "/" + LANG + "/ajax/" + "login/form",
 			success: function (data) {
 				$("body").append(data);
-				showWindow("login");
+				windowFunctions.show("login");
 
-				$(".window-login input").on("keyup", function() {
+				$(".window-login input").on("keyup", function () {
 					$(".window-login .error").hide();
 				});
 
-				$(".window-login .button").on("click", function() {
+				$(".window-login .button").on("click", function () {
 					$.ajax({
-						url: "/" + LANG + "/ajax/" +  "login/login",
+						url: "/" + LANG + "/ajax/" + "login/login",
 						type: "POST",
 						data: $(this).parents("form").serialize(),
 						success: function (data) {
@@ -186,12 +182,39 @@ $(document).ready(function () {
 
 	// Кнопка "закрыть" на окне
 	$("body").on("click", ".window .close-window", function () {
-		hideWindow($(this).parent().data("type"));
+		windowFunctions.hide($(this).parent().data("type"));
 	});
 
 	// Клик по затемнению
 	$("body").on("click", ".overlay", function () {
-		hideWindow($(this).data("type"));
+		windowFunctions.hide($(this).data("type"));
+	});
+
+	// Увеличение изображений
+	$(".fancybox").fancybox({
+		openEffect: "elastic",
+		closeEffect: "elastic",
+		helpers: {
+			thumbs: {
+				width: 50,
+				height: 50
+			},
+			buttons: {}
+		}
+	});
+
+	// Слайдер
+	$(".chopslider .slider").chopSlider({
+		slide: ".slide",
+		nextTrigger: ".chopslider a.slide-next",
+		prevTrigger: ".chopslider a.slide-prev",
+		hideTriggers: true,
+		sliderPagination: ".chopslider .slider-pagination",
+		autoplay: true,
+		autoplayDelay: 5000,
+		t2D: csTransitions["half"]["3"],
+		noCSS3: csTransitions["noCSS3"]["random"],
+		mobile: csTransitions["mobile"]["random"],
 	});
 
 });

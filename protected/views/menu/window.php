@@ -37,6 +37,13 @@ use itnew\controllers\MenuController;
 
 	<div class="clear"></div>
 
-<?php $this->renderPartial("../content/_window_button", compact("model")); ?>
+	<button
+		class="button ajax"
+		data-function="saveWindow"
+		data-controller="menu"
+		data-action="saveWindow?id=<?php echo $model->id; ?>"
+		data-post=true
+		data-modelId="<?php echo $model->id; ?>"
+		><?php echo Yii::t("common", "Update"); ?></button>
 
 <?php echo CHtml::endForm(); ?>

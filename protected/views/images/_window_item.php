@@ -9,30 +9,13 @@ use itnew\models\ImagesContent;
 <div class="image-float image-window-item image-window-item-<?php echo $model->id; ?>"
 	 data-id="<?php echo $model->id; ?>">
 	<img src="<?php echo $model->getUrl("window"); ?>"/>
-	<?php
-	echo CHtml::ajaxLink(
-		"<i class=\"close\"></i>",
-		$this->createUrl(
-			"ajax/index",
-			array(
-				"controller" => "images",
-				"action"     => "deleteImage",
-				"language"   => Yii::app()->language,
-				"id"         => $model->id,
-			)
-		),
-		array(
-			"beforeSend" => 'function() {
-					$(".window .image-window-item-' . $model->id . '").remove();
-				}',
-			"success"    => 'function(data) {
-				}'
-		),
-		array(
-			"class" => "close-container none-decoration",
-			"id"    => uniqid(),
-			"live"  => false,
-		)
-	);
-	?>
+
+	<a
+		href="#"
+		class="close-container none-decoration ajax"
+		data-function="removeImage"
+		data-controller="images"
+		data-action="deleteImage?id=<?php echo $model->id; ?>"
+		data-modelId="<?php echo $model->id; ?>"
+		><i class="close"></i></a>
 </div>

@@ -1,10 +1,6 @@
 <?php
-use itnew\models\Block;
-use itnew\components\Html;
-
 /**
- * @var Block[] $blocks
- * @var string  $value
+ * @var string[] $blocks
  */
 ?>
 

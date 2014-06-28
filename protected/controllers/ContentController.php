@@ -223,18 +223,18 @@ class ContentController extends CController
 	{
 		$id = Yii::app()->request->getQuery("id");
 		if (!$id) {
-			return false;
+			return null;
 		}
 
 		$model = $this->loadModel($id);
 		if (!$model) {
-			return false;
+			return null;
 		}
 
 		$post = Yii::app()->request->getPost(CHtml::modelName($model));
 
 		if (!$post) {
-			return false;
+			return null;
 		}
 
 		return $model->saveContent($post);

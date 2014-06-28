@@ -33,7 +33,8 @@ var ajaxFunctions = {
 	// Клик по блоку, открытие окна
 	showWindow: function (data) {
 		$("body").append(data);
-		showWindow(this.controller);
+		windowFunctions.show(this.controller);
+		setFunctions.windows();
 	},
 
 	// Открывает субпанель настроект
@@ -54,6 +55,46 @@ var ajaxFunctions = {
 	saveSettings: function (data) {
 		this.updatePanel();
 		$(".content-" + this.controller + "-" + this.modelId).replaceWith(data["content"]);
+	},
+
+	// Стандартные действия после сохранения окна
+	saveWindow: function (data) {
+		windowFunctions.hide(this.controller);
+	},
+
+	// Сохранение группы персонала
+	saveStaffGroupWindow: function (data) {
+		this.saveWindow();
+		windowFunctions.hide("staff-group");
+		$("body").append(data);
+		windowFunctions.show("staff");
+	},
+
+	// Окно добавления новой записи
+	addRecordsWindow: function (data) {
+		if (data["errorClass"]) {
+			$(".window-records-add ." + data["errorClass"]).show();
+		} else {
+			this.saveWindow();
+			windowFunctions.hide("records-add");
+			$("body").append(data["recordsForm"]);
+			windowFunctions.show("records-form");
+			$("body").append(data["records"]);
+			windowFunctions.show("records");
+		}
+	},
+
+	// Сохраняет запись
+	saveRecordsFormWindow: function (data) {
+		this.saveWindow();
+		windowFunctions.hide("records-form");
+		$("body").append(data);
+		windowFunctions.show("records");
+	},
+
+	// Удаялет изображение
+	removeImage: function (data) {
+		$(".window .image-window-item-" + this.modelId).remove();
 	},
 
 	// Получает действия в случае успешного выполнения ajax

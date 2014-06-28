@@ -52,20 +52,14 @@ use itnew\models\RecordsContent;
 		<?php $this->renderPartial("../text/_window", array("model" => $model->getText())); ?>
 	</div>
 
-<?php $this->renderPartial(
-	"../content/_window_button",
-	array(
-		"model"   => $model,
-		"button"  => $model->id ? "Update" : "Add",
-		"action"  => "saveForm",
-		"success" => '
-			hideWindow("records-form");
-			hideWindow("records");
-			$("body").append(data);
-			showWindow("records");
-		',
-	)
-); ?>
+	<button
+		class="button ajax"
+		data-function="saveRecordsFormWindow"
+		data-controller="records"
+		data-action="saveForm?id=<?php echo $model->id; ?>"
+		data-post=true
+		data-modelId="<?php echo $model->id; ?>"
+		><?php echo Yii::t("common", "Update"); ?></button>
 
 <?php echo CHtml::endForm(); ?>
 

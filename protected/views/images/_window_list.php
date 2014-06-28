@@ -1,10 +1,9 @@
 <?php
 use itnew\models\Images;
-use itnew\components\Html;
 use itnew\controllers\ImagesController;
 
 /**
- * @var Images $model
+ * @var Images           $model
  * @var ImagesController $this
  */
 ?>

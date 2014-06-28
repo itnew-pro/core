@@ -1,7 +1,9 @@
 <?php
 use itnew\controllers\ImagesController;
+use itnew\models\Images;
 
 /**
+ * @var Images           $model
  * @var ImagesController $this
  */
 ?>
@@ -10,6 +12,13 @@ use itnew\controllers\ImagesController;
 
 <?php $this->renderPartial("_window_list", compact("model")); ?>
 
-<?php $this->renderPartial("../content/_window_button", compact("model")); ?>
+	<button
+		class="button ajax"
+		data-function="saveWindow"
+		data-controller="images"
+		data-action="saveWindow?id=<?php echo $model->id; ?>"
+		data-post=true
+		data-modelId="<?php echo $model->id; ?>"
+		><?php echo Yii::t("common", "Update"); ?></button>
 
 <?php echo CHtml::endForm(); ?>
