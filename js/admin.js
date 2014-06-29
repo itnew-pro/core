@@ -37,27 +37,58 @@ var ajaxFunctions = {
 		setFunctions.windows();
 	},
 
+	// Показывает окно с текстом
+	showTextWindow: function (data) {
+		this.showWindow(data);
+	},
+
+	// Показывает окно с персоналом
+	showStaffWindow: function (data) {
+		this.showWindow(data);
+		$(".sortable").sortable({
+			stop: function () {
+				var sortString = "";
+				$(this).find(".move-item").each(function () {
+					sortString += $(this).data("id") + ",";
+				});
+				$("#itnew_models_Staff_groupIds").val(sortString);
+			}
+		});
+	},
+
+	// Показывает окно добавления группы персонала
+	showStaffGroupWindow: function (data) {
+		$("body").append(data);
+		windowFunctions.show("staff-group");
+		setFunctions.windows();
+	},
+
+	// Удаляет группу
+	deleteStaffGroup: function (data) {
+		$(".window #staff-group-" + this.modelId).remove();
+	},
+
 	// Показывает окно с изображениями
-	showImagesWindow: function(data) {
+	showImagesWindow: function (data) {
 		this.showWindow(data);
 		$(".sortable").sortable({
 			items: "> .image-window-item",
-			stop: function() {
+			stop: function () {
 				var sortString = "";
-				$(this).find(".image-window-item").each(function(){
+				$(this).find(".image-window-item").each(function () {
 					sortString += $(this).data("id") + ",";
 				});
 				$(this).parent().find(".imageContentIds").val(sortString);
 			}
 		});
-		$(".window .image-file-field").on("change", function(){
+		$(".window .image-file-field").on("change", function () {
 			var $object = $(this);
 			$object.hide();
 			//$object.parent().find(".loader").show();
 			$object.parent().find("i.c").hide();
 			imagesFunctions.upload(this.files, 0, $object, $object.data("id"));
 		});
-		$("body").on("click", ".close-container", function(){
+		$("body").on("click", ".close-container", function () {
 			$(this).parent().remove();
 		});
 	},
@@ -68,12 +99,38 @@ var ajaxFunctions = {
 		$("body").append(data);
 	},
 
-	// Обновляет субпанель
+	// Добавляет субпанель
+	addSubpanel: function (data) {
+		this.updateSubpanel(data);
+		$("#panel .scroll-container *").removeClass("active");
+	},
+
+	// Показывает субпанель с настройками изображений
 	showImagesSubpanel: function (data) {
 		this.updateSubpanel(data);
 		imagesFunctions.showImageStyleParams();
-		$("#imagesViewType").change(function() {
+		$("#imagesViewType").change(function () {
 			imagesFunctions.showImageStyleParams();
+		});
+	},
+
+	// Показывает субпанель с настройками записей
+	showRecordsSubpanel: function (data) {
+		this.updateSubpanel(data);
+
+		recordsFunctions.showImageStyleParams();
+		$("#images-view").change(function () {
+			recordsFunctions.showImageStyleParams();
+		});
+
+		recordsFunctions.showFormBlockContainerCover();
+		$("#itnew_models_Records_isCover").change(function () {
+			recordsFunctions.showFormBlockContainerCover();
+		});
+
+		recordsFunctions.showFormBlockContainerImages();
+		$("#itnew_models_Records_isImages").change(function () {
+			recordsFunctions.showFormBlockContainerImages();
 		});
 	},
 
@@ -126,7 +183,61 @@ var ajaxFunctions = {
 		windowFunctions.show("records");
 	},
 
-	// Удаялет изображение
+	// Сохраняет настройки раздела
+	saveSectionSettings: function (data) {
+		if (data["error"]) {
+			$(".error-" + data["error"]).show();
+		} else {
+			$("#subpanel").remove();
+			$("#panel").remove();
+			$("body").append(data["panel"]);
+		}
+	},
+
+	// Показывает настройки раздела
+	showSectionSettings: function (data) {
+		this.updateSubpanel();
+		$("#panel .section-item").removeClass("active");
+		$("#panel .section-" + this.modelId).addClass("active");
+		$("#subpanel").on("click", ".close", function () {
+			$("#panel .section-item").removeClass("active");
+		});
+	},
+
+	// Показывает окно редактирования записей
+	showRecordsFormWindow: function (data) {
+		$("body").append(data);
+		showWindow("records-form");
+		$(".datepicker").datepicker({
+			dateFormat: "dd.mm.yy"
+		});
+
+		$(".move-item").on("click", function () {
+			$(this).parent().remove();
+		});
+	},
+
+	// Показывает окно с записями
+	showRecordsWindow: function (data) {
+		this.showWindow(data);
+		$(".sortable").sortable({
+			stop: function () {
+				var sortString = "";
+				$(this).find(".move-item").each(function () {
+					sortString += $(this).data("id") + ",";
+				});
+				$("#itnew_models_Records_contentIds").val(sortString);
+			}
+		});
+	},
+
+	// Показывает окно для добавления записи
+	showRecordsAddWindow: function (data) {
+		$("body").append(data);
+		windowFunctions.show("records-add");
+	},
+
+	// Пустая функция
 	empty: function (data) {
 	},
 
@@ -168,6 +279,29 @@ var setFunctions = {
 			$(this).find(".scroll-container").css("max-height", $(window).height() - 250);
 			$(this).css("margin-top", "-" + ($(this).height() / 2) + "px");
 		});
+	},
+
+	// SEO
+	seo: function () {
+		$("body").on("keyup", ".seo-name", function () {
+			var $parent = $(this).parent().parent();
+			$parent.find(".error-name-empty").hide();
+			$parent.find(".error-url-empty").hide();
+			$parent.find(".error-url-exist").hide();
+			$parent.find(".seo-url").val($(this).val().translit());
+		});
+
+		$("body").on("keyup", ".seo-url", function () {
+			var $parent = $(this).parent();
+			$parent.find(".error-url-empty").hide();
+			$parent.find(".error-url-exist").hide();
+			$parent.find(".seo-url").val($(this).val().translit());
+		});
+
+		$("body").on("click", ".seo-title a", function () {
+			$(this).parent().parent().find(".seo-optimization").slideToggle(200);
+			return false;
+		});
 	}
 };
 
@@ -186,7 +320,7 @@ var imagesFunctions = {
 				processData: false,
 				url: "/" + LANG + "/ajax/" + "images/upload?id=" + modelId,
 				data: formData,
-				success: function(data) {
+				success: function (data) {
 					if (data) {
 						$object.parent().before(data);
 					}
@@ -202,7 +336,7 @@ var imagesFunctions = {
 	},
 
 	// Показывает параметры изображения
-	showImageStyleParams: function() {
+	showImageStyleParams: function () {
 		var $imagesViewType = $("#imagesViewType");
 		var style = $imagesViewType.val();
 		var $formStyle = $imagesViewType.parent().parent().find(".form-style");
@@ -211,13 +345,48 @@ var imagesFunctions = {
 			$formStyle.removeClass("hide");
 		}
 	}
+};
 
+// Функции для работы с записями
+var recordsFunctions = {
+
+	// Показывает стили изображения
+	showImageStyleParams: function () {
+		if ($("#images-view").val() == 1) {
+			$(".form-thumb-images-view").removeClass("hide");
+		} else {
+			$(".form-style-images-view").addClass("hide");
+		}
+	},
+
+	// Показывает параметры обложки
+	showFormBlockContainerCover: function () {
+		if ($("#itnew_models_Records_isCover").prop("checked")) {
+			$(".form-block-container-cover").removeClass("hide");
+		} else {
+			$(".form-block-container-cover").addClass("hide");
+		}
+	},
+
+	// Показывает блок с изображениями
+	showFormBlockContainerImages: function () {
+		if ($("#Records_isImages").prop("checked")) {
+			$(".form-block-container-images").removeClass("hide");
+		} else {
+			$(".form-block-container-images").addClass("hide");
+		}
+	}
 };
 
 $(document).ready(function () {
 
 	// Обрабатываются клики по элементам для ajax запросов
 	$("body").on("click", ".ajax", function () {
+		if ($(this).data("confirm")) {
+			if (!confirm('Восстановить будет невозможно! \\r\\n Вы действительно хотите удалить безвозвратно?')) {
+				return false;
+			}
+		}
 		var method = $(this).data("function");
 		var controller = $(this).data("controller");
 		var action = $(this).data("action");
@@ -256,4 +425,6 @@ $(document).ready(function () {
 		setFunctions.subpanel();
 		setFunctions.windows();
 	});
+
+	setFunctions.seo();
 });

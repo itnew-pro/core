@@ -32,7 +32,7 @@ use itnew\models\RecordsContent;
 			<?php echo CHtml::activeTextField(
 				$model,
 				"date",
-				array("value" => $model->getWindowDate(), "class" => "blue-form form-medium")
+				array("value" => $model->getWindowDate(), "class" => "datepicker blue-form form-medium")
 			); ?>
 		</span>
 
@@ -62,14 +62,3 @@ use itnew\models\RecordsContent;
 		><?php echo Yii::t("common", "Update"); ?></button>
 
 <?php echo CHtml::endForm(); ?>
-
-<?php
-Yii::app()->clientScript->registerScript(
-	"image-file-field-{$model->id}",
-	'
-			$("#RecordsContent_date").datepicker({
-				dateFormat: "dd.mm.yy"
-			});
-		'
-);
-?>

@@ -13,64 +13,22 @@ use itnew\models\Records;
 			foreach ($model->recordsContent as $record) {
 				?>
 				<div class="move-item" data-id="<?php echo $record->id; ?>" id="record-<?php echo $record->id; ?>">
+					<a
+						href="#"
+						class="dotted ajax"
+						data-function="show<?php echo ucfirst(Yii::app()->controller->id); ?>Subpanel"
+						data-controller="records"
+						data-action="windowForm?id=<?php echo $record->id; ?>"
+						><?php echo $record->seo->name; ?></a>
 
-					<?php
-					echo CHtml::ajaxLink(
-						$record->seo->name,
-						$this->createUrl(
-							"ajax/index",
-							array(
-								"controller" => "records",
-								"action"     => "windowForm",
-								"language"   => Yii::app()->language,
-								"id"         => $record->id,
-							)
-						),
-						array(
-							"beforeSend" => 'function(){
-
-							}',
-							"success"    => 'function(data) {
-								$("body").append(data);
-								showWindow("records-form");
-							}',
-						),
-						array(
-							"class" => "dotted",
-							"id"    => uniqid(),
-							"live"  => false,
-						)
-					);
-					?>
-
-					<?php
-					echo CHtml::ajaxLink(
-						"<i class=\"close\"></i>",
-						$this->createUrl(
-							"ajax/index",
-							array(
-								"controller" => "records",
-								"action"     => "deleteRecordsContent",
-								"language"   => Yii::app()->language,
-								"id"         => $record->id,
-							)
-						),
-						array(
-							"beforeSend" => 'function(){
-
-							}',
-							"success"    => 'function(data) {
-								$(".window #record-' . $record->id . '").remove();
-							}',
-						),
-						array(
-							"class"   => "none-decoration delete",
-							"id"      => uniqid(),
-							"live"    => false,
-							"onclick" => "if (!confirm('Восстановить будет невозможно! \\r\\n Вы действительно хотите удалить безвозвратно?')){return;}",
-						)
-					);
-					?>
+					<a
+						href="#"
+						class="none-decoration delete ajax"
+						data-function="empty"
+						data-controller="records"
+						data-action="deleteRecordsContent?id=<?php echo $record->id; ?>"
+						data-confirm=true
+						><i class="close"></i></a>
 				</div>
 			<?php
 			}
@@ -78,34 +36,13 @@ use itnew\models\Records;
 	</div>
 
 	<div class="window-bottom">
-		<?php
-		echo CHtml::ajaxLink(
-			Yii::t("common", "Add"),
-			$this->createUrl(
-				"ajax/index",
-				array(
-					"controller" => "records",
-					"action"     => "windowAdd",
-					"language"   => Yii::app()->language,
-					"id"         => $model->id,
-				)
-			),
-			array(
-				"beforeSend" => 'function(){
-						
-					}',
-				"success"    => 'function(data) {
-						$("body").append(data);
-						showWindow("records-add");
-					}',
-			),
-			array(
-				"class" => "link dotted",
-				"id"    => uniqid(),
-				"live"  => false,
-			)
-		);
-		?>
+		<a
+			href="#"
+			class="link dotted ajax"
+			data-function="showRecordsAddWindow"
+			data-controller="records"
+			data-action="windowAdd?id=<?php echo $model->id; ?>"
+			><?php echo Yii::t("common", "Add"); ?></a>
 	</div>
 
 <?php echo CHtml::activeHiddenField($model, "contentIds"); ?>
@@ -120,20 +57,3 @@ use itnew\models\Records;
 		><?php echo Yii::t("common", "Update"); ?></button>
 
 <?php echo CHtml::endForm(); ?>
-
-<?php
-Yii::app()->clientScript->registerScript(
-	"staffWindow",
-	'
-			$(".sortable").sortable({
-				stop: function() {
-					var sortString = "";
-					$(this).find(".move-item").each(function(){
-						sortString += $(this).data("id") + ",";
-					});
-					$("#Records_contentIds").val(sortString);
-				}
-			});
-		'
-);
-?>

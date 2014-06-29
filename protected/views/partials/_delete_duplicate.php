@@ -6,61 +6,21 @@
 
 <?php if (!$model->isNewRecord) { ?>
 	<div class="subpanel-links form-block">
-		<?php echo CHtml::ajaxLink(
-			Yii::t("common", "Delete"),
-			$this->createUrl(
-				"ajax/index",
-				array(
-					"controller" => Yii::app()->controller->id,
-					"action"     => "delete",
-					"language"   => Yii::app()->language,
-					"id"         => $model->id,
-				)
-			),
-			array(
-				"beforeSend" => 'function(){
-
-					}',
-				"success"    => 'function(data) {
-						$("#panel").remove();
-						$("#subpanel").remove();
-						$("body").append(data);
-					}',
-			),
-			array(
-				"class"   => "delete dotted",
-				"id"      => uniqid(),
-				"live"    => false,
-				"onclick" => "if (!confirm('Восстановить будет невозможно! \\r\\n Вы действительно хотите удалить безвозвратно?')){return;}",
-			)
-		);
-
-		echo CHtml::ajaxLink(
-			Yii::t("common", "Duplicate"),
-			$this->createUrl(
-				"ajax/index",
-				array(
-					"controller" => Yii::app()->controller->id,
-					"action"     => "duplicate",
-					"language"   => Yii::app()->language,
-					"id"         => $model->id,
-				)
-			),
-			array(
-				"beforeSend" => 'function(){
-
-					}',
-				"success"    => 'function(data) {
-						$("#panel").remove();
-						$("#subpanel").remove();
-						$("body").append(data);
-					}',
-			),
-			array(
-				"class" => "dotted",
-				"id"    => uniqid(),
-				"live"  => false,
-			)
-		); ?>
+		<a
+			href="#"
+			class="delete dotted ajax"
+			data-function="updatePanel"
+			data-controller="<?php echo Yii::app()->controller->id; ?>"
+			data-action="delete?id=<?php echo $model->id; ?>"
+			data-confirm=true
+			><?php echo Yii::t("common", "Delete"); ?></a>
+		<a
+			href="#"
+			class="dotted ajax"
+			data-function="updatePanel"
+			data-controller="<?php echo Yii::app()->controller->id; ?>"
+			data-action="duplicate?id=<?php echo $model->id; ?>"
+			data-confirm=true
+			><?php echo Yii::t("common", "Duplicate"); ?></a>
 	</div>
 <?php } ?>

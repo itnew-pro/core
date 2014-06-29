@@ -26,40 +26,13 @@ use itnew\components\Html;
 
 <?php echo CHtml::activeHiddenField($model, "id"); ?>
 
-<?php
-echo CHtml::ajaxSubmitButton(
-	Html::getButtonText($model),
-	$this->createUrl(
-		"ajax/index",
-		array(
-			"controller" => "section",
-			"action"     => "saveSettings",
-			"language"   => Yii::app()->language,
-		)
-	),
-	array(
-		"type"       => "POST",
-		"dataType"   => "json",
-		"beforeSend" => 'function() {
-					$(".loader-subpanel-button").show();
-				}',
-		"success"    => 'function(data) {
-					$(".loader-subpanel-button").hide();
-					if (data["error"]) {
-						$(".error-" + data["error"]).show();
-					} else {
-						$("#subpanel").remove();
-						$("#panel").remove();
-						$("body").append(data["panel"]);
-					}
-				}'
-	),
-	array(
-		"class" => "button",
-		"id"    => uniqid(),
-		"live"  => false,
-	)
-);
-?>
+	<button
+		class="button ajax"
+		data-function="saveSectionSettings"
+		data-controller="section"
+		data-action="saveSettings"
+		data-post=true
+		data-json=true
+		><?php echo Html::getButtonText($model); ?></button>
 
 <?php CHtml::endForm(); ?>
