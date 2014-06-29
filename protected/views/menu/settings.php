@@ -14,8 +14,7 @@ use itnew\controllers\MenuController;
 <?php $this->renderPartial("/content/_block_name", compact("model")); ?>
 
 	<div class="form-block">
-		<?php $imageUniqId = uniqid();
-		echo CHtml::activeLabel($model, "type"); ?>
+		<?php echo CHtml::activeLabel($model, "type"); ?>
 		<?php echo CHtml::activeDropDownList($model, "type", $model->getTypeListLabels()); ?>
 	</div>
 
