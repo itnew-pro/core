@@ -64,5 +64,5 @@ use itnew\components\Html;
 	</div>
 
 <?php
-$this->renderPartial("../partials/_add_panel");
+$this->renderPartial("/partials/_add_panel");
 ?>

@@ -2,6 +2,7 @@
 
 namespace itnew\controllers;
 
+use itnew\models\ImagesContent;
 use CController;
 use Yii;
 
@@ -41,9 +42,11 @@ class ImagesController extends ContentController
 	 */
 	public function actionUpload()
 	{
-		if (Yii::app()->request->getQuery("id")) {
-			$model = $this->loadModel(Yii::app()->request->getQuery("id"));
-			if ($imagesContent = ImagesContent::model()->upload($model)) {
+		$id = Yii::app()->request->getQuery("id");
+		if ($id) {
+			$model = $this->loadModel($id);
+			$imagesContent = ImagesContent::model()->upload($model);
+			if ($imagesContent) {
 				$this->render("_window_item", array("model" => $imagesContent));
 			}
 		}

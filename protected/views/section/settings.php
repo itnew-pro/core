@@ -9,8 +9,8 @@ use itnew\components\Html;
 
 <?php echo CHtml::form(); ?>
 
-<?php $this->renderPartial("../partials/_delete_duplicate", compact("model")); ?>
-<?php $this->renderPartial("../partials/_seo", array("model" => $model->getSeo())); ?>
+<?php $this->renderPartial("/partials/_delete_duplicate", compact("model")); ?>
+<?php $this->renderPartial("/partials/_seo", array("model" => $model->getSeo())); ?>
 
 	<div class="remember form-block">
 		<?php

@@ -159,6 +159,7 @@ class ImagesContent extends CActiveRecord
 		$model = new self;
 		$model->images_id = $images->id;
 		$model->file = $name;
+
 		if (
 			$model->save()
 			&& CUploadedFile::getInstance($model, "file")->saveAs($model->_getUploadDir() . $name)

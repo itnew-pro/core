@@ -38,7 +38,7 @@ use itnew\models\RecordsContent;
 
 		<?php echo CHtml::activeHiddenField($model, "id"); ?>
 
-		<?php $this->renderPartial("../partials/_seo", array("model" => $model->getSeo())); ?>
+		<?php $this->renderPartial("/partials/_seo", array("model" => $model->getSeo())); ?>
 
 		<?php $this->renderPartial(
 			"../text/_window",
@@ -46,10 +46,10 @@ use itnew\models\RecordsContent;
 		); ?>
 
 		<?php if ($model->records->images) { ?>
-			<?php $this->renderPartial("../images/_window_list", array("model" => $model->getImages())); ?>
+			<?php $this->renderPartial("/images/_window_list", array("model" => $model->getImages())); ?>
 		<?php } ?>
 
-		<?php $this->renderPartial("../text/_window", array("model" => $model->getText())); ?>
+		<?php $this->renderPartial("/text/_window", array("model" => $model->getText())); ?>
 	</div>
 
 	<button

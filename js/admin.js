@@ -25,7 +25,7 @@ var ajaxFunctions = {
 		});
 
 		// Удаляет ошибку для названия блока
-		$("#subpanel #Block_name").on("keyup", function() {
+		$("#subpanel #Block_name").on("keyup", function () {
 			$("#subpanel .error").hide();
 		});
 	},
@@ -37,10 +37,44 @@ var ajaxFunctions = {
 		setFunctions.windows();
 	},
 
-	// Открывает субпанель настроект
+	// Показывает окно с изображениями
+	showImagesWindow: function(data) {
+		this.showWindow(data);
+		$(".sortable").sortable({
+			items: "> .image-window-item",
+			stop: function() {
+				var sortString = "";
+				$(this).find(".image-window-item").each(function(){
+					sortString += $(this).data("id") + ",";
+				});
+				$(this).parent().find(".imageContentIds").val(sortString);
+			}
+		});
+		$(".window .image-file-field").on("change", function(){
+			var $object = $(this);
+			$object.hide();
+			//$object.parent().find(".loader").show();
+			$object.parent().find("i.c").hide();
+			imagesFunctions.upload(this.files, 0, $object, $object.data("id"));
+		});
+		$("body").on("click", ".close-container", function(){
+			$(this).parent().remove();
+		});
+	},
+
+	// Обновляет субпанель
 	updateSubpanel: function (data) {
 		$("#subpanel").remove();
 		$("body").append(data);
+	},
+
+	// Обновляет субпанель
+	showImagesSubpanel: function (data) {
+		this.updateSubpanel(data);
+		imagesFunctions.showImageStyleParams();
+		$("#imagesViewType").change(function() {
+			imagesFunctions.showImageStyleParams();
+		});
 	},
 
 	// Обновляет панель
@@ -93,8 +127,7 @@ var ajaxFunctions = {
 	},
 
 	// Удаялет изображение
-	removeImage: function (data) {
-		$(".window .image-window-item-" + this.modelId).remove();
+	empty: function (data) {
 	},
 
 	// Получает действия в случае успешного выполнения ajax
@@ -136,6 +169,49 @@ var setFunctions = {
 			$(this).css("margin-top", "-" + ($(this).height() / 2) + "px");
 		});
 	}
+};
+
+// Функции для работы с изображениями
+var imagesFunctions = {
+
+	// Загружает изображения
+	upload: function (files, i, $object, modelId) {
+		if (i < files.length) {
+			var formData = new FormData();
+			formData.append("itnew_models_ImagesContent[file]", files[i]);
+			$.ajax({
+				type: "POST",
+				cache: false,
+				contentType: false,
+				processData: false,
+				url: "/" + LANG + "/ajax/" + "images/upload?id=" + modelId,
+				data: formData,
+				success: function(data) {
+					if (data) {
+						$object.parent().before(data);
+					}
+					i++;
+					this.upload(files, i, $object, modelId);
+				}
+			});
+		} else {
+			$object.show();
+			$object.parent().find(".loader").hide();
+			$object.parent().find("i.c").show();
+		}
+	},
+
+	// Показывает параметры изображения
+	showImageStyleParams: function() {
+		var $imagesViewType = $("#imagesViewType");
+		var style = $imagesViewType.val();
+		var $formStyle = $imagesViewType.parent().parent().find(".form-style");
+		$formStyle.addClass("hide");
+		if (style == 1) {
+			$formStyle.removeClass("hide");
+		}
+	}
+
 };
 
 $(document).ready(function () {

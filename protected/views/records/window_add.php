@@ -8,7 +8,7 @@ use itnew\models\RecordsContent;
 
 <?php echo CHtml::form(); ?>
 
-<?php $this->renderPartial("../partials/_seo", array("model" => $model->getSeo())); ?>
+<?php $this->renderPartial("/partials/_seo", array("model" => $model->getSeo())); ?>
 
 <?php echo CHtml::activeHiddenField($model, "records_id"); ?>
 

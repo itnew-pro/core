@@ -13,7 +13,7 @@ use itnew\models\ImagesContent;
 	<a
 		href="#"
 		class="close-container none-decoration ajax"
-		data-function="removeImage"
+		data-function="empty"
 		data-controller="images"
 		data-action="deleteImage?id=<?php echo $model->id; ?>"
 		data-modelId="<?php echo $model->id; ?>"
