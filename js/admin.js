@@ -116,9 +116,7 @@ var ajaxFunctions = {
 		});
 		$(".window .image-file-field").on("change", function () {
 			var $object = $(this);
-			$object.hide();
-			//$object.parent().find(".loader").show();
-			$object.parent().find("i.c").hide();
+			$object.parent().hide();
 			imagesFunctions.upload(this.files, 0, $object, $object.data("id"));
 		});
 		$("body").on("click", ".close-container", function () {
@@ -282,13 +280,11 @@ var imagesFunctions = {
 						$object.parent().before(data);
 					}
 					i++;
-					this.upload(files, i, $object, id);
+					imagesFunctions.upload(files, i, $object, id);
 				}
 			});
 		} else {
-			$object.show();
-			$object.parent().find(".loader").hide();
-			$object.parent().find("i.c").show();
+			$object.parent().show();
 		}
 	},
 

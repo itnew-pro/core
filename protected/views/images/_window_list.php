@@ -38,7 +38,7 @@ use itnew\controllers\ImagesController;
 	$model,
 	"imageContentIds",
 	array(
-		"name"  => !empty($name) ? "{$name}[imageContentIds]" : get_class($model) . "[imageContentIds]",
+		"name"  => !empty($name) ? "{$name}[imageContentIds]" : CHtml::modelName($model) . "[imageContentIds]",
 		"class" => "imageContentIds"
 	)
 ); ?>

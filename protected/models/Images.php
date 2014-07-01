@@ -238,11 +238,11 @@ class Images extends CActiveRecord
 	public function saveContent($post = array())
 	{
 		if (empty($post["imageContentIds"])) {
-			return false;
+			return true;
 		}
 
 		$sort = 10;
-		foreach (explode(",", $images["imageContentIds"]) as $pk) {
+		foreach (explode(",", $post["imageContentIds"]) as $pk) {
 			if ($pk) {
 				$model = ImagesContent::model()->findByPk($pk);
 				if ($model) {
