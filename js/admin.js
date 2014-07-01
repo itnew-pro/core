@@ -72,7 +72,7 @@ var ajaxFunctions = {
 		});
 	},
 	showSectionSubpanel: function (data) {
-		this.updateSubpanel();
+		this.updateSubpanel(data);
 		$("#panel .section-item").removeClass("active");
 		$("#panel .section-" + this.id).addClass("active");
 		$("#subpanel").on("click", ".close", function () {
