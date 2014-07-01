@@ -2,6 +2,7 @@
 
 namespace itnew\controllers;
 
+use itnew\models\Records;
 use itnew\models\RecordsContent;
 use itnew\models\Seo;
 use itnew\models\Images;
@@ -107,6 +108,7 @@ class RecordsController extends ContentController
 	{
 		$post = Yii::app()->request->getPost(CHtml::modelName(new RecordsContent));
 		$seoPost = Yii::app()->request->getPost(CHtml::modelName(new Seo));
+
 		if (!$post || !$seoPost) {
 			return false;
 		}

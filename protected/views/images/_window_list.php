@@ -8,31 +8,31 @@ use itnew\controllers\ImagesController;
  */
 ?>
 
-<div <?php if (empty($notMultiple)) { ?>class="sortable"<?php } ?>>
+	<div <?php if (empty($notMultiple)) { ?>class="sortable"<?php } ?>>
 
-	<?php if ($model->imagesContent) {
-		foreach ($model->imagesContent as $imagesContent) {
-			$this->renderPartial("/images/_window_item", array("model" => $imagesContent));
-		}
-	} ?>
-	<div class="add-images image-float">
-		<?php
-		echo CHtml::fileField(
-			"imageFiles",
-			null,
-			array(
-				"multiple" => empty($notMultiple) ? true : false,
-				"class"    => "image-file-field",
-				"data-id" => $model->id,
-			)
-		);
-		?>
-		<i class="c c-image"></i>
+		<?php if ($model->imagesContent) {
+			foreach ($model->imagesContent as $imagesContent) {
+				$this->renderPartial("/images/_window_item", array("model" => $imagesContent));
+			}
+		} ?>
+		<div class="add-images image-float">
+			<?php
+			echo CHtml::fileField(
+				"imageFiles",
+				null,
+				array(
+					"multiple" => empty($notMultiple) ? true : false,
+					"class"    => "image-file-field",
+					"data-id"  => $model->id,
+				)
+			);
+			?>
+			<i class="c c-image"></i>
+		</div>
+
 	</div>
 
-</div>
-
-<div class="clear"></div>
+	<div class="clear"></div>
 
 <?php echo CHtml::activeHiddenField(
 	$model,

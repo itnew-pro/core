@@ -105,6 +105,17 @@ String.prototype.translit = (function () {
 })();
 
 /**
+ * Преобразует первый символ строки в верхний регистр
+ *
+ * @param {string} string строка
+ *
+ * @return string
+ */
+function ucwords(string) {
+	return string.charAt(0).toUpperCase() + string.substr(1).toLowerCase();
+}
+
+/**
  * Отображает ошибки AJAX
  *
  * @param {jqXHR} xhr XMLHTTPRequest

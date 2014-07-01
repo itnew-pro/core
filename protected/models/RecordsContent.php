@@ -173,8 +173,8 @@ class RecordsContent extends CActiveRecord
 	/**
 	 * Добавляет запись
 	 *
-	 * @param string[] $post    поля модели переданные через POST
-	 * @param string[] $seoPost поля модели СЕО переданные через POST
+	 * @param string[] $post      поля модели переданные через POST
+	 * @param string[] $seoPost   поля модели СЕО переданные через POST
 	 *
 	 * @return bool|string[]
 	 */
@@ -203,7 +203,7 @@ class RecordsContent extends CActiveRecord
 		$criteria->with = "seo";
 		$criteria->condition = "seo.url = :url AND t.records_id = :records_id";
 		$criteria->params["url"] = $seoPost["url"];
-		$criteria->params["records_id"] = $seoPost["records_id"];
+		$criteria->params["records_id"] = $post["records_id"];
 		if ($this->find($criteria)) {
 			return array(
 				"errorClass" => "error-url-exist",

@@ -43,7 +43,7 @@ var ajaxFunctions = {
 		$(".content-" + this.controller + "-" + this.id).replaceWith(data["content"]);
 	},
 	addSubpanel: function (data) {
-		this.updateSubpanel(data);
+		this["show" + ucwords(this.controller) + "Subpanel"](data);
 		$("#panel .scroll-container *").removeClass("active");
 	},
 	showTextSubpanel: function (data) {
@@ -104,24 +104,7 @@ var ajaxFunctions = {
 	},
 	showImagesWindow: function (data) {
 		this.showWindow(data);
-		$(".sortable").sortable({
-			items: "> .image-window-item",
-			stop: function () {
-				var sortString = "";
-				$(this).find(".image-window-item").each(function () {
-					sortString += $(this).data("id") + ",";
-				});
-				$(this).parent().find(".imageContentIds").val(sortString);
-			}
-		});
-		$(".window .image-file-field").on("change", function () {
-			var $object = $(this);
-			$object.parent().hide();
-			imagesFunctions.upload(this.files, 0, $object, $object.data("id"));
-		});
-		$("body").on("click", ".close-container", function () {
-			$(this).parent().remove();
-		});
+		imagesFunctions.setWindow();
 	},
 	showStaffWindow: function (data) {
 		this.showWindow(data);
@@ -160,17 +143,17 @@ var ajaxFunctions = {
 	},
 	showRecordsFormWindow: function (data) {
 		$("body").append(data);
-		showWindow("records-form");
+		windowFunctions.show("records-form");
+		imagesFunctions.setWindow();
+		setFunctions.windows();
 		$(".datepicker").datepicker({
 			dateFormat: "dd.mm.yy"
-		});
-		$(".move-item").on("click", function () {
-			$(this).parent().remove();
 		});
 	},
 	showRecordsAddWindow: function (data) {
 		$("body").append(data);
 		windowFunctions.show("records-add");
+		setFunctions.windows();
 	},
 	saveNewRecordsWindow: function (data) {
 		if (data["errorClass"]) {
@@ -183,6 +166,7 @@ var ajaxFunctions = {
 				.append(data["records"]);
 			windowFunctions.show("records-form");
 			windowFunctions.show("records");
+			setFunctions.windows();
 		}
 	},
 	saveRecordsFormWindow: function (data) {
@@ -190,6 +174,7 @@ var ajaxFunctions = {
 		windowFunctions.hide("records-form");
 		$("body").append(data);
 		windowFunctions.show("records");
+		setFunctions.windows();
 	},
 
 	// Пустая функция
@@ -297,6 +282,28 @@ var imagesFunctions = {
 		if (style == 1) {
 			$formStyle.removeClass("hide");
 		}
+	},
+
+	// Инициализирует действия для окна
+	setWindow: function () {
+		$(".sortable").sortable({
+			items: "> .image-window-item",
+			stop: function () {
+				var sortString = "";
+				$(this).find(".image-window-item").each(function () {
+					sortString += $(this).data("id") + ",";
+				});
+				$(this).parent().find(".imageContentIds").val(sortString);
+			}
+		});
+		$(".window .image-file-field").on("change", function () {
+			var $object = $(this);
+			$object.parent().hide();
+			imagesFunctions.upload(this.files, 0, $object, $object.data("id"));
+		});
+		$("body").on("click", ".close-container", function () {
+			$(this).parent().remove();
+		});
 	}
 };
 
@@ -336,7 +343,7 @@ $(document).ready(function () {
 	// Обрабатываются клики по элементам для ajax запросов
 	$("body").on("click", ".ajax", function () {
 		if ($(this).data("confirm")) {
-			if (!confirm('Восстановить будет невозможно! \\r\\n Вы действительно хотите удалить безвозвратно?')) {
+			if (!confirm('Вы действительно хотите удалить безвозвратно?')) {
 				return false;
 			}
 		}

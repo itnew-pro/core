@@ -11,7 +11,7 @@ use itnew\models\RecordsContent;
 <?php if ($model->records->cover) { ?>
 	<div class="cover">
 		<?php $this->renderPartial(
-			"../images/_window_list",
+			"/images/_window_list",
 			array(
 				"model"       => $model->getCover(),
 				"notMultiple" => true,

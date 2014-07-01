@@ -16,7 +16,7 @@ use itnew\models\Records;
 					<a
 						href="#"
 						class="dotted ajax"
-						data-function="show<?php echo ucfirst(Yii::app()->controller->id); ?>Subpanel"
+						data-function="showRecordsFormWindow"
 						data-controller="records"
 						data-action="windowForm?id=<?php echo $record->id; ?>"
 						><?php echo $record->seo->name; ?></a>
