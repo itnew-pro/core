@@ -12,7 +12,7 @@ use itnew\models\Records;
 	if ($model->recordsContent) {
 		foreach ($model->recordsContent as $recordsContent) {
 			$this->renderPartial(
-				"_card",
+				"/records/_card",
 				array(
 					"model"   => $recordsContent,
 					"records" => $model,

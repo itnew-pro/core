@@ -13,8 +13,8 @@ $recordsContent = RecordsContent::model()->getModelBySeoUrlAndRecordsId(
 	$model->id
 );
 if ($recordsContent) {
-	$this->renderPartial("_item", array("model" => $recordsContent));
+	$this->renderPartial("/records/_item", array("model" => $recordsContent));
 } else {
-	$this->renderPartial("_list", compact("model"));
+	$this->renderPartial("/records/_list", compact("model"));
 }
 ?>
