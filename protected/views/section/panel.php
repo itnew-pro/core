@@ -15,10 +15,10 @@ use itnew\components\Html;
 					<?php echo $section->seo->name; ?>
 					<button
 						class="settings ajax"
-						data-function="showSectionSettings"
+						data-function="showSectionSubpanel"
 						data-controller="section"
 						data-action="settings?id=<?php echo $section->id; ?>"
-						data-modelId="<?php echo $section->id; ?>"
+						data-id="<?php echo $section->id; ?>"
 						></button>
 					<?php if ($section->main) { ?>
 						<i class="home"></i>

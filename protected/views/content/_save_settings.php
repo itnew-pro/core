@@ -13,5 +13,5 @@ use itnew\components\Html;
 	data-action="saveSettings?id=<?php echo $model->id; ?>"
 	data-post=true
 	data-json=true
-	data-modelId="<?php echo $model->id; ?>"
+	data-id="<?php echo $model->id; ?>"
 	><?php echo Html::getButtonText($model); ?></button>

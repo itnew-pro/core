@@ -22,7 +22,7 @@ use itnew\models\StaffGroup;
 		data-controller="staff"
 		data-action="saveGroup?id=<?php echo $model->id; ?>"
 		data-post=true
-		data-modelId="<?php echo $model->id; ?>"
+		data-id="<?php echo $model->id; ?>"
 		><?php echo Yii::t("common", $model->id ? "Update" : "Add"); ?></button>
 
 <?php echo CHtml::endForm(); ?>

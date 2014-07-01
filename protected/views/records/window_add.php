@@ -14,12 +14,12 @@ use itnew\models\RecordsContent;
 
 	<button
 		class="button ajax"
-		data-function="addRecordsWindow"
+		data-function="saveNewRecordsWindow"
 		data-controller="records"
 		data-action="saveAdd?id=<?php echo $model->id; ?>"
 		data-post=true
 		data-json=true
-		data-modelId="<?php echo $model->id; ?>"
+		data-id="<?php echo $model->id; ?>"
 		><?php echo Yii::t("common", "Add"); ?></button>
 
 <?php echo CHtml::endForm(); ?>

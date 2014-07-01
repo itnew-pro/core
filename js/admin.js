@@ -2,7 +2,7 @@
 var ajaxFunctions = {
 	controller: "section",
 	action: "action",
-	modelId: 0,
+	id: 0,
 
 	// Кнопка панели управления
 	panelTab: function (data) {
@@ -10,65 +10,98 @@ var ajaxFunctions = {
 		$(".panel-tab").removeClass("active");
 		this.updatePanel(data);
 		$(".panel-tab-" + this.controller).addClass("active").parent().addClass("active");
-
-		// Кнопка "закрыть" на панели
-		$("body").on("click", "#panel .close", function () {
-			$("#panel").remove();
-			$("#subpanel").remove();
-			$(".panel-tab").removeClass("active");
-			$("#panel-tabs").removeClass("active");
-		});
-
-		// Кнопка "закрыть" на субпанели
-		$("body").on("click", "#subpanel .close", function () {
-			$("#subpanel").remove();
-		});
-
-		// Удаляет ошибку для названия блока
-		$("#subpanel #Block_name").on("keyup", function () {
-			$("#subpanel .error").hide();
-		});
+		$("body")
+			.on("click", "#panel .close", function () {
+				$("#panel").remove();
+				$("#subpanel").remove();
+				$(".panel-tab").removeClass("active");
+				$("#panel-tabs").removeClass("active");
+			})
+			.on("click", "#subpanel .close", function () {
+				$("#subpanel").remove();
+			})
+			.on("keyup", "#itnew_model_Block_name", function () {
+				$(this).parent().find(".error").hide();
+			});
 	},
 
-	// Клик по блоку, открытие окна
+	// Панель
+	updatePanel: function (data) {
+		$("#subpanel").remove();
+		$("#panel").remove();
+		$("body").append(data);
+		setFunctions.panel();
+	},
+
+	// Субпанель
+	updateSubpanel: function (data) {
+		$("#subpanel").remove();
+		$("body").append(data);
+	},
+	saveSettings: function (data) {
+		this.updatePanel(data["panel"]);
+		$(".content-" + this.controller + "-" + this.id).replaceWith(data["content"]);
+	},
+	addSubpanel: function (data) {
+		this.updateSubpanel(data);
+		$("#panel .scroll-container *").removeClass("active");
+	},
+	showTextSubpanel: function (data) {
+		this.updateSubpanel(data);
+	},
+	showImagesSubpanel: function (data) {
+		this.updateSubpanel(data);
+		imagesFunctions.showImageStyleParams();
+		$("#imagesViewType").change(function () {
+			imagesFunctions.showImageStyleParams();
+		});
+	},
+	showRecordsSubpanel: function (data) {
+		this.updateSubpanel(data);
+		recordsFunctions.showImageStyleParams();
+		$("#images-view").change(function () {
+			recordsFunctions.showImageStyleParams();
+		});
+		recordsFunctions.showFormBlockContainerCover();
+		$("#itnew_models_Records_isCover").change(function () {
+			recordsFunctions.showFormBlockContainerCover();
+		});
+		recordsFunctions.showFormBlockContainerImages();
+		$("#itnew_models_Records_isImages").change(function () {
+			recordsFunctions.showFormBlockContainerImages();
+		});
+	},
+	showSectionSubpanel: function (data) {
+		this.updateSubpanel();
+		$("#panel .section-item").removeClass("active");
+		$("#panel .section-" + this.id).addClass("active");
+		$("#subpanel").on("click", ".close", function () {
+			$("#panel .section-item").removeClass("active");
+		});
+	},
+	saveSectionSubpanel: function (data) {
+		if (data["error"]) {
+			$(".error-" + data["error"]).show();
+		} else {
+			$("#subpanel").remove();
+			$("#panel").remove();
+			$("body").append(data["panel"]);
+		}
+	},
+
+	// Окно
 	showWindow: function (data) {
 		$("body").append(data);
 		windowFunctions.show(this.controller);
 		setFunctions.windows();
 	},
-
-	// Показывает окно с текстом
+	saveWindow: function (data) {
+		windowFunctions.hide(this.controller);
+		$(".content-" + this.controller + "-" + this.id).replaceWith(data);
+	},
 	showTextWindow: function (data) {
 		this.showWindow(data);
 	},
-
-	// Показывает окно с персоналом
-	showStaffWindow: function (data) {
-		this.showWindow(data);
-		$(".sortable").sortable({
-			stop: function () {
-				var sortString = "";
-				$(this).find(".move-item").each(function () {
-					sortString += $(this).data("id") + ",";
-				});
-				$("#itnew_models_Staff_groupIds").val(sortString);
-			}
-		});
-	},
-
-	// Показывает окно добавления группы персонала
-	showStaffGroupWindow: function (data) {
-		$("body").append(data);
-		windowFunctions.show("staff-group");
-		setFunctions.windows();
-	},
-
-	// Удаляет группу
-	deleteStaffGroup: function (data) {
-		$(".window #staff-group-" + this.modelId).remove();
-	},
-
-	// Показывает окно с изображениями
 	showImagesWindow: function (data) {
 		this.showWindow(data);
 		$(".sortable").sortable({
@@ -92,132 +125,29 @@ var ajaxFunctions = {
 			$(this).parent().remove();
 		});
 	},
-
-	// Обновляет субпанель
-	updateSubpanel: function (data) {
-		$("#subpanel").remove();
+	showStaffWindow: function (data) {
+		this.showWindow(data);
+		$(".sortable").sortable({
+			stop: function () {
+				var sortString = "";
+				$(this).find(".move-item").each(function () {
+					sortString += $(this).data("id") + ",";
+				});
+				$("#itnew_models_Staff_groupIds").val(sortString);
+			}
+		});
+	},
+	showStaffGroupWindow: function (data) {
 		$("body").append(data);
+		windowFunctions.show("staff-group");
+		setFunctions.windows();
 	},
-
-	// Добавляет субпанель
-	addSubpanel: function (data) {
-		this.updateSubpanel(data);
-		$("#panel .scroll-container *").removeClass("active");
-	},
-
-	// Показывает субпанель с настройками изображений
-	showImagesSubpanel: function (data) {
-		this.updateSubpanel(data);
-		imagesFunctions.showImageStyleParams();
-		$("#imagesViewType").change(function () {
-			imagesFunctions.showImageStyleParams();
-		});
-	},
-
-	// Показывает субпанель с настройками записей
-	showRecordsSubpanel: function (data) {
-		this.updateSubpanel(data);
-
-		recordsFunctions.showImageStyleParams();
-		$("#images-view").change(function () {
-			recordsFunctions.showImageStyleParams();
-		});
-
-		recordsFunctions.showFormBlockContainerCover();
-		$("#itnew_models_Records_isCover").change(function () {
-			recordsFunctions.showFormBlockContainerCover();
-		});
-
-		recordsFunctions.showFormBlockContainerImages();
-		$("#itnew_models_Records_isImages").change(function () {
-			recordsFunctions.showFormBlockContainerImages();
-		});
-	},
-
-	// Обновляет панель
-	updatePanel: function (data) {
-		$("#subpanel").remove();
-		$("#panel").remove();
-		$("body").append(data);
-		setFunctions.panel();
-	},
-
-	// Сохраняет настройки в субпанели
-	saveSettings: function (data) {
-		this.updatePanel();
-		$(".content-" + this.controller + "-" + this.modelId).replaceWith(data["content"]);
-	},
-
-	// Стандартные действия после сохранения окна
-	saveWindow: function (data) {
-		windowFunctions.hide(this.controller);
-	},
-
-	// Сохранение группы персонала
 	saveStaffGroupWindow: function (data) {
 		this.saveWindow();
 		windowFunctions.hide("staff-group");
 		$("body").append(data);
 		windowFunctions.show("staff");
 	},
-
-	// Окно добавления новой записи
-	addRecordsWindow: function (data) {
-		if (data["errorClass"]) {
-			$(".window-records-add ." + data["errorClass"]).show();
-		} else {
-			this.saveWindow();
-			windowFunctions.hide("records-add");
-			$("body").append(data["recordsForm"]);
-			windowFunctions.show("records-form");
-			$("body").append(data["records"]);
-			windowFunctions.show("records");
-		}
-	},
-
-	// Сохраняет запись
-	saveRecordsFormWindow: function (data) {
-		this.saveWindow();
-		windowFunctions.hide("records-form");
-		$("body").append(data);
-		windowFunctions.show("records");
-	},
-
-	// Сохраняет настройки раздела
-	saveSectionSettings: function (data) {
-		if (data["error"]) {
-			$(".error-" + data["error"]).show();
-		} else {
-			$("#subpanel").remove();
-			$("#panel").remove();
-			$("body").append(data["panel"]);
-		}
-	},
-
-	// Показывает настройки раздела
-	showSectionSettings: function (data) {
-		this.updateSubpanel();
-		$("#panel .section-item").removeClass("active");
-		$("#panel .section-" + this.modelId).addClass("active");
-		$("#subpanel").on("click", ".close", function () {
-			$("#panel .section-item").removeClass("active");
-		});
-	},
-
-	// Показывает окно редактирования записей
-	showRecordsFormWindow: function (data) {
-		$("body").append(data);
-		showWindow("records-form");
-		$(".datepicker").datepicker({
-			dateFormat: "dd.mm.yy"
-		});
-
-		$(".move-item").on("click", function () {
-			$(this).parent().remove();
-		});
-	},
-
-	// Показывает окно с записями
 	showRecordsWindow: function (data) {
 		this.showWindow(data);
 		$(".sortable").sortable({
@@ -230,11 +160,38 @@ var ajaxFunctions = {
 			}
 		});
 	},
-
-	// Показывает окно для добавления записи
+	showRecordsFormWindow: function (data) {
+		$("body").append(data);
+		showWindow("records-form");
+		$(".datepicker").datepicker({
+			dateFormat: "dd.mm.yy"
+		});
+		$(".move-item").on("click", function () {
+			$(this).parent().remove();
+		});
+	},
 	showRecordsAddWindow: function (data) {
 		$("body").append(data);
 		windowFunctions.show("records-add");
+	},
+	saveNewRecordsWindow: function (data) {
+		if (data["errorClass"]) {
+			$(".window-records-add ." + data["errorClass"]).show();
+		} else {
+			this.saveWindow();
+			windowFunctions.hide("records-add");
+			$("body")
+				.append(data["recordsForm"])
+				.append(data["records"]);
+			windowFunctions.show("records-form");
+			windowFunctions.show("records");
+		}
+	},
+	saveRecordsFormWindow: function (data) {
+		this.saveWindow();
+		windowFunctions.hide("records-form");
+		$("body").append(data);
+		windowFunctions.show("records");
 	},
 
 	// Пустая функция
@@ -242,10 +199,10 @@ var ajaxFunctions = {
 	},
 
 	// Получает действия в случае успешного выполнения ajax
-	execute: function (method, data, controller, action, modelId) {
+	execute: function (method, data, controller, action, id) {
 		this.controller = controller;
 		this.action = action;
-		this.modelId = modelId;
+		this.id = id;
 		this[method](data);
 	}
 };
@@ -309,7 +266,7 @@ var setFunctions = {
 var imagesFunctions = {
 
 	// Загружает изображения
-	upload: function (files, i, $object, modelId) {
+	upload: function (files, i, $object, id) {
 		if (i < files.length) {
 			var formData = new FormData();
 			formData.append("itnew_models_ImagesContent[file]", files[i]);
@@ -318,14 +275,14 @@ var imagesFunctions = {
 				cache: false,
 				contentType: false,
 				processData: false,
-				url: "/" + LANG + "/ajax/" + "images/upload?id=" + modelId,
+				url: "/" + LANG + "/ajax/" + "images/upload?id=" + id,
 				data: formData,
 				success: function (data) {
 					if (data) {
 						$object.parent().before(data);
 					}
 					i++;
-					this.upload(files, i, $object, modelId);
+					this.upload(files, i, $object, id);
 				}
 			});
 		} else {
@@ -394,7 +351,7 @@ $(document).ready(function () {
 		var dataType = "text";
 		var type = "GET";
 		var data = {};
-		var modelId = 0;
+		var id = 0;
 		if ($(this).data("post")) {
 			type = "POST";
 			data = $(this).parents("form").serialize()
@@ -402,8 +359,8 @@ $(document).ready(function () {
 		if ($(this).data("json")) {
 			dataType = "JSON";
 		}
-		if ($(this).data("modelId")) {
-			modelId = $(this).data("modelId");
+		if ($(this).data("id")) {
+			id = $(this).data("id");
 		}
 
 		$.ajax({
@@ -412,7 +369,7 @@ $(document).ready(function () {
 			data: data,
 			dataType: dataType,
 			success: function (data) {
-				ajaxFunctions.execute(method, data, controller, action, modelId);
+				ajaxFunctions.execute(method, data, controller, action, id);
 			}
 		});
 

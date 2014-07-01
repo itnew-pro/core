@@ -16,6 +16,6 @@ use itnew\models\ImagesContent;
 		data-function="empty"
 		data-controller="images"
 		data-action="deleteImage?id=<?php echo $model->id; ?>"
-		data-modelId="<?php echo $model->id; ?>"
+		data-id="<?php echo $model->id; ?>"
 		><i class="close"></i></a>
 </div>

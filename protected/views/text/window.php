@@ -18,7 +18,8 @@ use itnew\models\Text;
 		data-controller="text"
 		data-action="saveWindow?id=<?php echo $model->id; ?>"
 		data-post=true
-		data-modelId="<?php echo $model->id; ?>"
+		data-id="<?php echo $model->id; ?>"
+		data-aaa="<?php echo $model->id; ?>"
 		><?php echo Yii::t("common", "Update"); ?></button>
 
 <?php echo CHtml::endForm(); ?>

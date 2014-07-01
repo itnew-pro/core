@@ -217,7 +217,7 @@ class ContentController extends CController
 	/**
 	 * Сохраняет модель в окне
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public function actionSaveWindow()
 	{
@@ -237,7 +237,9 @@ class ContentController extends CController
 			return null;
 		}
 
-		return $model->saveContent($post);
+		if ($model->saveContent($post)) {
+			echo $this->getContent($model->id);
+		}
 	}
 
 	/**

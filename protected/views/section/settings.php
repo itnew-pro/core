@@ -28,7 +28,7 @@ use itnew\components\Html;
 
 	<button
 		class="button ajax"
-		data-function="saveSectionSettings"
+		data-function="saveSectionSubpanel"
 		data-controller="section"
 		data-action="saveSettings"
 		data-post=true
