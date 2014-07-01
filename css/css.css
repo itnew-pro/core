@@ -639,10 +639,6 @@ i.plus {
 
 /* grid */
 
-body {
-	background: #333;
-}
-
 #loader {
 	z-index: 999;
 	position: fixed;
