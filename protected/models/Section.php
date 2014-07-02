@@ -242,7 +242,6 @@ class Section extends CActiveRecord
 
 		$structureCopy = new Structure;
 		$structureCopy->width = $this->structure->width;
-		$structureCopy->size = $this->structure->size;
 
 		if (!$structureCopy->save()) {
 			$transaction->rollback();

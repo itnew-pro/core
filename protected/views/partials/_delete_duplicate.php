@@ -20,7 +20,6 @@
 			data-function="updatePanel"
 			data-controller="<?php echo Yii::app()->controller->id; ?>"
 			data-action="duplicate?id=<?php echo $model->id; ?>"
-			data-confirm=true
 			><?php echo Yii::t("common", "Duplicate"); ?></a>
 	</div>
 <?php } ?>
