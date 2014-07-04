@@ -212,12 +212,12 @@ class Block extends CActiveRecord
 		}
 
 		$structure = Structure::model()->findByPk(Yii::app()->session["structureId"]);
-		if ($structure) {
+		if (!$structure) {
 			return $blocks;
 		}
 
 		$grids = $structure->grid;
-		if ($grids) {
+		if (!$grids) {
 			return $blocks;
 		}
 
