@@ -160,13 +160,18 @@ class SectionController extends CController
 	 */
 	public function actionDelete()
 	{
-		if (Yii::app()->request->getQuery("id")) {
-			if ($model = Section::model()->findByPk(Yii::app()->request->getQuery("id"))) {
-				var_dump($model->id);
-				$model->delete();
-				echo $this->actionPanel(true);
-			}
+		$id = Yii::app()->request->getQuery("id");
+		if (!$id) {
+			return null;
 		}
+
+		$model = Section::model()->findByPk($id);
+		if (!$model) {
+			return null;
+		}
+
+		$model->delete();
+		echo $this->actionPanel(true);
 	}
 
 	/**
@@ -176,11 +181,17 @@ class SectionController extends CController
 	 */
 	public function actionDuplicate()
 	{
-		if (Yii::app()->request->getQuery("id")) {
-			if ($model = Section::model()->findByPk(Yii::app()->request->getQuery("id"))) {
-				$model->duplicate();
-			}
-			echo $this->actionPanel(true);
+		$id = Yii::app()->request->getQuery("id");
+		if (!$id) {
+			return null;
 		}
+
+		$model = Section::model()->findByPk($id);
+		if (!$model) {
+			return null;
+		}
+
+		$model->duplicate();
+		echo $this->actionPanel(true);
 	}
 }
