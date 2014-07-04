@@ -316,9 +316,7 @@ class Section extends CActiveRecord
 	public function beforeDelete()
 	{
 		if ($this->menuContent) {
-			foreach ($this->menuContent as $model) {
-				$model->delete();
-			}
+			$this->menuContent->delete();
 		}
 
 		return parent::beforeDelete();
