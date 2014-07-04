@@ -12,6 +12,8 @@ use itnew\models\Structure;
 <head>
 	<meta charset="utf-8">
 	<title><?php echo Seo::$pageTitle; ?></title>
+	<meta name="keywords" content="<?php echo Seo::$pageKeywords; ?>" />
+	<meta name="description" content="<?php echo Seo::$pageDescription; ?>" />
 
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,800,300,700&subset=latin,cyrillic-ext'
 		  rel='stylesheet' type='text/css'>
