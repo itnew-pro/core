@@ -1,4 +1,5 @@
 <?php
+use itnew\models\Seo;
 use itnew\models\Structure;
 
 /**
@@ -10,7 +11,7 @@ use itnew\models\Structure;
 <html>
 <head>
 	<meta charset="utf-8">
-	<title><?php echo $this->pageTitle; ?></title>
+	<title><?php echo Seo::$pageTitle; ?></title>
 
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,800,300,700&subset=latin,cyrillic-ext'
 		  rel='stylesheet' type='text/css'>

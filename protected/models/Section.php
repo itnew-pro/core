@@ -120,6 +120,9 @@ class Section extends CActiveRecord
 	 */
 	public function getActive($sectionUrl)
 	{
+		$model = null;
+		$isMain = false;
+
 		$criteria = new CDbCriteria;
 		$criteria->params["language_id"] = Language::getActiveId();
 
@@ -127,14 +130,20 @@ class Section extends CActiveRecord
 			$criteria->with = array("seo");
 			$criteria->condition = "seo.url = :url AND t.language_id = :language_id";
 			$criteria->params["url"] = $sectionUrl;
+		} else {
+			$criteria->condition = "main = :main AND language_id = :language_id";
+			$criteria->params["main"] = 1;
+			$isMain = true;
+		}
+		$model = $this->find($criteria);
 
-			return $this->find($criteria);
+		if (!$model) {
+			return null;
 		}
 
-		$criteria->condition = "main = :main AND language_id = :language_id";
-		$criteria->params["main"] = 1;
+		$model->setSeo($isMain);
 
-		return $this->find($criteria);
+		return $model;
 	}
 
 	/**
@@ -336,5 +345,40 @@ class Section extends CActiveRecord
 				"section"  => $this->seo->url,
 			)
 		);
+	}
+
+	/**
+	 * Устанавливает SEO
+	 *
+	 * @param bool $isMain является ли раздел главной страницей
+	 *
+	 * @return bool
+	 */
+	public function setSeo($isMain)
+	{
+		$seo = $this->seo;
+
+		if (!$seo) {
+			return false;
+		}
+
+		$site = Site::model()->find();
+		if (!$site) {
+			return false;
+		}
+
+		if ($isMain) {
+			$site->setSeo();
+		} else {
+			if ($seo->title) {
+				Seo::$pageTitle = $seo->title;
+			} else {
+				Seo::$pageTitle = "{$seo->name} - {$site->name}";
+			}
+			Seo::$pageKeywords = $seo->keywords;
+			Seo::$pageDescription = $seo->description;
+		}
+
+		return true;
 	}
 }

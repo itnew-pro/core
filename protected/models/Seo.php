@@ -28,6 +28,27 @@ class Seo extends CActiveRecord
 {
 
 	/**
+	 * Текущий заголовок страницы
+	 *
+	 * @var string
+	 */
+	public static $pageTitle = "";
+
+	/**
+	 * Текущие ключевые слова на странице
+	 *
+	 * @var string
+	 */
+	public static $pageKeywords = "";
+
+	/**
+	 * Текущее описание на странице
+	 *
+	 * @var string
+	 */
+	public static $pageDescription = "";
+
+	/**
 	 * Возвращает имя связанной таблицы базы данных
 	 *
 	 * @return string

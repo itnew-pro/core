@@ -2,6 +2,7 @@
 
 namespace itnew\models;
 
+use itnew\models\Seo;
 use CActiveRecord;
 use Yii;
 
@@ -77,5 +78,21 @@ class Site extends CActiveRecord
 	public static function model($className = __CLASS__)
 	{
 		return parent::model($className);
+	}
+
+	/**
+	 * Устанавливает SEO
+	 *
+	 * @return void
+	 */
+	public function setSeo()
+	{
+		if ($this->title) {
+			Seo::$pageTitle = $this->title;
+		} else {
+			Seo::$pageTitle = $this->name;
+		}
+		Seo::$pageKeywords = $this->keywords;
+		Seo::$pageDescription = $this->description;
 	}
 }
