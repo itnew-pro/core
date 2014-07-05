@@ -235,7 +235,7 @@ class Block extends CActiveRecord
 	 */
 	public function getAllThisPageBlocksTypes()
 	{
-		$blocksTypes = array();
+		$blocksTypes = array(0);
 
 		$blocks = $this->_getAllThisPageBlocks();
 		if (!$blocks) {
@@ -256,7 +256,7 @@ class Block extends CActiveRecord
 	 */
 	public function getAllThisPageBlocksIds()
 	{
-		$blocksIds = array();
+		$blocksIds = array(0);
 
 		$blocks = $this->_getAllThisPageBlocks();
 		if (!$blocks) {
