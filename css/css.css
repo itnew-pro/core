@@ -397,7 +397,6 @@ i.plus {
 }
 
 .chopslider .slider {
-	margin: 0 auto;
 	position: relative;
 	z-index: 2;
 	display: block;
