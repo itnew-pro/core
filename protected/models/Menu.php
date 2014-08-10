@@ -153,11 +153,11 @@ class Menu extends CActiveRecord
 	 */
 	public function getType()
 	{
-		if (!empty($this->_typeList[$this->type])) {
-			return null;
+		if (array_key_exists($this->type, $this->_typeList)) {
+			return $this->_typeList[$this->type];
 		}
 
-		return $this->_typeList[$this->type];
+		return $this->_typeList[0];
 	}
 
 	/**

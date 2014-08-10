@@ -310,7 +310,10 @@ class Section extends CActiveRecord
 		$url = $this->getUrl();
 
 		$active = null;
-		if (Yii::app()->request->url === $url) {
+		if (
+			Yii::app()->request->url === $url
+			|| (Yii::app()->request->url == "/" && $this->main)
+		) {
 			$active = "class=\"active\"";
 		}
 
