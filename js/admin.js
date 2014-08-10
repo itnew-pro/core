@@ -49,6 +49,9 @@ var ajaxFunctions = {
 	showTextSubpanel: function (data) {
 		this.updateSubpanel(data);
 	},
+	showMenuSubpanel: function (data) {
+		this.updateSubpanel(data);
+	},
 	showImagesSubpanel: function (data) {
 		this.updateSubpanel(data);
 		imagesFunctions.showImageStyleParams();
