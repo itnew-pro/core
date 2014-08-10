@@ -1,19 +1,20 @@
 <?php
-use itnew\models\ImagesContent;
+use itnew\models\Images;
 
 /**
- * @var ImagesContent[] $images
- * @var bool $isFirst
+ * @var Images $model
+ * @var bool   $isFirst
  */
 ?>
 
 <div class="chopslider">
 	<a class="slide-next" href="#"></a>
 	<a class="slide-prev" href="#"></a>
-	<div class="slider" style="width: 940px; height: 444px;">
-		<?php $isFirst = true; foreach ($images as $model) { ?>
+	<?php $images = $model->imagesContent; ?>
+	<div class="slider" style="width: <?php echo $model->width; ?>px; height: <?php echo $model->height; ?>px;">
+		<?php $isFirst = true; foreach ($images as $image) { ?>
 			<div class="slide<?php if ($isFirst) { ?> cs-activeSlide<?php $isFirst = false;  } ?>">
-				<img src="<?php echo $model->getViewUrl(); ?>" />
+				<img src="<?php echo $image->getViewUrl(); ?>" />
 			</div>
 		<?php } ?>
 	</div>

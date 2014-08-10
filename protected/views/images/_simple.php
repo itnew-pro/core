@@ -1,13 +1,13 @@
 <?php
-use itnew\models\ImagesContent;
+use itnew\models\Images;
 
 /**
- * @var ImagesContent[] $images
+ * @var Images $model
  */
 ?>
 
-<?php foreach ($images as $model) { ?>
-	<?php if ($model->link) { ?><a href="<?php echo $model->link; ?>"><?php } ?>
-	<img src="<?php echo $model->getViewUrl(); ?>" alt="<?php echo $model->alt; ?>">
-	<?php if ($model->link) { ?></a><?php } ?>
+<?php foreach ($model->imagesContent as $image) { ?>
+	<?php if ($image->link) { ?><a href="<?php echo $image->link; ?>"><?php } ?>
+	<img src="<?php echo $image->getViewUrl(); ?>" alt="<?php echo $image->alt; ?>">
+	<?php if ($image->link) { ?></a><?php } ?>
 <?php } ?>

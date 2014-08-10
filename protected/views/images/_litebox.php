@@ -1,16 +1,16 @@
 <?php
-use itnew\models\ImagesContent;
+use itnew\models\Images;
 
 /**
- * @var ImagesContent[] $images
+ * @var Images $model
  */
 ?>
 
-<?php foreach ($images as $model) { ?>
+<?php foreach ($model->imagesContent as $image) { ?>
 	<a
 		class="none-decoration fancybox"
-		rel="<?php echo $model->images_id; ?>"
-		href="<?php echo $model->getFullUrl(); ?>"
-		title="<?php echo $model->alt; ?>"
-		><img src="<?php echo $model->getThumbUrl(); ?>" alt="<?php echo $model->alt; ?>"></a>
+		rel="<?php echo $image->images_id; ?>"
+		href="<?php echo $image->getFullUrl(); ?>"
+		title="<?php echo $image->alt; ?>"
+		><img src="<?php echo $image->getThumbUrl(); ?>" alt="<?php echo $image->alt; ?>"></a>
 <?php } ?>
