@@ -13,7 +13,7 @@ use itnew\models\Records;
 		<a href="<?php echo $model->getUrl(); ?>">
 			<?php $this->renderPartial(
 				"/images/" . $model->coverRelation->getTemplateName(),
-				array("images" => $model->coverRelation->imagesContent)
+				array("model" => $model->coverRelation)
 			); ?>
 		</a>
 	</div>

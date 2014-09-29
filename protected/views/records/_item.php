@@ -12,7 +12,7 @@ use itnew\models\RecordsContent;
 	<div class="images">
 		<?php $this->renderPartial(
 			"../images/" . $model->imagesRelation->getTemplateName(),
-			array("images" => $model->imagesRelation->imagesContent)
+			array("model" => $model->imagesRelation)
 		); ?>
 	</div>
 	<div class="text">
