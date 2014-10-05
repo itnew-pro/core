@@ -19,19 +19,23 @@ class Html extends CHtml
 {
 
 	/**
-	 * Получает текст кнопки ("Добавить" или "Редактировать")
+	 * Возвращает кнопку с лоадером
 	 *
-	 * @param object $model модель, для которой создается кнопка
+	 * @param string $class css-класс
+	 * @param string $label название кнопки
 	 *
 	 * @return string
 	 */
-	public static function getButtonText($model = null)
+	public static function getButtonWithLoader($class, $label)
 	{
-		if ($model) {
-			if (!$model->isNewRecord) {
-				return Yii::t("common", "Update");
-			}
-		}
-		return Yii::t("common", "Add");
+		return "
+			<button class=\"{$class}\"><span>{$label}</span>
+			<div class=\"button-loader\">
+				<div class=\"bounce1\"></div>
+				<div class=\"bounce2\"></div>
+				<div class=\"bounce3\"></div>
+			</div>
+			</button>
+		";
 	}
 }

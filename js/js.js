@@ -121,8 +121,6 @@ function ucwords(string) {
  * @param {jqXHR} xhr XMLHTTPRequest
  */
 function showExceptionError(xhr) {
-	alert(xhr.responseText);
-	return;
 	var str = xhr.responseText.match(/<h2>[^<>]*<\/h2>/gi)[0];
 	str = str.replace(/<h2>/i, "");
 	str = str.replace(/<\/h2>/i, "");
@@ -145,6 +143,35 @@ $.ajaxSetup({
 		showExceptionError(xhr);
 	}
 });
+
+// Методы для валидации
+var validateFunctions = {
+
+	// Проверка на пустоту
+	required: function (data) {
+		return data != "";
+	},
+
+	// Проверка на email
+	email: function (data) {
+		if (data == "") {
+			return true;
+		}
+		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		return regex.test(data);
+	},
+
+	// Проверка на email и на пустую строку
+	emailRequired: function (data) {
+		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		return regex.test(data);
+	},
+
+	// Выполняет действия
+	execute: function (method, value) {
+		return this[method]($.trim(value));
+	}
+};
 
 $(document).ready(function () {
 
@@ -225,7 +252,66 @@ $(document).ready(function () {
 		autoplayDelay: 5000,
 		t2D: csTransitions["half"]["3"],
 		noCSS3: csTransitions["noCSS3"]["random"],
-		mobile: csTransitions["mobile"]["random"],
+		mobile: csTransitions["mobile"]["random"]
+	});
+
+	// Обратная связь
+	$("body").on("click", ".feedback-button", function() {
+		var $form = $(this).parents("form");
+		var $hasErrors = $form.find(".has-error");
+		var errorsCount = $hasErrors.length;
+		if (errorsCount > 0) {
+			$form.find(".error").hide();
+			var i = 0;
+			$hasErrors.each(function() {
+				var value = $(this).val();
+				var error = $(this).data("error");
+				var id = $(this).attr("id");
+				if (error != "" && !validateFunctions.execute(error, value)) {
+					$("#" + id + "-" + error).show();
+					return false;
+				} else {
+					i++;
+					if (i == errorsCount) {
+						executeFeedbackAjax($form);
+					}
+				}
+			});
+		} else {
+			executeFeedbackAjax($form);
+		}
+		return false;
 	});
 
 });
+
+/**
+ * Выполняет AJAX для формы обратной связи
+ *
+ * @param {object} $form
+ *
+ * @return void
+ */
+function executeFeedbackAjax($form) {
+	var $button = $form.find(".feedback-button");
+	$.ajax({
+		url: "/" + LANG + "/ajax/feedback/send/",
+		type: "POST",
+		data: $form.serialize(),
+		dataType: "JSON",
+		beforeSend: function() {
+			$button.find("span").css("opacity", 0);
+			$button.find(".button-loader").show();
+		},
+		success: function (data) {
+			$button.find("span").css("opacity", 1);
+			$button.find(".button-loader").hide();
+			$form.css("opacity", 0);
+			if (data.status) {
+				$form.parent().find(".success").show();
+			} else {
+				$form.parent().find(".not-success").show();
+			}
+		}
+	});
+}

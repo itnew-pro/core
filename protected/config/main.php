@@ -90,10 +90,17 @@ return array(
 		"baseUrl"     => "",
 		"siteId"      => SITE_ID,
 		"domain"      => DOMAIN,
-		"migrateTime" => "2014-03-04 00:00:00",
+		"migrateTime" => "2014-09-29 02:00:00",
 		"admin"       => array(
 			"login"    => ADMIN_LOGIN,
 			"password" => ADMIN_PASSWORD,
+		),
+		"feedback" => array(
+			"host" => "itnew.pro",
+			"port" => 25,
+			"user" => "mailer@itnew.pro",
+			"password" => "?vQ5we65",
+			"name" => "ITnew",
 		),
 	),
 );

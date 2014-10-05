@@ -1,6 +1,4 @@
 <?php
-use itnew\components\Html;
-
 /**
  * @var mixed $model
  */
@@ -14,4 +12,4 @@ use itnew\components\Html;
 	data-post=true
 	data-json=true
 	data-id="<?php echo $model->id; ?>"
-	><?php echo Html::getButtonText($model); ?></button>
+	><?php echo ($model->isNewRecord) ? Yii::t("common", "Add") : Yii::t("common", "Update"); ?></button>

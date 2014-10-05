@@ -1,6 +1,5 @@
 <?php
 use itnew\models\Section;
-use itnew\components\Html;
 
 /**
  * @var Section $model
@@ -33,6 +32,6 @@ use itnew\components\Html;
 		data-action="saveSettings"
 		data-post=true
 		data-json=true
-		><?php echo Html::getButtonText($model); ?></button>
+		><?php echo ($model->isNewRecord) ? Yii::t("common", "Add") : Yii::t("common", "Update"); ?></button>
 
 <?php CHtml::endForm(); ?>

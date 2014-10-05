@@ -63,16 +63,24 @@ class Block extends CActiveRecord
 	const TYPE_RECORDS = 5;
 
 	/**
+	 * Тип обратной связи
+	 *
+	 * @var int
+	 */
+	const TYPE_FEEDBACK = 6;
+
+	/**
 	 * Типы
 	 *
 	 * @var string[]
 	 */
 	public $types = array(
-		self::TYPE_TEXT    => "text",
-		self::TYPE_IMAGE   => "images",
-		self::TYPE_MENU    => "menu",
-		self::TYPE_STAFF   => "staff",
-		self::TYPE_RECORDS => "records",
+		self::TYPE_TEXT     => "text",
+		self::TYPE_IMAGE    => "images",
+		self::TYPE_MENU     => "menu",
+		self::TYPE_STAFF    => "staff",
+		self::TYPE_RECORDS  => "records",
+		self::TYPE_FEEDBACK => "feedback",
 	);
 
 	/**

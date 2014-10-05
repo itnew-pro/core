@@ -74,6 +74,9 @@ var ajaxFunctions = {
 			recordsFunctions.showFormBlockContainerImages();
 		});
 	},
+	showFeedbackSubpanel: function (data) {
+		this.updateSubpanel(data);
+	},
 	showSectionSubpanel: function (data) {
 		this.updateSubpanel(data);
 		$("#panel .section-item").removeClass("active");
@@ -341,43 +344,88 @@ var recordsFunctions = {
 	}
 };
 
+/**
+ * Выполняет AJAX запрос
+ *
+ * @param {string}   url        адрес
+ * @param {string}   type       тип запроса
+ * @param {string[]} data       данные
+ * @param {string}   dataType   тип данных
+ * @param {string}   method     метод
+ * @param {string}   controller контроллер
+ * @param {string}   action     действие
+ * @param {int}      id         идентификатор модели
+ *
+ * @return void
+ */
+function executeAjax(url, type, data, dataType, method, controller, action, id) {
+	$.ajax({
+		url: url,
+		type: type,
+		data: data,
+		dataType: dataType,
+		success: function (data) {
+			ajaxFunctions.execute(method, data, controller, action, id);
+		}
+	});
+}
+
+
 $(document).ready(function () {
 
 	// Обрабатываются клики по элементам для ajax запросов
 	$("body").on("click", ".ajax", function () {
-		if ($(this).data("confirm")) {
+		var $obj = $(this);
+		if ($obj.data("confirm")) {
 			if (!confirm('Вы действительно хотите удалить безвозвратно?')) {
 				return false;
 			}
 		}
-		var method = $(this).data("function");
-		var controller = $(this).data("controller");
-		var action = $(this).data("action");
+		var method = $obj.data("function");
+		var controller = $obj.data("controller");
+		var action = $obj.data("action");
 		var url = "/" + LANG + "/ajax/" + controller + "/" + action;
 		var dataType = "text";
 		var type = "GET";
 		var data = {};
 		var id = 0;
-		if ($(this).data("post")) {
-			type = "POST";
-			data = $(this).parents("form").serialize()
-		}
-		if ($(this).data("json")) {
+
+		if ($obj.data("json")) {
 			dataType = "JSON";
 		}
-		if ($(this).data("id")) {
-			id = $(this).data("id");
+		if ($obj.data("id")) {
+			id = $obj.data("id");
 		}
 
-		$.ajax({
-			url: url,
-			type: type,
-			data: data,
-			dataType: dataType,
-			success: function (data) {
-				ajaxFunctions.execute(method, data, controller, action, id);
+		if ($obj.data("post")) {
+			type = "POST";
+			var $form = $obj.parents("form");
+			data = $form.serialize();
+			var $hasErrors = $form.find(".has-errors");
+			var errorsCount = $hasErrors.length;
+			if (errorsCount > 0) {
+				$form.find(".error").hide();
+				var i = 0;
+				$hasErrors.each(function() {
+					var value = $(this).val();
+					var error = $(this).data("error");
+					var id = $(this).attr("id");
+					if (!validateFunctions.execute(error, value)) {
+						$("#" + id + "-" + error).show();
+						return false;
+					} else {
+						i++;
+						if (i == errorsCount) {
+							executeAjax(url, type, data, dataType, method, controller, action, id);
+						}
+					}
+				});
+			} else {
+				executeAjax(url, type, data, dataType, method, controller, action, id);
 			}
-		});
+		} else {
+			executeAjax(url, type, data, dataType, method, controller, action, id);
+		}
 
 		return false;
 	});

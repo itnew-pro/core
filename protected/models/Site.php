@@ -95,4 +95,19 @@ class Site extends CActiveRecord
 		Seo::$pageKeywords = $this->keywords;
 		Seo::$pageDescription = $this->description;
 	}
+
+	/**
+	 * Получает email
+	 *
+	 * @return string
+	 */
+	public static function getEmail()
+	{
+		$model = self::model()->find();
+		if ($model) {
+			return $model->email;
+		}
+
+		return null;
+	}
 }
