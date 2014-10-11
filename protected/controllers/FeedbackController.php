@@ -104,10 +104,10 @@ class FeedbackController extends ContentController
 
 		$body = "";
 		if ($phone) {
-			$body .= "<p><strong>" . Yii::t("feedback", "Phone") . ":</strong> {$phone}</p>";
+			$body .= "<p><strong>" . $model->getAttributeLabel("phone_label") . ":</strong> {$phone}</p>";
 		}
 		if ($adress) {
-			$body .= "<p><strong>" . Yii::t("feedback", "Adress") . ":</strong> {$adress}</p>";
+			$body .= "<p><strong>" . $model->getAttributeLabel("adress_label") . ":</strong> {$adress}</p>";
 		}
 		if ($message) {
 			$body .= "<p>{$message}</p>";
