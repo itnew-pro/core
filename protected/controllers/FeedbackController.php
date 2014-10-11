@@ -81,10 +81,12 @@ class FeedbackController extends ContentController
 		$mail->From = Yii::app()->params["feedback"]["user"];
 		$mail->FromName = ($name) ? $name : Yii::app()->params["feedback"]["name"];
 
-		if ($name) {
-			$mail->addReplyTo($email, $name);
-		} else {
-			$mail->addReplyTo($email);
+		if ($email) {
+			if ($name) {
+				$mail->addReplyTo($email, $name);
+			} else {
+				$mail->addReplyTo($email);
+			}
 		}
 
 		$mail->addAddress(($model->email_to) ? $model->email_to : Site::getEmail());
@@ -110,10 +112,16 @@ class FeedbackController extends ContentController
 		if ($message) {
 			$body .= "<p>{$message}</p>";
 		}
-		$body .=
-			"<p><strong>" .
-			Yii::t("feedback", "E-mail for reply") .
-			":</strong> <a href=\"mailto:{$email}\">{$email}</a></p>";
+		if ($email) {
+			$body .=
+				"<p><strong>" .
+				Yii::t("feedback", "E-mail for reply") .
+				":</strong> <a href=\"mailto:{$email}\">{$email}</a></p>";
+		}
+
+		if (!$body) {
+			$body = Yii::t("feedback", "Feedback");
+		}
 
 		$mail->CharSet = "UTF-8";
 		$mail->Subject = $subject;

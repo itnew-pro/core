@@ -31,7 +31,7 @@ class m140921_000000_feedback extends CDbMigration
 				"is_name"             => "INT NOT NULL",
 				"is_name_required"    => "INT NOT NULL",
 				"name_label"          => "VARCHAR(255) NOT NULL",
-				"email_from_label"    => "VARCHAR(255) NOT NULL",
+				"is_email_required"   => "INT NOT NULL",
 				"is_phone"            => "INT NOT NULL",
 				"is_phone_required"   => "INT NOT NULL",
 				"phone_label"         => "VARCHAR(255) NOT NULL",

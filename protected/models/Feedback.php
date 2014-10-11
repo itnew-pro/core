@@ -15,7 +15,7 @@ use Yii;
  * @property integer $is_name             наличие поля Name
  * @property integer $is_name_required    обязательное ли поле Name
  * @property string  $name_label          название метки Name
- * @property string  $email_from_label    название метки Email
+ * @property integer $is_email_required   обязательное ли поле Email
  * @property integer $is_phone            наличие поля Phone
  * @property integer $is_phone_required   обязательное ли поле Phone
  * @property string  $phone_label         название метки Phone
@@ -55,14 +55,14 @@ class Feedback extends CActiveRecord
 	{
 		return array(
 			array(
-				'email_to, name_label, email_from_label, phone_label, adress_label, subject_label, message_label,
+				'email_to, name_label, phone_label, adress_label, subject_label, message_label,
 					send_label',
 				'length',
 				"max" => 255
 			),
 			array(
 				'is_name, is_name_required, is_phone, is_phone_required, phone_mask, is_adress, is_adress_required,
-					is_subject, is_subject_required, is_message, is_message_required',
+					is_subject, is_subject_required, is_message, is_message_required, is_email_required',
 				'numerical',
 				'integerOnly' => true
 			),
@@ -117,8 +117,9 @@ class Feedback extends CActiveRecord
 			"is_adress_required"  => "",
 			"is_subject_required" => "",
 			"is_message_required" => "",
+			"is_email_required"   => "",
 			"name_label"          => ($this->name_label) ? $this->name_label : Yii::t("feedback", "Name"),
-			"email_from_label"    => ($this->email_from_label) ? $this->email_from_label : Yii::t("feedback", "Email"),
+			"email_from_label"    => Yii::t("feedback", "Email"),
 			"phone_label"         => ($this->phone_label) ? $this->phone_label : Yii::t("feedback", "Phone"),
 			"adress_label"        => ($this->adress_label) ? $this->adress_label : Yii::t("feedback", "Adress"),
 			"subject_label"       => ($this->subject_label) ? $this->subject_label : Yii::t("feedback", "Subject"),

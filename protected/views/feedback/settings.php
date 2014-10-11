@@ -71,25 +71,24 @@ use itnew\models\Site;
 				"disabled" => true
 			)
 		); ?>
-		<?php echo CHtml::activeTextField(
-			$model,
-			"email_from_label",
+		<?php echo CHtml::textField(
+			"emailFromLabel",
+			$model->getAttributeLabel("email_from_label"),
 			array(
 				"class" => "blue-form",
-				"value" => $model->getAttributeLabel("email_from_label"),
-			)
-		); ?>
-		<?php echo CHtml::checkBox(
-			"emailRequired",
-			true,
-			array(
-				"class"    => "checkbox-required",
 				"disabled" => true
 			)
 		); ?>
-		<?php echo CHtml::label(
-			null,
-			"emailRequired",
+		<?php echo CHtml::activeCheckbox(
+			$model,
+			"is_email_required",
+			array(
+				"class" => "checkbox-required"
+			)
+		); ?>
+		<?php echo CHtml::activeLabel(
+			$model,
+			"is_email_required",
 			array(
 				"class" => "checkbox-required-label"
 			)

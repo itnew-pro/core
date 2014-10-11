@@ -41,13 +41,13 @@ use itnew\models\Feedback;
 		"feedback{$model->id}Email",
 		null,
 		array(
-			"placeholder" => $model->getAttributeLabel("email_from_label") . "*",
+			"placeholder" => $model->getAttributeLabel("email_from_label") . (($model->is_email_required) ? "*" : ""),
 			"class"       => "has-error",
-			"data-error"  => "emailRequired",
+			"data-error"  => "email",
 		)
 	);
 	?>
-	<div class="error" id="feedback<?php echo $model->id; ?>Email-emailRequired">
+	<div class="error" id="feedback<?php echo $model->id; ?>Email-email">
 		<?php echo Yii::t("feedback", "Incorrect email"); ?>
 	</div>
 
