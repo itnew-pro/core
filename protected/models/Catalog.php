@@ -214,26 +214,26 @@ class Catalog extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			"price_type" => Yii::t("catalog", "Price"),
-			"size_type" => Yii::t("catalog", "Sizes"),
-			"new_type" => Yii::t("catalog", "New labels"),
-			"discount_type" => Yii::t("catalog", "Discount labels"),
-			"date_type" => Yii::t("catalog", "Date"),
-			"is_rating" => Yii::t("catalog", "Rating"),
-			"is_article" => Yii::t("catalog", "Article"),
-			"is_color" => Yii::t("catalog", "Colors"),
-			"is_brand" => Yii::t("catalog", "Brands"),
-			"is_cover" => Yii::t("catalog", "Cover"),
-			"is_images" => Yii::t("catalog", "Images"),
-			"is_description" => Yii::t("catalog", "Brief description"),
-			"is_text" => Yii::t("catalog", "Text"),
-			"price_in_short_card" => Yii::t("catalog", "Output in short card"),
-			"size_in_short_card" => Yii::t("catalog", "Output in short card"),
-			"date_in_short_card" => Yii::t("catalog", "Output in short card"),
+			"price_type"            => Yii::t("catalog", "Price"),
+			"size_type"             => Yii::t("catalog", "Sizes"),
+			"new_type"              => Yii::t("catalog", "New labels"),
+			"discount_type"         => Yii::t("catalog", "Discount labels"),
+			"date_type"             => Yii::t("catalog", "Date"),
+			"is_rating"             => Yii::t("catalog", "Rating"),
+			"is_article"            => Yii::t("catalog", "Article"),
+			"is_color"              => Yii::t("catalog", "Colors"),
+			"is_brand"              => Yii::t("catalog", "Brands"),
+			"is_cover"              => Yii::t("catalog", "Cover"),
+			"is_images"             => Yii::t("catalog", "Images"),
+			"is_description"        => Yii::t("catalog", "Brief description"),
+			"is_text"               => Yii::t("catalog", "Text"),
+			"price_in_short_card"   => Yii::t("catalog", "Output in short card"),
+			"size_in_short_card"    => Yii::t("catalog", "Output in short card"),
+			"date_in_short_card"    => Yii::t("catalog", "Output in short card"),
 			"article_in_short_card" => Yii::t("catalog", "Output in short card"),
-			"color_in_short_card" => Yii::t("catalog", "Output in short card"),
-			"brand_in_short_card" => Yii::t("catalog", "Output in short card"),
-			"rating_in_short_card" => Yii::t("catalog", "Output in short card"),
+			"color_in_short_card"   => Yii::t("catalog", "Output in short card"),
+			"brand_in_short_card"   => Yii::t("catalog", "Output in short card"),
+			"rating_in_short_card"  => Yii::t("catalog", "Output in short card"),
 		);
 	}
 
@@ -281,8 +281,8 @@ class Catalog extends CActiveRecord
 	public function getSizeTypeList()
 	{
 		return array(
-			self::SIZE_TYPE_CLOTHES  => Yii::t("catalog", "for clothing"),
-			self::SIZE_TYPE_SHOES  => Yii::t("catalog", "for shoes"),
+			self::SIZE_TYPE_CLOTHES => Yii::t("catalog", "for clothing"),
+			self::SIZE_TYPE_SHOES   => Yii::t("catalog", "for shoes"),
 		);
 	}
 
@@ -294,12 +294,12 @@ class Catalog extends CActiveRecord
 	public function getColorList()
 	{
 		return array(
-			self::COLOR_RED => Yii::t("catalog", "red"),
-			self::COLOR_GREEN => Yii::t("catalog", "green"),
-			self::COLOR_BLUE => Yii::t("catalog", "blue"),
+			self::COLOR_RED    => Yii::t("catalog", "red"),
+			self::COLOR_GREEN  => Yii::t("catalog", "green"),
+			self::COLOR_BLUE   => Yii::t("catalog", "blue"),
 			self::COLOR_ORANGE => Yii::t("catalog", "orange"),
 			self::COLOR_YELLOW => Yii::t("catalog", "yellow"),
-			self::COLOR_PINK => Yii::t("catalog", "pink"),
+			self::COLOR_PINK   => Yii::t("catalog", "pink"),
 		);
 	}
 
