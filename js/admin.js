@@ -37,6 +37,7 @@ var ajaxFunctions = {
 	updateSubpanel: function (data) {
 		$("#subpanel").remove();
 		$("body").append(data);
+		setFunctions.subpanel();
 	},
 	saveSettings: function (data) {
 		this.updatePanel(data["panel"]);
@@ -76,6 +77,27 @@ var ajaxFunctions = {
 	},
 	showFeedbackSubpanel: function (data) {
 		this.updateSubpanel(data);
+	},
+	showCatalogSubpanel: function (data) {
+		this.updateSubpanel(data);
+		$("#subpanel select").change(function() {
+			var $block = $(this).parent().find(".form-block-container");
+			if (parseInt($(this).val())) {
+				$block.removeClass("hide");
+			} else {
+				$block.addClass("hide");
+			}
+			setFunctions.subpanel();
+		});
+		$("#subpanel input[type=checkbox]").change(function() {
+			var $block = $(this).parent().find(".form-block-container");
+			if ($(this).is(":checked")) {
+				$block.removeClass("hide");
+			} else {
+				$block.addClass("hide");
+			}
+			setFunctions.subpanel();
+		});
 	},
 	showSectionSubpanel: function (data) {
 		this.updateSubpanel(data);

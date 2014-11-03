@@ -70,9 +70,16 @@ class Block extends CActiveRecord
 	const TYPE_FEEDBACK = 6;
 
 	/**
+	 * Тип каталога
+	 *
+	 * @var int
+	 */
+	const TYPE_CATALOG = 7;
+
+	/**
 	 * Типы
 	 *
-	 * @var string[]
+	 * @var array
 	 */
 	public $types = array(
 		self::TYPE_TEXT     => "text",
@@ -81,6 +88,7 @@ class Block extends CActiveRecord
 		self::TYPE_STAFF    => "staff",
 		self::TYPE_RECORDS  => "records",
 		self::TYPE_FEEDBACK => "feedback",
+		self::TYPE_CATALOG  => "catalog",
 	);
 
 	/**

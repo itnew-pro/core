@@ -121,7 +121,11 @@ function ucwords(string) {
  * @param {jqXHR} xhr XMLHTTPRequest
  */
 function showExceptionError(xhr) {
-	var str = xhr.responseText.match(/<h2>[^<>]*<\/h2>/gi)[0];
+	var str = xhr.responseText.match(/<h2>[^<>]*<\/h2>/gi);
+	if (str === null) {
+		return false;
+	}
+	str = str[0];
 	str = str.replace(/<h2>/i, "");
 	str = str.replace(/<\/h2>/i, "");
 	$(".loader").hide();
