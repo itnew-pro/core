@@ -1,0 +1,2 @@
+ffffffffffffff
+<?php echo $aaa; ?>
