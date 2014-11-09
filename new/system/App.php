@@ -16,6 +16,8 @@ use Exception;
 class App
 {
 
+	public static $isDebug = false;
+
 	/**
 	 * Подключенные файлы класов
 	 *
@@ -64,12 +66,16 @@ class App
 	 */
 	public static function run($config = null)
 	{
+		$startTime = microtime(true);
+
 		spl_autoload_register(array('system\App', "autoload"));
 
 		$config = require($config);
 
+		self::$isDebug = $config["isDebug"];
+
 		ini_set("register_globals", "Off");
-		if ($config["isDebug"]) {
+		if (self::$isDebug) {
 			ini_set("error_reporting", E_ALL);
 			ini_set("display_errors", "On");
 		} else {
@@ -105,6 +111,11 @@ class App
 		);
 
 		self::_runController(self::_parseUrl($config["baseUrl"]));
+
+		if (self::$isDebug) {
+			$time = microtime(true) - $startTime;
+			echo "<script>console.log(\"Время выполнения скрипта: {$time} сек.\");</script>";
+		}
 	}
 
 	/**

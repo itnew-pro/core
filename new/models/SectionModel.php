@@ -15,7 +15,7 @@ class SectionModel extends Model
 	/**
 	 * @var SeoModel
 	 */
-	public $seo = null;
+	public $seoModel = null;
 
 	/**
 	 * Получает название связной таблицы
@@ -30,7 +30,7 @@ class SectionModel extends Model
 	public function relations()
 	{
 		return array(
-			"seo" => array("models\SeoModel", "seo_id")
+			"seoModel" => array("models\SeoModel", "seo_id")
 		);
 	}
 
@@ -64,8 +64,8 @@ class SectionModel extends Model
 	public function byUrl($url = "")
 	{
 		if ($url) {
-			$this->db->with[] = "seo";
-			$this->db->addCondition("seo.url = :url");
+			$this->db->with[] = "seoModel";
+			$this->db->addCondition("seoModel.url = :url");
 			$this->db->params["url"] = $url;
 		} else {
 			$this->db->addCondition($this->tableName() . ".is_main = 1");

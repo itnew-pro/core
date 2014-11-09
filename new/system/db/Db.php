@@ -2,6 +2,7 @@
 
 namespace system\db;
 
+use system\App;
 use system\base\Model;
 use Exception;
 
@@ -60,16 +61,15 @@ class Db
 			 * @var Model $class
 			 */
 			$class = new $relation[0];
-			$select[] = "{$with}.id AS {$with}__id";
+			$select[] = $class->tableName() . ".id AS {$with}__id";
 			foreach (array_keys($class->rules()) as $field) {
-				$select[] = "{$with}.{$field} AS {$with}__{$field}";
+				$select[] = $class->tableName() . ".{$field} AS {$with}__{$field}";
 			}
 
 			$this->condition = str_replace("{$with}.", $class->tableName() . ".", $this->condition);
 			$join[] =
 				" LEFT JOIN " .
 				$class->tableName() .
-				" AS {$with}" .
 				" ON t." .
 				$relation[1] .
 				" = t.id";
@@ -99,6 +99,10 @@ class Db
 
 		if ($this->limit) {
 			$query .= " LIMIT {$this->limit}";
+		}
+
+		if (App::$isDebug) {
+			echo "<script>console.log(\"{$query}\");</script>";
 		}
 
 		return $query;
