@@ -1,2 +1,3 @@
-123
+<div>
 <?php echo $content; ?>
+	</div>

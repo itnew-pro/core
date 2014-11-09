@@ -10,13 +10,13 @@ use system\db\Db;
  * Базовый абстрактный класс для работы с моделями
  *
  * @package system.base
- *
- * @property string $tableName
  */
 abstract class Model
 {
 
 	const BELONGS_TO = 1;
+	const HAS_ONE = 2;
+	const HAS_MANY = 3;
 
 	/**
 	 * Идентификатор
@@ -32,14 +32,33 @@ abstract class Model
 	 */
 	protected $db;
 
-	abstract public function tableName() {}
+	/**
+	 * Получает название связной таблицы
+	 *
+	 * @return string
+	 */
+	abstract public function tableName();
 
+	abstract public function relations();
+
+	abstract public function rules();
+
+	/**
+	 * Конструктор
+	 */
 	public function __construct()
 	{
 		$this->db = new Db;
-		$this->db->model = $this;
+		$this->db->tableName = $this->tableName();
+		$this->db->relations = $this->relations();
+		$this->db->fields = array_keys($this->rules());
 	}
 
+	/**
+	 * Поиск модели
+	 *
+	 * @return null|Model
+	 */
 	public function find()
 	{
 		$this->db->limit = 1;
@@ -60,15 +79,71 @@ abstract class Model
 		return $model;
 	}
 
+	/**
+	 * Поиск моделей
+	 *
+	 * @return null|Model[]
+	 */
+	public function findAll()
+	{
+		$result = $this->db->getResult();
+		if (!$result) {
+			return null;
+		}
 
-	public function setAttributes($values)
+		$list = array();
+
+		foreach ($result as $values) {
+			/**
+			 * @var Model $model
+			 */
+			$model = new $this;
+			$model->setAttributes($values);
+			if ($model) {
+				$list[] = $model;
+			}
+		}
+
+		return $list;
+	}
+
+	/**
+	 * Устанавливает атрибуты модели
+	 *
+	 * @param array $values значения атрибутов
+	 *
+	 * @return bool
+	 */
+	public function setAttributes($values = array())
 	{
 		if (!is_array($values)) {
 			return false;
 		}
 
-		foreach ($values as $attribute => $value) {
-			$this->$attribute = $value;
+		$attributes = array();
+
+		foreach ($values as $key => $val) {
+			$explode = explode("__", $key, 2);
+			$attributes[$explode[0]][$explode[1]] = $val;
+		}
+
+		if (!$attributes) {
+			return false;
+		}
+
+		$relations = $this->relations();
+		foreach ($attributes as $key => $fields) {
+			if ($key == "t") {
+				foreach ($fields as $name => $value) {
+					$this->$name = $value;
+				}
+			} else {
+				$model = new $relations[$key][0];
+				foreach ($fields as $name => $value) {
+					$model->$name = $value;
+				}
+				$this->$key = $model;
+			}
 		}
 
 		return true;

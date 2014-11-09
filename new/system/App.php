@@ -3,14 +3,65 @@
 namespace system;
 
 use system\db\Db;
-use controllers\Section;
+use controllers\SectionController;
+use Exception;
 
+/**
+ * Файл класса App.
+ *
+ * Приложение
+ *
+ * @package system
+ */
 class App
 {
 
+	/**
+	 * Подключенные файлы класов
+	 *
+	 * @var array
+	 */
 	public static $classMap = array();
+
+	/**
+	 * Корневая директория
+	 *
+	 * @var string
+	 */
 	public static $rootDir = "";
 
+	/**
+	 * Идентификатор языка
+	 *
+	 * @var integer
+	 */
+	public static $languageId = 0;
+
+	/**
+	 * Идентификатор русского языка
+	 *
+	 * @var integer
+	 */
+	const LANGUAGE_RU = 1;
+
+	/**
+	 * Список языков
+	 *
+	 * @var array
+	 */
+	public static $languageList = array(
+		"ru" => self::LANGUAGE_RU,
+	);
+
+	/**
+	 * Запуск приложения
+	 *
+	 * @param string $config путь до файла настроек
+	 *
+	 * @throws Exception
+	 *
+	 * @return void
+	 */
 	public static function run($config = null)
 	{
 		spl_autoload_register(array('system\App', "autoload"));
@@ -36,10 +87,34 @@ class App
 			$config["db"]["charset"]
 		);
 
+		$host = str_replace("www.", "", $_SERVER["HTTP_HOST"]);
+		$siteInfo = Db::executeQuery("SELECT * FROM sites WHERE host = '{$host}'");
+		if (!$siteInfo) {
+			throw new Exception("Не найден сайт");
+		}
+
+		self::$languageId = self::$languageList[$siteInfo["lang"]];
+
+		Db::setConnect(
+			$config["db"]["host"],
+			$siteInfo["db_user"],
+			$siteInfo["db_pass"],
+			$siteInfo["db_name"],
+			$config["db"]["charset"],
+			true
+		);
+
 		self::_runController(self::_parseUrl($config["baseUrl"]));
 	}
 
-	private static function _runController($params)
+	/**
+	 * Производит запуск контроллера
+	 *
+	 * @param string[] $params разбитый на куски URL
+	 *
+	 * @return void
+	 */
+	private static function _runController($params = array())
 	{
 		$action = "actionIndex";
 		$language = "";
@@ -55,10 +130,17 @@ class App
 			$section = $params[1];
 		}
 
-		$controller = new Section($language, $section, $param1, $param2);
+		$controller = new SectionController($language, $section, $param1, $param2);
 		$controller->$action();
 	}
 
+	/**
+	 * Разбивает строку
+	 *
+	 * @param string $baseUrl базовый URL
+	 *
+	 * @return string[]
+	 */
 	private static function _parseUrl($baseUrl = "/")
 	{
 		$items = array();
@@ -71,7 +153,7 @@ class App
 		$explodeForGet = explode("?", $url, 2);
 
 		$urlExplode = explode("/", $explodeForGet[0]);
-		foreach($urlExplode as $item) {
+		foreach ($urlExplode as $item) {
 			if ($item) {
 				$items[] = $item;
 			}
@@ -80,6 +162,13 @@ class App
 		return $items;
 	}
 
+	/**
+	 * Автоматическая загрузка классов
+	 *
+	 * @param string $className название класса
+	 *
+	 * @return bool
+	 */
 	public static function autoload($className)
 	{
 		if (array_key_exists($className, self::$classMap)) {

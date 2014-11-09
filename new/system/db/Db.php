@@ -2,6 +2,7 @@
 
 namespace system\db;
 
+use system\base\Model;
 use Exception;
 
 class Db
@@ -9,15 +10,22 @@ class Db
 
 	private static $_isConnect = false;
 
+	public $tableName = "";
 	public $condition = "";
 	public $params = array();
 	public $limit = "";
-	public $model = null;
+	public $with = array();
+	public $fields = array();
+
+	/**
+	 * @var array
+	 */
+	public $relations = array();
 	public $select = array();
 
-	public static function setConnect($host, $user, $password, $base, $charset)
+	public static function setConnect($host, $user, $password, $base, $charset, $isNewConnection = false)
 	{
-		if (self::$_isConnect) {
+		if (self::$_isConnect && !$isNewConnection) {
 			return true;
 		}
 
@@ -38,7 +46,37 @@ class Db
 
 	private function _getQuery()
 	{
-		$query = "SELECT * FROM {$this->table}";
+		$join = array();
+		$select = array();
+
+		$select[] = "t.id AS t__id";
+		foreach ($this->fields as $field) {
+			$select[] = "t.{$field} AS t__{$field}";
+		}
+
+		foreach ($this->with as $with) {
+			$relation = $this->relations[$with];
+			/**
+			 * @var Model $class
+			 */
+			$class = new $relation[0];
+			$select[] = "{$with}.id AS {$with}__id";
+			foreach (array_keys($class->rules()) as $field) {
+				$select[] = "{$with}.{$field} AS {$with}__{$field}";
+			}
+
+			$this->condition = str_replace("{$with}.", $class->tableName() . ".", $this->condition);
+			$join[] =
+				" LEFT JOIN " .
+				$class->tableName() .
+				" AS {$with}" .
+				" ON t." .
+				$relation[1] .
+				" = t.id";
+		}
+
+		$query = "SELECT " . implode(", ", $select);
+		$query .= " FROM " . $this->tableName . " AS t";
 
 		if ($this->condition && $this->params) {
 			foreach ($this->params as $key => $val) {
@@ -49,6 +87,10 @@ class Db
 					$this->condition
 				);
 			}
+		}
+
+		foreach ($join as $item) {
+			$query .= $item;
 		}
 
 		if ($this->condition) {
@@ -100,5 +142,11 @@ class Db
 	public function setSelect()
 	{
 
+	}
+
+	public static function executeQuery($query)
+	{
+		$query = mysql_query($query);
+		return mysql_fetch_assoc($query);
 	}
 }

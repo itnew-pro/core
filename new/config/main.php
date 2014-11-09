@@ -6,9 +6,9 @@ return array(
 	"baseUrl" => "/new/",
 	"db"      => array(
 		"host"     => "localhost",
-		"user"     => "dev2",
-		"base"     => "dev2",
+		"user"     => "itnew",
 		"password" => "mypasS77",
+		"base"     => "_sites",
 		"charset"  => "utf8",
 	),
 
