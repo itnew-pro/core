@@ -2,6 +2,7 @@
 
 namespace models;
 
+use system\App;
 use system\base\Model;
 
 /**
@@ -63,12 +64,15 @@ class SectionModel extends Model
 
 	public function byUrl($url = "")
 	{
+		$this->db->with[] = "seoModel";
+		$this->db->addCondition("t.language_id = :language_id");
+		$this->db->params["language_id"] = App::$languageId;
+
 		if ($url) {
-			$this->db->with[] = "seoModel";
 			$this->db->addCondition("seoModel.url = :url");
 			$this->db->params["url"] = $url;
 		} else {
-			$this->db->addCondition($this->tableName() . ".is_main = 1");
+			$this->db->addCondition("t.is_main = 1");
 		}
 
 		return $this;
