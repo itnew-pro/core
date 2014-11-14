@@ -72,7 +72,9 @@ class Db
 				$class->tableName() .
 				" ON t." .
 				$relation[1] .
-				" = t.id";
+				" = " .
+				$class->tableName().
+				".id";
 		}
 
 		$query = "SELECT " . implode(", ", $select);
@@ -148,7 +150,7 @@ class Db
 
 	}
 
-	public static function executeQuery($query)
+	public static function selectQuery($query)
 	{
 		$query = mysql_query($query);
 		return mysql_fetch_assoc($query);

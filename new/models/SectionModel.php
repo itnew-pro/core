@@ -43,10 +43,10 @@ class SectionModel extends Model
 	public function rules()
 	{
 		return array(
-			"seo_id"       => array(),
-			"language_id"  => array(),
-			"structure_id" => array(),
-			"is_main"      => array(),
+			"seo_id"   => array(),
+			"language" => array(),
+			"width"    => array(),
+			"is_main"  => array(),
 		);
 	}
 
@@ -65,8 +65,8 @@ class SectionModel extends Model
 	public function byUrl($url = "")
 	{
 		$this->db->with[] = "seoModel";
-		$this->db->addCondition("t.language_id = :language_id");
-		$this->db->params["language_id"] = App::$languageId;
+		$this->db->addCondition("t.language = :language");
+		$this->db->params["language"] = App::$languageId;
 
 		if ($url) {
 			$this->db->addCondition("seoModel.url = :url");

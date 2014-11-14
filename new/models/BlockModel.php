@@ -5,11 +5,11 @@ namespace models;
 use system\base\Model;
 
 /**
- * Файл класса SeoModel
+ * Файл класса BlockModel
  *
  * @package models
  */
-class SeoModel extends Model
+class BlockModel extends Model
 {
 
 	/**
@@ -19,17 +19,26 @@ class SeoModel extends Model
 	 */
 	public function tableName()
 	{
-		return "seo";
+		return "blocks";
 	}
 
+	public function relations()
+	{
+		return array();
+	}
+
+	/**
+	 * Правила валидации
+	 *
+	 * @return array
+	 */
 	public function rules()
 	{
 		return array(
-			"name"        => array(),
-			"url"         => array(),
-			"title"       => array(),
-			"keywords"    => array(),
-			"description" => array(),
+			"language" => array(),
+			"name"     => array(),
+			"type"     => array(),
+			"content"  => array(),
 		);
 	}
 
@@ -38,15 +47,10 @@ class SeoModel extends Model
 	 *
 	 * @param string $className
 	 *
-	 * @return SectionModel
+	 * @return BlockModel
 	 */
 	public static function model($className = __CLASS__)
 	{
 		return new $className;
-	}
-
-	public function relations()
-	{
-		return array();
 	}
 }

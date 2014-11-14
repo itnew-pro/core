@@ -94,7 +94,7 @@ class App
 		);
 
 		$host = str_replace("www.", "", $_SERVER["HTTP_HOST"]);
-		$siteInfo = Db::executeQuery("SELECT * FROM sites WHERE host = '{$host}'");
+		$siteInfo = Db::selectQuery("SELECT * FROM sites WHERE host = '{$host}'");
 		if (!$siteInfo) {
 			throw new Exception("Не найден сайт");
 		}
