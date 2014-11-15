@@ -24,7 +24,10 @@ class SectionController extends Controller
 		}
 
 		$grids = GridModel::model()->bySectionId($model->id)->withContent()->findAll();
+		if (!$grids) {
+			throw new \Exception("Структура для раздела не определена");
+		}
 
-		$this->render("index", array("model" => $model));
+		$this->render("index", array("model" => $model, "grids" => $grids));
 	}
 }

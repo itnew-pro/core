@@ -13,6 +13,11 @@ use system\base\Model;
 class SectionModel extends Model
 {
 
+	public $seo_id = 0;
+	public $language = 0;
+	public $width = 0;
+	public $is_main = 0;
+
 	/**
 	 * @var SeoModel
 	 */

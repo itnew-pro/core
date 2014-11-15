@@ -12,6 +12,15 @@ use system\base\Model;
 class BlockModel extends Model
 {
 
+	const TYPE_TEXT = 1;
+
+	public $type;
+	public $content;
+
+	public static $typeList = array(
+		self::TYPE_TEXT => "text",
+	);
+
 	/**
 	 * Получает название связной таблицы
 	 *
@@ -52,5 +61,26 @@ class BlockModel extends Model
 	public static function model($className = __CLASS__)
 	{
 		return new $className;
+	}
+
+	public function getType()
+	{
+		if (array_key_exists($this->type, self::$typeList)) {
+			return self::$typeList[$this->type];
+		}
+
+		return null;
+	}
+
+	public function getContentModel()
+	{
+		$modelName = "models\\" . ucfirst($this->getType() . "Model");
+
+		/**
+		 * @var \system\base\Model $model
+		 */
+		$model = new $modelName;
+
+		return $model->byIds($this->content)->find();
 	}
 }

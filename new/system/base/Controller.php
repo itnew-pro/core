@@ -119,7 +119,13 @@ abstract class Controller
 	 */
 	public function renderPartial($viewFile, $data = array(), $isReturn = false)
 	{
-		$path = $this->getViewsRootDir() . $this->getViewsDir() . "/{$viewFile}.php";
+		$path = $this->getViewsRootDir();
+		if ($viewFile[0] !== "/") {
+			$path .= $this->getViewsDir() . "/";
+		} else {
+			$viewFile = substr($viewFile, 1);
+		}
+		$path .= "{$viewFile}.php";
 
 		extract($data, EXTR_OVERWRITE);
 

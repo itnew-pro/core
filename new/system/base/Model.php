@@ -54,6 +54,16 @@ abstract class Model
 		$this->db->fields = array_keys($this->rules());
 	}
 
+	public function byIds($ids)
+	{
+		if (!is_array($ids)) {
+			$this->db->addCondition("t.id = :id");
+			$this->db->params["id"] = $ids;
+		}
+
+		return $this;
+	}
+
 	/**
 	 * Поиск модели
 	 *

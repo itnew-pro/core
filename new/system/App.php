@@ -32,6 +32,8 @@ class App
 	 */
 	public static $rootDir = "";
 
+	public static $baseUrl = "";
+
 	/**
 	 * Идентификатор языка
 	 *
@@ -84,6 +86,7 @@ class App
 		}
 
 		self::$rootDir = $config["rootDir"];
+		self::$baseUrl = $config["baseUrl"];
 
 		Db::setConnect(
 			$config["db"]["host"],
