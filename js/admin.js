@@ -189,9 +189,8 @@ var ajaxFunctions = {
 		} else {
 			this.saveWindow();
 			windowFunctions.hide("records-add");
-			$("body")
-				.append(data["recordsForm"])
-				.append(data["records"]);
+			$("body").append(data["records"]);
+			this.showRecordsFormWindow(data["recordsForm"]);
 			windowFunctions.show("records-form");
 			windowFunctions.show("records");
 			setFunctions.windows();
