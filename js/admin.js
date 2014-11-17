@@ -358,7 +358,7 @@ var recordsFunctions = {
 
 	// Показывает блок с изображениями
 	showFormBlockContainerImages: function () {
-		if ($("#Records_isImages").prop("checked")) {
+		if ($("#itnew_models_Records_isImages").prop("checked")) {
 			$(".form-block-container-images").removeClass("hide");
 		} else {
 			$(".form-block-container-images").addClass("hide");

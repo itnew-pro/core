@@ -862,3 +862,14 @@ i.plus {
 	color: #F00;
 	font-weight: 400;
 }
+
+/* Костыли */
+.content-menu-block-menu {
+	display: none;
+}
+.content-menu-block-staff {
+	display: none;
+}
+.content-menu-block-catalog {
+	display: none;
+}

@@ -326,7 +326,7 @@ class Records extends CActiveRecord
 	 */
 	public function hasCover()
 	{
-		return $this->isNewRecord && $this->cover;
+		return $this->isNewRecord || $this->cover;
 	}
 
 	/**
@@ -336,7 +336,7 @@ class Records extends CActiveRecord
 	 */
 	public function hasImages()
 	{
-		return $this->isNewRecord && $this->images;
+		return $this->isNewRecord || $this->images;
 	}
 
 	/**

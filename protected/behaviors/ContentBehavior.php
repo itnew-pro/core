@@ -103,7 +103,9 @@ class ContentBehavior extends CActiveRecordBehavior
 			} else {
 				$paramModel = new $param["class"];
 			}
-			$paramModel->attributes = $param["post"];
+			$aaa = Yii::app()->request->getPost($param["post"]);
+
+			$paramModel->attributes = $aaa;
 			if ($paramModel->save()) {
 				$model->$param["attribute"] = $paramModel->id;
 			}
