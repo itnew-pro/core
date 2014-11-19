@@ -281,6 +281,7 @@ class Text extends CActiveRecord
 	{
 		$model = new self;
 		$model->rows = self::DEFAULT_DESCRIPTION_SIZE;
+		$model->editor = 1;
 
 		return $model;
 	}

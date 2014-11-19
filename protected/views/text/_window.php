@@ -9,7 +9,7 @@ use itnew\models\Text;
 <?php
 if ($model->getEditorClass()) {
 	Yii::app()->clientScript->registerScript(
-		"textWindow",
+		"textWindow{$model->id}",
 		'
 					tinymce.init({
 						selector: ".tinymce",
